@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Questrial&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;700&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #111111;
+  --font-questrial: 'Questrial', sans-serif;
+  --font-raleway: 'Raleway', sans-serif;
+  --font-stacksans: 'Stack Sans Headline', 'Questrial', sans-serif;
+  --font-googlesans: 'Google Sans Flex', 'Google Sans', sans-serif;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-questrial: var(--font-questrial);
+  --font-raleway: var(--font-raleway);
+  --font-stacksans: var(--font-stacksans);
+  --font-googlesans: var(--font-googlesans);
+  
+  --color-gold-50: #faf8f2;
+  --color-gold-100: #f4efdb;
+  --color-gold-200: #e8dbb4;
+  --color-gold-300: #dcc88d;
+  --color-gold-400: #d0b466;
+  --color-gold-500: #c59b27; /* Luxurious Gold accent */
+  --color-gold-600: #a9831e;
+  --color-gold-700: #8c6a16;
+  --color-gold-800: #6f520f;
+  --color-gold-900: #523b08;
+  
+  --color-luxury-charcoal: #111111;
+  --color-luxury-offwhite: #fafafa;
+  --color-luxury-sand: #f5f2eb;
+}
+
+/* Custom base styles */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-stacksans);
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, .font-serif-luxury {
+  font-family: var(--font-raleway);
+  letter-spacing: 0.02em;
+}
+
+/* Luxury border utilities */
+.border-gold-subtle {
+  border-color: rgba(197, 155, 39, 0.2);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Custom premium scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #fafafa;
+}
+::-webkit-scrollbar-thumb {
+  background: #dcdcdc;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c59b27;
+}
+
