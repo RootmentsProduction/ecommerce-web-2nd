@@ -4,7 +4,6 @@ import CategorySection from "../components/home/CategorySection";
 import NewArrivalsSection from "../components/home/NewArrivalsSection";
 import BestSellerSection from "../components/home/BestSellerSection";
 import InstagramSection from "../components/home/InstagramSection";
-import LatestCollectionSection from "../components/home/LatestCollectionSection";
 
 export default function Home() {
   return (
@@ -20,11 +19,6 @@ export default function Home() {
 
         {/* Categories Grid */}
         <CategorySection />
-
-        {/* Latest Collection (Visible on mobile only, replacing Best Sellers and Instagram) */}
-        <div className="block sm:hidden">
-          <LatestCollectionSection />
-        </div>
 
         {/* Best Sellers Showcase */}
         <BestSellerSection />

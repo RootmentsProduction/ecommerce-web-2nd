@@ -1,30 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import fs from 'fs';
-import path from 'path';
+import videoFiles from '../../data/videos.json';
 
 export default function InstagramSection() {
-  // Dynamically scan the public/videos directory
-  const videosDirectory = path.join(process.cwd(), 'public/videos');
-  let videoFiles: string[] = [];
-
-  try {
-    if (fs.existsSync(videosDirectory)) {
-      videoFiles = fs.readdirSync(videosDirectory)
-        .filter(file => {
-          const ext = path.extname(file).toLowerCase();
-          // Support common video formats and exclude hidden/system files
-          return ['.mp4', '.webm', '.ogg', '.mov'].includes(ext) && !file.startsWith('.');
-        })
-        // Sort files alphabetically/numerically
-        .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
-    }
-  } catch (error) {
-    console.error('Error reading public/videos directory:', error);
-  }
-
   // If no videos are found, do not render the section
-  if (videoFiles.length === 0) {
+  if (!videoFiles || videoFiles.length === 0) {
     return null;
   }
 
