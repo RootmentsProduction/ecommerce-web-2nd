@@ -79,13 +79,13 @@ export default function CategorySection() {
               >
                 <div className="flex items-center gap-8">
                   {/* Category Small Thumbnail */}
-                  <div className="relative w-[72px] h-[72px] bg-neutral-50 overflow-hidden flex-shrink-0">
+                  <div className="relative w-[72px] h-[72px] bg-neutral-50 overflow-hidden flex-shrink-0 rounded-md border border-neutral-100">
                     <Image
                       src={cat.img}
                       alt={cat.name}
                       fill
                       sizes="72px"
-                      className="object-cover"
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                     />
                   </div>
                   {/* Category Name */}
@@ -93,7 +93,7 @@ export default function CategorySection() {
                     {cat.name}
                   </span>
                 </div>
-
+ 
                 {/* Arrow indicator */}
                 <div className="text-neutral-900 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300">
                   <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,16 +103,16 @@ export default function CategorySection() {
               </Link>
             ))}
           </div>
-
+ 
           {/* Right Column (Large Visual Image) - order 1 on mobile, order 2 on desktop */}
           <div className="lg:col-span-7 h-full order-1 lg:order-2">
-            <div className="relative aspect-[4/3.1] w-full overflow-hidden bg-neutral-50">
+            <div className="relative aspect-[4/3.1] w-full overflow-hidden bg-neutral-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-500">
               <Image
                 src="/cat_large.png"
                 alt="Layered Gold Necklaces Styling"
                 fill
                 sizes="(max-width: 1024px) 100vw, 55vw"
-                className="object-cover object-center transition-transform duration-700 ease-out hover:scale-[1.02]"
+                className="object-cover object-center transition-transform duration-1000 ease-out hover:scale-105"
               />
             </div>
           </div>

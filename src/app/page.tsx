@@ -26,15 +26,11 @@ export default function Home() {
           <LatestCollectionSection />
         </div>
 
-        {/* Best Sellers Showcase (Hidden on mobile) */}
-        <div className="hidden sm:block">
-          <BestSellerSection />
-        </div>
+        {/* Best Sellers Showcase */}
+        <BestSellerSection />
 
-        {/* Instagram User Gallery (Hidden on mobile) */}
-        <div className="hidden sm:block">
-          <InstagramSection />
-        </div>
+        {/* Instagram User Gallery */}
+        <InstagramSection />
       </div>
     </div>
   );
