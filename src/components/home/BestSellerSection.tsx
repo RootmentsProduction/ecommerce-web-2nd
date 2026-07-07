@@ -1,4 +1,6 @@
-import React from 'react';
+"use client";
+
+import React, { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { products } from '../../data/products';
 import ProductCard from '../product/ProductCard';
@@ -6,6 +8,77 @@ import ProductCard from '../product/ProductCard';
 export default function BestSellerSection() {
   // Filter bestsellers and limit to 4 to match the screenshot grid
   const bestSellers = products.filter((p) => p.isBestSeller).slice(0, 4);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container || !bestSellers || bestSellers.length === 0) return;
+
+    const isMobile = () => window.innerWidth < 640;
+
+    let animationFrameId: number;
+    let isInteracting = false;
+    let interactionTimeout: NodeJS.Timeout;
+    const scrollSpeed = 0.25; // Very slow scroll speed for Products (px/frame)
+    const originalCount = bestSellers.length;
+
+    const handleInteractionStart = () => {
+      isInteracting = true;
+      clearTimeout(interactionTimeout);
+    };
+
+    const handleInteractionEnd = () => {
+      clearTimeout(interactionTimeout);
+      interactionTimeout = setTimeout(() => {
+        isInteracting = false;
+      }, 2000);
+    };
+
+    container.addEventListener('touchstart', handleInteractionStart, { passive: true });
+    container.addEventListener('touchend', handleInteractionEnd, { passive: true });
+    container.addEventListener('mousedown', handleInteractionStart);
+    container.addEventListener('mouseup', handleInteractionEnd);
+    container.addEventListener('mouseleave', handleInteractionEnd);
+
+    const handleScroll = () => {
+      if (isInteracting) {
+        clearTimeout(interactionTimeout);
+        interactionTimeout = setTimeout(() => {
+          isInteracting = false;
+        }, 2000);
+      }
+    };
+    container.addEventListener('scroll', handleScroll, { passive: true });
+
+    const step = () => {
+      if (!isInteracting && isMobile() && container.children.length >= originalCount * 2) {
+        container.scrollLeft += scrollSpeed;
+
+        const firstSetEndElement = container.children[originalCount] as HTMLElement;
+        if (firstSetEndElement) {
+          const W = firstSetEndElement.offsetLeft - (container.children[0] as HTMLElement).offsetLeft;
+          if (container.scrollLeft >= W) {
+            container.scrollLeft -= W;
+          }
+        }
+      }
+      animationFrameId = requestAnimationFrame(step);
+    };
+
+    animationFrameId = requestAnimationFrame(step);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      clearTimeout(interactionTimeout);
+      container.removeEventListener('touchstart', handleInteractionStart);
+      container.removeEventListener('touchend', handleInteractionEnd);
+      container.removeEventListener('mousedown', handleInteractionStart);
+      container.removeEventListener('mouseup', handleInteractionEnd);
+      container.removeEventListener('mouseleave', handleInteractionEnd);
+      container.removeEventListener('scroll', handleScroll);
+    };
+  }, [bestSellers.length]);
 
   return (
     <section className="py-12 bg-white relative sm:py-16">
@@ -64,11 +137,14 @@ export default function BestSellerSection() {
         </div>
 
         {/* Mobile Product Scrollable Container (Visible on mobile only, matching latest collection) */}
-        <div className="flex sm:hidden overflow-x-auto gap-6 pb-6 px-1 snap-x snap-mandatory scrollbar-none">
-          {bestSellers.map((product) => (
+        <div 
+          ref={scrollRef}
+          className="flex sm:hidden overflow-x-auto gap-6 pb-6 px-1 scrollbar-none"
+        >
+          {[...bestSellers, ...bestSellers, ...bestSellers].map((product, idx) => (
             <div 
-              key={product.id} 
-              className="min-w-[270px] max-w-[290px] w-[78vw] snap-start flex-shrink-0"
+              key={`${product.id}-${idx}`} 
+              className="min-w-[270px] max-w-[290px] w-[78vw] flex-shrink-0"
             >
               <ProductCard product={product} centered={true} />
             </div>

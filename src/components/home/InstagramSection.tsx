@@ -1,8 +1,81 @@
-import React from 'react';
+"use client";
+
+import React, { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import videoFiles from '../../data/videos.json';
 
 export default function InstagramSection() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container || !videoFiles || videoFiles.length === 0) return;
+
+    const isMobile = () => window.innerWidth < 640;
+
+    let animationFrameId: number;
+    let isInteracting = false;
+    let interactionTimeout: NodeJS.Timeout;
+    const scrollSpeed = 0.5; // Slow scroll speed for Reels (px/frame)
+    const originalCount = videoFiles.length;
+
+    const handleInteractionStart = () => {
+      isInteracting = true;
+      clearTimeout(interactionTimeout);
+    };
+
+    const handleInteractionEnd = () => {
+      clearTimeout(interactionTimeout);
+      interactionTimeout = setTimeout(() => {
+        isInteracting = false;
+      }, 2000);
+    };
+
+    container.addEventListener('touchstart', handleInteractionStart, { passive: true });
+    container.addEventListener('touchend', handleInteractionEnd, { passive: true });
+    container.addEventListener('mousedown', handleInteractionStart);
+    container.addEventListener('mouseup', handleInteractionEnd);
+    container.addEventListener('mouseleave', handleInteractionEnd);
+
+    const handleScroll = () => {
+      if (isInteracting) {
+        clearTimeout(interactionTimeout);
+        interactionTimeout = setTimeout(() => {
+          isInteracting = false;
+        }, 2000);
+      }
+    };
+    container.addEventListener('scroll', handleScroll, { passive: true });
+
+    const step = () => {
+      if (!isInteracting && isMobile() && container.children.length >= originalCount * 2) {
+        container.scrollLeft += scrollSpeed;
+
+        const firstSetEndElement = container.children[originalCount] as HTMLElement;
+        if (firstSetEndElement) {
+          const W = firstSetEndElement.offsetLeft - (container.children[0] as HTMLElement).offsetLeft;
+          if (container.scrollLeft >= W) {
+            container.scrollLeft -= W;
+          }
+        }
+      }
+      animationFrameId = requestAnimationFrame(step);
+    };
+
+    animationFrameId = requestAnimationFrame(step);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      clearTimeout(interactionTimeout);
+      container.removeEventListener('touchstart', handleInteractionStart);
+      container.removeEventListener('touchend', handleInteractionEnd);
+      container.removeEventListener('mousedown', handleInteractionStart);
+      container.removeEventListener('mouseup', handleInteractionEnd);
+      container.removeEventListener('mouseleave', handleInteractionEnd);
+      container.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   // If no videos are found, do not render the section
   if (!videoFiles || videoFiles.length === 0) {
     return null;
@@ -128,13 +201,16 @@ export default function InstagramSection() {
 
       {/* Mobile Gallery (same format and layout as latest collection - scrollable container) */}
       <div className="block sm:hidden w-full px-[6.5%]">
-        <div className="flex overflow-x-auto gap-6 pb-6 px-1 snap-x snap-mandatory scrollbar-none">
-          {videoFiles.map((filename, idx) => {
+        <div 
+          ref={scrollRef}
+          className="flex overflow-x-auto gap-6 pb-6 px-1 scrollbar-none"
+        >
+          {[...videoFiles, ...videoFiles, ...videoFiles].map((filename, idx) => {
             const videoSrc = `/videos/${encodeURIComponent(filename)}`;
             return (
               <div
                 key={idx}
-                className="relative aspect-[9/16] w-[70vw] min-w-[200px] max-w-[240px] snap-start flex-shrink-0 overflow-hidden bg-neutral-100 rounded-lg shadow-sm"
+                className="relative aspect-[9/16] w-[70vw] min-w-[200px] max-w-[240px] flex-shrink-0 overflow-hidden bg-neutral-100 rounded-lg shadow-sm"
               >
                 <video
                   src={videoSrc}
@@ -145,17 +221,6 @@ export default function InstagramSection() {
                   preload="metadata"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black/15 flex items-center justify-center pointer-events-none">
-                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30">
-                    <svg 
-                      className="w-5 h-5 text-white" 
-                      fill="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
-                    </svg>
-                  </div>
-                </div>
               </div>
             );
           })}
