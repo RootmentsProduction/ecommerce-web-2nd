@@ -18,9 +18,11 @@ export default function InstagramSection() {
     let interactionTimeout: NodeJS.Timeout;
     const scrollSpeed = 0.5; // Slow scroll speed for Reels (px/frame)
     const originalCount = videoFiles.length;
+    let scrollPos = container.scrollLeft;
 
     const handleInteractionStart = () => {
       isInteracting = true;
+      scrollPos = container.scrollLeft;
       clearTimeout(interactionTimeout);
     };
 
@@ -28,6 +30,7 @@ export default function InstagramSection() {
       clearTimeout(interactionTimeout);
       interactionTimeout = setTimeout(() => {
         isInteracting = false;
+        scrollPos = container.scrollLeft;
       }, 2000);
     };
 
@@ -39,6 +42,7 @@ export default function InstagramSection() {
 
     const handleScroll = () => {
       if (isInteracting) {
+        scrollPos = container.scrollLeft;
         clearTimeout(interactionTimeout);
         interactionTimeout = setTimeout(() => {
           isInteracting = false;
@@ -49,15 +53,16 @@ export default function InstagramSection() {
 
     const step = () => {
       if (!isInteracting && isMobile() && container.children.length >= originalCount * 2) {
-        container.scrollLeft += scrollSpeed;
+        scrollPos += scrollSpeed;
 
         const firstSetEndElement = container.children[originalCount] as HTMLElement;
         if (firstSetEndElement) {
           const W = firstSetEndElement.offsetLeft - (container.children[0] as HTMLElement).offsetLeft;
-          if (container.scrollLeft >= W) {
-            container.scrollLeft -= W;
+          if (scrollPos >= W) {
+            scrollPos -= W;
           }
         }
+        container.scrollLeft = scrollPos;
       }
       animationFrameId = requestAnimationFrame(step);
     };

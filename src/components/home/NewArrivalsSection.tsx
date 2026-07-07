@@ -22,9 +22,11 @@ export default function NewArrivalsSection() {
     let interactionTimeout: NodeJS.Timeout;
     const scrollSpeed = 0.25; // Very slow scroll speed for Products (px/frame)
     const originalCount = newArrivals.length;
+    let scrollPos = container.scrollLeft;
 
     const handleInteractionStart = () => {
       isInteracting = true;
+      scrollPos = container.scrollLeft;
       clearTimeout(interactionTimeout);
     };
 
@@ -32,6 +34,7 @@ export default function NewArrivalsSection() {
       clearTimeout(interactionTimeout);
       interactionTimeout = setTimeout(() => {
         isInteracting = false;
+        scrollPos = container.scrollLeft;
       }, 2000);
     };
 
@@ -43,6 +46,7 @@ export default function NewArrivalsSection() {
 
     const handleScroll = () => {
       if (isInteracting) {
+        scrollPos = container.scrollLeft;
         clearTimeout(interactionTimeout);
         interactionTimeout = setTimeout(() => {
           isInteracting = false;
@@ -53,15 +57,16 @@ export default function NewArrivalsSection() {
 
     const step = () => {
       if (!isInteracting && isMobile() && container.children.length >= originalCount * 2) {
-        container.scrollLeft += scrollSpeed;
+        scrollPos += scrollSpeed;
 
         const firstSetEndElement = container.children[originalCount] as HTMLElement;
         if (firstSetEndElement) {
           const W = firstSetEndElement.offsetLeft - (container.children[0] as HTMLElement).offsetLeft;
-          if (container.scrollLeft >= W) {
-            container.scrollLeft -= W;
+          if (scrollPos >= W) {
+            scrollPos -= W;
           }
         }
+        container.scrollLeft = scrollPos;
       }
       animationFrameId = requestAnimationFrame(step);
     };
@@ -78,6 +83,7 @@ export default function NewArrivalsSection() {
       container.removeEventListener('mouseleave', handleInteractionEnd);
       container.removeEventListener('scroll', handleScroll);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newArrivals.length]);
 
   return (
