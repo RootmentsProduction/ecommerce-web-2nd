@@ -24,6 +24,8 @@ export default function NewArrivalsSection() {
     const originalCount = newArrivals.length;
     let scrollPos = container.scrollLeft;
 
+    let expectedScrollLeft = container.scrollLeft;
+
     const handleInteractionStart = () => {
       isInteracting = true;
       scrollPos = container.scrollLeft;
@@ -45,7 +47,9 @@ export default function NewArrivalsSection() {
     container.addEventListener('mouseleave', handleInteractionEnd);
 
     const handleScroll = () => {
-      if (isInteracting) {
+      const isProgrammatic = Math.abs(container.scrollLeft - expectedScrollLeft) < 1;
+      if (!isProgrammatic) {
+        isInteracting = true;
         scrollPos = container.scrollLeft;
         clearTimeout(interactionTimeout);
         interactionTimeout = setTimeout(() => {
@@ -67,6 +71,7 @@ export default function NewArrivalsSection() {
           }
         }
         container.scrollLeft = scrollPos;
+        expectedScrollLeft = container.scrollLeft;
       }
       animationFrameId = requestAnimationFrame(step);
     };
