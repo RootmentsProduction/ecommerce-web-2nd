@@ -1,0 +1,60 @@
+import { AdminOrder } from "@/types/admin";
+
+export const adminOrders: AdminOrder[] = [
+  {
+    id: "#ORD-1234",
+    customerName: "Priya Sharma",
+    productName: "Golden Chain | Ring",
+    value: "₹ 2,34,500",
+    status: "Delivered",
+    date: "24 Jun 2026",
+  },
+  {
+    id: "#ORD-1234",
+    customerName: "Priya Sharma",
+    productName: "Golden Chain | Ring",
+    value: "₹ 2,34,500",
+    status: "Delivered",
+    date: "24 Jun 2026",
+  },
+  {
+    id: "#ORD-1234",
+    customerName: "Priya Sharma",
+    productName: "Golden Chain | Ring",
+    value: "₹ 2,34,500",
+    status: "Shipped",
+    date: "24 Jun 2026",
+  },
+  {
+    id: "#ORD-1234",
+    customerName: "Priya Sharma",
+    productName: "Golden Chain | Ring",
+    value: "₹ 2,34,500",
+    status: "Delivered",
+    date: "24 Jun 2026",
+  },
+  {
+    id: "#ORD-1234",
+    customerName: "Priya Sharma",
+    productName: "Golden Chain | Ring",
+    value: "₹ 2,34,500",
+    status: "Pending",
+    date: "24 Jun 2026",
+  },
+  {
+    id: "#ORD-1234",
+    customerName: "Priya Sharma",
+    productName: "Golden Chain | Ring",
+    value: "₹ 2,34,500",
+    status: "Processing",
+    date: "24 Jun 2026",
+  },
+  {
+    id: "#ORD-1234",
+    customerName: "Priya Sharma",
+    productName: "Golden Chain | Ring",
+    value: "₹ 2,34,500",
+    status: "Cancelled",
+    date: "24 Jun 2026",
+  },
+];

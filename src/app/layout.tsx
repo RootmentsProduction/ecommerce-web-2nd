@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { CartProvider } from "../context/CartContext";
-import Header from "../components/layout/Header";
-import Footer from "../components/layout/Footer";
-import ServiceBenefitsBar from "../components/layout/ServiceBenefitsBar";
+import ClientLayoutWrapper from "../components/layout/ClientLayoutWrapper";
 
 export const metadata: Metadata = {
   title: "JEWEL | Handcrafted Luxury & Premium Fine Jewellery",
@@ -18,16 +15,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full scroll-smooth">
       <body className="min-h-full flex flex-col font-sans bg-white text-neutral-900 selection:bg-gold-200 selection:text-neutral-900">
-        <CartProvider>
-          <Header />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <ServiceBenefitsBar />
-          <Footer />
-        </CartProvider>
+        <ClientLayoutWrapper>
+          {children}
+        </ClientLayoutWrapper>
       </body>
     </html>
   );
 }
+
 
