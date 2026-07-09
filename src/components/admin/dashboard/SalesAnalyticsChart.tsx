@@ -5,6 +5,7 @@ import { monthlySalesData } from "@/data/admin/dashboard";
 
 export default function SalesAnalyticsChart() {
   const [activeFilter, setActiveFilter] = useState("Month");
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   // Chart configuration
   const width = 900;
@@ -58,10 +59,8 @@ export default function SalesAnalyticsChart() {
   // Y-axis grid values
   const yGridValues = [100, 80, 60, 40, 20, 0];
 
-  // Specific highlighted index (Aug is index 7)
-  const highlightedIndex = 7;
-  const highlightRevPt = pointsRevenue[highlightedIndex];
-  const highlightProfPt = pointsProfit[highlightedIndex];
+  const highlightRevPt = hoveredIndex !== null ? pointsRevenue[hoveredIndex] : null;
+  const highlightProfPt = hoveredIndex !== null ? pointsProfit[hoveredIndex] : null;
 
   return (
     <div className="bg-white border border-[#E5E5E5] rounded-[12px] p-6 shadow-sm">
@@ -176,8 +175,21 @@ export default function SalesAnalyticsChart() {
               className="opacity-90"
             />
 
-            {/* Highlighted Aug points (dots with outer glow) */}
-            {highlightRevPt && (
+            {/* Vertical alignment indicator line (visible only on hover) */}
+            {hoveredIndex !== null && highlightRevPt && (
+              <line
+                x1={highlightRevPt[0]}
+                y1={paddingTop}
+                x2={highlightRevPt[0]}
+                y2={paddingTop + chartHeight}
+                stroke="#D4D4D4"
+                strokeWidth="1.2"
+                strokeDasharray="4,4"
+              />
+            )}
+
+            {/* Highlighted points (dots with outer glow) - visible only on hover */}
+            {hoveredIndex !== null && highlightRevPt && (
               <g>
                 <circle
                   cx={highlightRevPt[0]}
@@ -198,7 +210,7 @@ export default function SalesAnalyticsChart() {
               </g>
             )}
 
-            {highlightProfPt && (
+            {hoveredIndex !== null && highlightProfPt && (
               <g>
                 <circle
                   cx={highlightProfPt[0]}
@@ -218,6 +230,27 @@ export default function SalesAnalyticsChart() {
                 />
               </g>
             )}
+
+            {/* Invisible vertical columns to capture cursor hover positions */}
+            {monthlySalesData.map((d, i) => {
+              const xCenter = paddingLeft + (i * chartWidth) / (monthlySalesData.length - 1);
+              const colWidth = chartWidth / (monthlySalesData.length - 1);
+              const rectX = xCenter - colWidth / 2;
+
+              return (
+                <rect
+                  key={i}
+                  x={rectX}
+                  y={paddingTop}
+                  width={colWidth}
+                  height={chartHeight}
+                  fill="transparent"
+                  className="cursor-crosshair"
+                  onMouseEnter={() => setHoveredIndex(i)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                />
+              );
+            })}
           </svg>
         </div>
       </div>
