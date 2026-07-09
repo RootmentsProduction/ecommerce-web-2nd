@@ -19,7 +19,7 @@ export default function ClientLayoutWrapper({ children }: ClientLayoutWrapperPro
 
   if (isAdmin) {
     return (
-      <div className="min-h-screen bg-[#F8F8F8] text-neutral-900 font-sans">
+      <div className="min-h-screen bg-[#F8F8F8] text-neutral-900 admin-dashboard-root">
         {children}
       </div>
     );

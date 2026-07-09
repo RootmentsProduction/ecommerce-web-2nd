@@ -186,15 +186,18 @@ export default function AdminSidebar() {
         {/* Brand Area */}
         <div className="h-20 flex items-center justify-between px-6 border-b border-neutral-800">
           <div className="flex items-center space-x-2">
-            {/* Gold Asterisk/Star Logo */}
-            <svg className="w-6 h-6 text-[#C99213]" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2l1.6 4.9H19l-4 3 1.5 4.9-4.2-3.1-4.2 3.1 1.5-4.9-4-3h5.4z" />
+            {/* Gold Asterisk Logo */}
+            <svg className="w-5 h-5 text-[#C99213]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="12" y1="4" x2="12" y2="20" />
+              <line x1="4" y1="12" x2="20" y2="12" />
+              <line x1="6.34" y1="6.34" x2="17.66" y2="17.66" />
+              <line x1="6.34" y1="17.66" x2="17.66" y2="6.34" />
             </svg>
-            <div className="flex flex-col">
-              <span className="font-semibold text-white text-sm tracking-wide leading-tight">
+            <div className="flex flex-col space-y-1.5">
+              <span className="admin-brand-text text-white">
                 Jewelry by Zorucci
               </span>
-              <span className="text-[9px] text-[#C99213] tracking-widest uppercase font-bold">
+              <span className="admin-brand-text text-[#C99213]">
                 Admin Dashboard
               </span>
             </div>
