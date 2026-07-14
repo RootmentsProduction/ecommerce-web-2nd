@@ -1,0 +1,58 @@
+import { AdminCategory } from "@/types/admin";
+
+export const adminCategories: AdminCategory[] = [
+  {
+    id: "cat-1",
+    name: "Earrings",
+    slug: "earrings",
+    description: "Premium handcrafted gold and silver earrings, studs, and drops.",
+    status: "Active",
+    productCount: 154,
+    displayOrder: 1,
+  },
+  {
+    id: "cat-2",
+    name: "Necklaces",
+    slug: "necklaces",
+    description: "Chains, lockets, and bridal neckpieces curated for elegant profiles.",
+    status: "Active",
+    productCount: 210,
+    displayOrder: 2,
+  },
+  {
+    id: "cat-3",
+    name: "Rings",
+    slug: "rings",
+    description: "Solitaires, wedding bands, and casual everyday rings.",
+    status: "Active",
+    productCount: 345,
+    displayOrder: 3,
+  },
+  {
+    id: "cat-4",
+    name: "Bracelets",
+    slug: "bracelets",
+    description: "Delicate wristwear, cuffs, and heavy gold bangles.",
+    status: "Active",
+    productCount: 88,
+    displayOrder: 4,
+  },
+  {
+    id: "cat-5",
+    name: "Bridal",
+    slug: "bridal",
+    description: "Heavy wedding jewelry sets with diamonds and intricate filigree.",
+    status: "Active",
+    productCount: 42,
+    displayOrder: 5,
+  },
+  {
+    id: "cat-6",
+    name: "Everyday",
+    slug: "everyday",
+    description: "Minimalist items styled for everyday office and casual wear.",
+    status: "Draft",
+    productCount: 196,
+    displayOrder: 6,
+  },
+];

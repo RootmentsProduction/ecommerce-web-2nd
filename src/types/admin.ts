@@ -6,7 +6,14 @@ export type StatusType =
   | "Cancelled" 
   | "Active" 
   | "Low Stock" 
-  | "Out of Stock";
+  | "Out of Stock"
+  | "Pending Payment"
+  | "Confirmed"
+  | "Packed"
+  | "Returned"
+  | "Draft"
+  | "Hidden"
+  | "Archived";
 
 export interface AdminStat {
   id: string;
@@ -74,4 +81,158 @@ export interface AdminNavItem {
 export interface NavSection {
   sectionTitle: string;
   items: AdminNavItem[];
+}
+
+// New UI Types
+
+export interface AdminProductMedia {
+  id: string;
+  url: string;
+  isPrimary: boolean;
+}
+
+export interface AdminProductVariant {
+  id: string;
+  name: string; // e.g. "Gold / 16 inch"
+  sku: string;
+  price: string;
+  stock: number;
+  status: StatusType;
+}
+
+export interface AdminProductFormData {
+  name: string;
+  sku: string;
+  slug: string;
+  shortDescription: string;
+  description: string;
+  category: string;
+  gender: string;
+  occasion: string;
+  material: string;
+  sellingPrice: string;
+  mrp: string;
+  discountPercent: number;
+  taxCategory: string;
+  costPrice?: string;
+  trackInventory: boolean;
+  initialStock: number;
+  minStock: number;
+  allowBackorder: boolean;
+  status: "Draft" | "Active";
+  isFeatured: boolean;
+  isNewArrival: boolean;
+  isBestSeller: boolean;
+  showOnHomepage: boolean;
+  publishDate?: string;
+  media: AdminProductMedia[];
+  variants: AdminProductVariant[];
+}
+
+export interface AdminCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  status: "Active" | "Draft" | "Hidden";
+  productCount: number;
+  displayOrder: number;
+  image?: string;
+}
+
+export interface InventoryDetails {
+  productId: string;
+  productName: string;
+  sku: string;
+  category: string;
+  image?: string;
+  currentStock: number;
+  minRequired: number;
+  availableStock: number;
+  reservedStock: number;
+  incomingStock: number;
+  status: StatusType;
+  variantsStock?: AdminProductVariant[];
+}
+
+export interface StockAdjustment {
+  productId: string;
+  variantId?: string;
+  adjustmentType: "Add Stock" | "Remove Stock" | "Set Exact Quantity" | "Damaged Item" | "Returned Item" | "Manual Correction";
+  quantity: number;
+  reason: string;
+  referenceNumber?: string;
+  notes?: string;
+}
+
+export interface StockTransaction {
+  id: string;
+  date: string;
+  productId: string;
+  productName: string;
+  sku: string;
+  variant?: string;
+  change: string; // e.g. "+15"
+  before: number;
+  after: number;
+  reason: string;
+  reference: string;
+  changedBy: string;
+  isAutomatic?: boolean;
+}
+
+export interface AdminAddress {
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+}
+
+export interface AdminOrderItem {
+  productId: string;
+  productName: string;
+  sku: string;
+  variant?: string;
+  quantity: number;
+  unitPrice: string;
+  totalPrice: string;
+  image?: string;
+}
+
+export interface PaymentDetails {
+  method: string;
+  status: string;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  subtotal: string;
+  shipping: string;
+  tax: string;
+  discount: string;
+  grandTotal: string;
+}
+
+export interface OrderTimelineEvent {
+  title: string;
+  description: string;
+  date?: string;
+  status: "completed" | "current" | "upcoming";
+}
+
+export interface AdminOrderDetails {
+  id: string;
+  date: string;
+  status: StatusType;
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string;
+  shippingAddress: AdminAddress;
+  billingAddress: AdminAddress;
+  items: AdminOrderItem[];
+  payment: PaymentDetails;
+  stockDeductionStatus: string;
+  stockDeductedQty: number;
+  stockDeductionTime?: string;
+  stockDeductionRef?: string;
+  timeline: OrderTimelineEvent[];
 }

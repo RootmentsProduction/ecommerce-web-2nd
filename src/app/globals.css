@@ -1,16 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Questrial&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap');
-
 @import "tailwindcss";
 
 :root {
   --background: #ffffff;
   --foreground: #111111;
-  --font-questrial: 'Questrial', sans-serif;
-  --font-raleway: 'Raleway', sans-serif;
-  --font-stacksans: 'Stack Sans Headline', 'Questrial', sans-serif;
-  --font-googlesans: 'Google Sans Flex', 'Google Sans', sans-serif;
+  --font-questrial: var(--font-questrial), 'Questrial', sans-serif;
+  --font-raleway: var(--font-raleway), 'Raleway', sans-serif;
+  --font-stacksans: var(--font-instrument-sans), 'Instrument Sans', sans-serif;
+  --font-googlesans: var(--font-instrument-sans), 'Instrument Sans', sans-serif;
 }
 
 @theme {

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import AdminTopbar from "@/components/admin/layout/AdminTopbar";
 import AdminTabs from "@/components/admin/shared/AdminTabs";
 import StatusBadge from "@/components/admin/shared/StatusBadge";
@@ -114,19 +115,23 @@ export default function AdminOrdersPage() {
               </thead>
               <tbody className="divide-y divide-neutral-100">
                 {filteredOrders.length > 0 ? (
-                  filteredOrders.map((order, idx) => (
-                    <tr key={idx} className="hover:bg-neutral-50/50 transition-colors">
-                      {/* Order ID */}
-                      <td className="py-4 px-6 text-xs font-bold text-[#C99213] cursor-pointer hover:underline">
-                        {order.id}
-                      </td>
-                      
-                      {/* Customer Name */}
-                      <td className="py-4 px-6 text-xs font-medium text-neutral-800">
-                        {order.customerName}
-                      </td>
+                  filteredOrders.map((order, idx) => {
+                    const urlId = order.id.replace("#", "").trim();
+                    return (
+                      <tr key={idx} className="hover:bg-neutral-50/50 transition-colors">
+                        {/* Order ID */}
+                        <td className="py-4 px-6 text-xs font-bold text-[#C99213] cursor-pointer hover:underline">
+                          <Link href={`/admin/orders/${urlId}`}>
+                            {order.id}
+                          </Link>
+                        </td>
 
-                      {/* Product details */}
+                        {/* Customer Name */}
+                        <td className="py-4 px-6 text-xs font-medium text-neutral-800">
+                          {order.customerName}
+                        </td>
+
+                        {/* Product details */}
                       <td className="py-4 px-6 text-xs text-neutral-500 font-medium">
                         {order.productName}
                       </td>
@@ -146,7 +151,8 @@ export default function AdminOrdersPage() {
                         {order.date}
                       </td>
                     </tr>
-                  ))
+                  );
+                })
                 ) : (
                   <tr>
                     <td colSpan={6} className="py-8 text-center text-xs text-neutral-400 font-medium">

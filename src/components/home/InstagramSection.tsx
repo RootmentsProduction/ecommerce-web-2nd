@@ -1,11 +1,31 @@
 "use client";
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 import videoFiles from '../../data/videos.json';
 
 export default function InstagramSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const container = sectionRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const container = scrollRef.current;
@@ -99,7 +119,7 @@ export default function InstagramSection() {
   }
 
   return (
-    <section className="py-12 bg-white relative sm:py-16">
+    <section ref={sectionRef} className="py-12 bg-white relative sm:py-16">
       
       {/* Desktop Section Header (hidden on mobile) */}
       <div className="hidden sm:block w-full px-[6.5%] mx-auto max-w-none relative z-10 mb-8">
@@ -182,15 +202,19 @@ export default function InstagramSection() {
                 key={idx}
                 className="relative aspect-[9/16] w-[180px] sm:w-[240px] md:w-[280px] flex-shrink-0 overflow-hidden bg-neutral-100 rounded-lg group shadow-sm hover:shadow-md transition-shadow duration-300"
               >
-                <video
-                  src={videoSrc}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="metadata"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
+                {isInView ? (
+                  <video
+                    src={videoSrc}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="metadata"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-neutral-100 animate-pulse" />
+                )}
                 {/* Instagram/Reel Icon Overlay */}
                 <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
                   <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 transform scale-90 group-hover:scale-100 transition-all duration-300">
@@ -222,15 +246,19 @@ export default function InstagramSection() {
                 key={idx}
                 className="relative aspect-[9/16] w-[70vw] min-w-[200px] max-w-[240px] flex-shrink-0 overflow-hidden bg-neutral-100 rounded-lg shadow-sm"
               >
-                <video
-                  src={videoSrc}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="metadata"
-                  className="w-full h-full object-cover"
-                />
+                {isInView ? (
+                  <video
+                    src={videoSrc}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="metadata"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-neutral-100 animate-pulse" />
+                )}
               </div>
             );
           })}

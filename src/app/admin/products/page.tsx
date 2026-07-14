@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import AdminTopbar from "@/components/admin/layout/AdminTopbar";
 import AdminTabs from "@/components/admin/shared/AdminTabs";
 import StatusBadge from "@/components/admin/shared/StatusBadge";
@@ -51,7 +52,7 @@ export default function AdminProductsPage() {
             <h1 className="text-xl font-bold tracking-wider text-neutral-900 uppercase font-sans">
               PRODUCTS
             </h1>
-            <p className="text-[11px] text-neutral-400 mt-1 font-medium">
+            <p className="text-[11px] text-neutral-450 mt-1 font-medium">
               1,234 Total products in catalogue
             </p>
           </div>
@@ -60,7 +61,7 @@ export default function AdminProductsPage() {
             {/* Search Input inside the body */}
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg className="w-4 h-4 text-neutral-450" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-neutral-455" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </span>
@@ -69,15 +70,15 @@ export default function AdminProductsPage() {
                 placeholder="Search Product..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-56 pl-9 pr-4 py-2 border border-neutral-200 rounded-full bg-white text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 placeholder-neutral-400"
+                className="w-56 pl-9 pr-4 py-2 border border-neutral-200 rounded-full bg-white text-xs outline-none focus:border-[#C99213] transition-all text-neutral-805 placeholder-neutral-400"
               />
             </div>
 
             {/* Add Product Button */}
-            <button className="flex items-center space-x-2 px-5 py-2.5 bg-neutral-950 hover:bg-neutral-850 text-white rounded-full text-xs font-semibold tracking-wide transition-colors cursor-pointer">
+            <Link href="/admin/products/new" className="flex items-center space-x-2 px-5 py-2.5 bg-neutral-950 hover:bg-neutral-850 text-white rounded-full text-xs font-semibold tracking-wide transition-colors cursor-pointer">
               <span className="text-[#C99213] font-bold text-sm leading-none">+</span>
               <span>Add Product</span>
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -103,57 +104,73 @@ export default function AdminProductsPage() {
                   <th className="py-4 px-6 font-semibold">PRICE</th>
                   <th className="py-4 px-6 font-semibold">STOCK</th>
                   <th className="py-4 px-6 font-semibold">STATUS</th>
+                  <th className="py-4 px-6 font-semibold text-right">ACTION</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100">
                 {filteredProducts.length > 0 ? (
-                  filteredProducts.map((product, idx) => (
-                    <tr key={idx} className="hover:bg-neutral-50/50 transition-colors">
-                      {/* SKU */}
-                      <td className="py-4 px-6 text-xs font-bold text-[#C99213] cursor-pointer hover:underline">
-                        {product.sku}
-                      </td>
+                  filteredProducts.map((product, idx) => {
+                    const urlId = product.sku.replace("#", "").trim();
+                    return (
+                      <tr key={idx} className="hover:bg-neutral-50/50 transition-colors">
+                        {/* SKU */}
+                        <td className="py-4 px-6 text-xs font-bold text-[#C99213] cursor-pointer hover:underline">
+                          <Link href={`/admin/products/${urlId}`}>
+                            {product.sku}
+                          </Link>
+                        </td>
 
-                      {/* Product Thumbnail + Name */}
-                      <td className="py-4 px-6">
-                        <div className="flex items-center space-x-3">
-                          {/* Premium CSS gradient placeholder representing jewelry thumbnail */}
-                          <div className="w-8 h-8 rounded-md bg-gradient-to-tr from-[#f4efdb] via-[#e8dbb4] to-[#c59b27]/40 border border-[#e8dbb4] flex items-center justify-center flex-shrink-0 relative overflow-hidden">
-                            <svg className="w-4 h-4 text-[#8c6a16]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                              <circle cx="12" cy="14" r="5" />
-                              <path d="M12 9V3m-3 2h6" />
-                            </svg>
+                        {/* Product Thumbnail + Name */}
+                        <td className="py-4 px-6">
+                          <div className="flex items-center space-x-3">
+                            {/* Premium CSS gradient placeholder representing jewelry thumbnail */}
+                            <div className="w-8 h-8 rounded-md bg-gradient-to-tr from-[#f4efdb] via-[#e8dbb4] to-[#c59b27]/40 border border-[#e8dbb4] flex items-center justify-center flex-shrink-0 relative overflow-hidden">
+                              <svg className="w-4 h-4 text-[#8c6a16]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                                <circle cx="12" cy="14" r="5" />
+                                <path d="M12 9V3m-3 2h6" />
+                              </svg>
+                            </div>
+                            <Link href={`/admin/products/${urlId}`} className="text-xs font-semibold text-neutral-800 whitespace-nowrap hover:text-[#C99213] hover:underline">
+                              {product.name}
+                            </Link>
                           </div>
-                          <span className="text-xs font-semibold text-neutral-800 whitespace-nowrap">
-                            {product.name}
-                          </span>
-                        </div>
-                      </td>
+                        </td>
 
-                      {/* Category */}
-                      <td className="py-4 px-6 text-xs text-neutral-400 font-semibold whitespace-nowrap">
-                        {product.category}
-                      </td>
+                        {/* Category */}
+                        <td className="py-4 px-6 text-xs text-neutral-400 font-semibold whitespace-nowrap">
+                          {product.category}
+                        </td>
 
-                      {/* Price */}
-                      <td className="py-4 px-6 text-xs font-bold text-neutral-900">
-                        {product.price}
-                      </td>
+                        {/* Price */}
+                        <td className="py-4 px-6 text-xs font-bold text-neutral-900">
+                          {product.price}
+                        </td>
 
-                      {/* Stock Level */}
-                      <td className="py-4 px-6 text-xs font-semibold text-neutral-600">
-                        {product.stock}
-                      </td>
+                        {/* Stock Level */}
+                        <td className="py-4 px-6 text-xs font-semibold text-neutral-600">
+                          {product.stock}
+                        </td>
 
-                      {/* Status */}
-                      <td className="py-4 px-6">
-                        <StatusBadge status={product.status} />
-                      </td>
-                    </tr>
-                  ))
+                        {/* Status */}
+                        <td className="py-4 px-6">
+                          <StatusBadge status={product.status} />
+                        </td>
+
+                        {/* Action buttons */}
+                        <td className="py-4 px-6 text-right space-x-3 whitespace-nowrap text-xs font-semibold">
+                          <Link href={`/admin/products/${urlId}`} className="text-neutral-500 hover:text-neutral-900">
+                            View
+                          </Link>
+                          <Link href={`/admin/products/${urlId}/edit`} className="text-[#C99213] hover:text-[#a9831e]">
+                            Edit
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
-                    <td colSpan={6} className="py-8 text-center text-xs text-neutral-400 font-medium">
+                    <td colSpan={7} className="py-8 text-center text-xs text-neutral-400 font-medium">
                       No products found.
                     </td>
                   </tr>

@@ -24,6 +24,20 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
         return "bg-white text-[#E65100] border border-[#FFB74D]";
       case "Out of Stock":
         return "bg-white text-[#C62828] border border-[#E57373]";
+      case "Pending Payment":
+        return "bg-[#FFF8E1] text-[#F57F17] border border-[#FFE082]/40";
+      case "Confirmed":
+        return "bg-[#E8F5E9] text-[#1B5E20] border border-[#A5D6A7]/40";
+      case "Packed":
+        return "bg-[#E0F2F1] text-[#00695C] border border-[#80CBC4]/40";
+      case "Returned":
+        return "bg-[#ECEFF1] text-[#37474F] border border-[#CFD8DC]/40";
+      case "Draft":
+        return "bg-[#F5F5F5] text-[#757575] border border-[#BDBDBD]/40";
+      case "Hidden":
+        return "bg-[#FAFAFA] text-[#9E9E9E] border border-[#E0E0E0]";
+      case "Archived":
+        return "bg-[#EEEEEE] text-[#424242] border border-[#BDBDBD]/30";
       default:
         return "bg-neutral-100 text-neutral-600 border border-neutral-200";
     }

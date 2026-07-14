@@ -17,7 +17,6 @@ export default function CartPage() {
     .slice(0, 4);
 
   // Summary figures
-  const shipping = 0;
   const tax = 189; // Static matching the screenshot
   const total = cartSubtotal + tax;
 

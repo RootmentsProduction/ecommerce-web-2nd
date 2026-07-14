@@ -32,6 +32,7 @@ export default function AdminSidebar() {
           ],
         },
         { title: "Products", href: "/admin/products", iconName: "products" },
+        { title: "Categories", href: "/admin/categories", iconName: "categories" },
         { title: "Purchases", href: "#", iconName: "purchases" },
         { title: "Sales", href: "#", iconName: "sales" },
       ],
@@ -40,7 +41,15 @@ export default function AdminSidebar() {
       sectionTitle: "MANAGEMENT",
       items: [
         { title: "Customers", href: "/admin/customers", iconName: "customers" },
-        { title: "Inventory", href: "/admin/inventory", iconName: "inventory" },
+        {
+          title: "Inventory",
+          href: "/admin/inventory",
+          iconName: "inventory",
+          subItems: [
+            { title: "Overview", href: "/admin/inventory" },
+            { title: "Transactions", href: "/admin/inventory/transactions" },
+          ],
+        },
         { title: "Vendors", href: "/admin/vendors", iconName: "vendors" },
       ],
     },
@@ -95,6 +104,12 @@ export default function AdminSidebar() {
         return (
           <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+        );
+      case "categories":
+        return (
+          <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
           </svg>
         );
       case "purchases":
