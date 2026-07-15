@@ -5,9 +5,11 @@ import Link from "next/link";
 import AdminTopbar from "@/components/admin/layout/AdminTopbar";
 import AdminTabs from "@/components/admin/shared/AdminTabs";
 import StatusBadge from "@/components/admin/shared/StatusBadge";
-import { adminOrders } from "@/data/admin/orders";
+import { getOrders } from "@/services/orders.service";
+import { AdminOrder } from "@/types/admin";
 
 export default function AdminOrdersPage() {
+  const [orders, setOrders] = useState<AdminOrder[]>([]);
   const [activeTab, setActiveTab] = useState("All Orders");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -23,8 +25,12 @@ export default function AdminOrdersPage() {
     "Returns",
   ];
 
+  React.useEffect(() => {
+    getOrders().then(setOrders);
+  }, []);
+
   // Filter orders based on selected tab and search query
-  const filteredOrders = adminOrders.filter((order) => {
+  const filteredOrders = orders.filter((order) => {
     // Tab filter
     if (activeTab !== "All Orders") {
       if (activeTab === "Returns") {

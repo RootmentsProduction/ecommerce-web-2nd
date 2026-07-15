@@ -5,26 +5,29 @@ import Link from "next/link";
 import AdminTopbar from "@/components/admin/layout/AdminTopbar";
 import AdminTabs from "@/components/admin/shared/AdminTabs";
 import StatusBadge from "@/components/admin/shared/StatusBadge";
-import { adminProducts } from "@/data/admin/products";
+import { getAdminProducts } from "@/services/products.service";
+import { AdminProduct } from "@/types/admin";
 
 export default function AdminProductsPage() {
-  const [activeTab, setActiveTab] = useState("All Orders"); // Matches order-like tabs from screenshot
+  const [productList, setProductList] = useState<AdminProduct[]>([]);
+  const [activeTab, setActiveTab] = useState("All Products");
   const [searchQuery, setSearchQuery] = useState("");
 
   const breadcrumbs = [{ label: "Products" }];
 
-  const tabs = [
-    "All Orders",
-    "Pending",
-    "Processing",
-    "Shipped",
-    "Delivered",
-    "Cancelled",
-    "Returns",
-  ];
+  const tabs = ["All Products", "Active", "Draft", "Archived"];
 
-  // Filter products by search query
-  const filteredProducts = adminProducts.filter((product) => {
+  React.useEffect(() => {
+    getAdminProducts().then(setProductList);
+  }, []);
+
+  // Filter products by search query and publication status
+  const filteredProducts = productList.filter((product) => {
+    // Tab filter
+    if (activeTab === "Active" && product.publicationStatus !== "Active") return false;
+    if (activeTab === "Draft" && product.publicationStatus !== "Draft") return false;
+    if (activeTab === "Archived" && product.publicationStatus !== "Archived") return false;
+
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       return (
@@ -38,7 +41,7 @@ export default function AdminProductsPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F8F8F8]">
-      {/* Topbar (No search input here, since it is in the main body area in the screenshot) */}
+      {/* Topbar */}
       <AdminTopbar
         breadcrumbItems={breadcrumbs}
         showSearch={false}
@@ -46,22 +49,22 @@ export default function AdminProductsPage() {
 
       {/* Main Content */}
       <div className="flex-1 p-6 md:p-8 space-y-6 max-w-7xl w-full mx-auto">
-        {/* Page Title & Search + Add button */}
+        {/* Page Title & Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-xl font-bold tracking-wider text-neutral-900 uppercase font-sans">
               PRODUCTS
             </h1>
             <p className="text-[11px] text-neutral-450 mt-1 font-medium">
-              1,234 Total products in catalogue
+              {productList.length} Total products in catalogue
             </p>
           </div>
 
           <div className="flex items-center space-x-3">
-            {/* Search Input inside the body */}
+            {/* Search Input */}
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg className="w-4 h-4 text-neutral-455" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </span>
@@ -70,7 +73,7 @@ export default function AdminProductsPage() {
                 placeholder="Search Product..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-56 pl-9 pr-4 py-2 border border-neutral-200 rounded-full bg-white text-xs outline-none focus:border-[#C99213] transition-all text-neutral-805 placeholder-neutral-400"
+                className="w-56 pl-9 pr-4 py-2 border border-neutral-200 rounded-full bg-white text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 placeholder-neutral-400"
               />
             </div>
 
@@ -101,9 +104,10 @@ export default function AdminProductsPage() {
                   <th className="py-4 px-6 font-semibold">SKU</th>
                   <th className="py-4 px-6 font-semibold">PRODUCT</th>
                   <th className="py-4 px-6 font-semibold">CATEGORY</th>
-                  <th className="py-4 px-6 font-semibold">PRICE</th>
-                  <th className="py-4 px-6 font-semibold">STOCK</th>
-                  <th className="py-4 px-6 font-semibold">STATUS</th>
+                  <th className="py-4 px-6 font-semibold">SELLING PRICE</th>
+                  <th className="py-4 px-6 font-semibold">CURRENT STOCK</th>
+                  <th className="py-4 px-6 font-semibold">STOCK STATUS</th>
+                  <th className="py-4 px-6 font-semibold">PUBLICATION STATUS</th>
                   <th className="py-4 px-6 font-semibold text-right">ACTION</th>
                 </tr>
               </thead>
@@ -123,7 +127,6 @@ export default function AdminProductsPage() {
                         {/* Product Thumbnail + Name */}
                         <td className="py-4 px-6">
                           <div className="flex items-center space-x-3">
-                            {/* Premium CSS gradient placeholder representing jewelry thumbnail */}
                             <div className="w-8 h-8 rounded-md bg-gradient-to-tr from-[#f4efdb] via-[#e8dbb4] to-[#c59b27]/40 border border-[#e8dbb4] flex items-center justify-center flex-shrink-0 relative overflow-hidden">
                               <svg className="w-4 h-4 text-[#8c6a16]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                                 <circle cx="12" cy="14" r="5" />
@@ -137,23 +140,28 @@ export default function AdminProductsPage() {
                         </td>
 
                         {/* Category */}
-                        <td className="py-4 px-6 text-xs text-neutral-400 font-semibold whitespace-nowrap">
+                        <td className="py-4 px-6 text-xs text-neutral-450 font-semibold whitespace-nowrap">
                           {product.category}
                         </td>
 
-                        {/* Price */}
+                        {/* Selling Price */}
                         <td className="py-4 px-6 text-xs font-bold text-neutral-900">
                           {product.price}
                         </td>
 
-                        {/* Stock Level */}
+                        {/* Current Stock */}
                         <td className="py-4 px-6 text-xs font-semibold text-neutral-600">
                           {product.stock}
                         </td>
 
-                        {/* Status */}
+                        {/* Stock Status */}
                         <td className="py-4 px-6">
-                          <StatusBadge status={product.status} />
+                          <StatusBadge status={product.stockStatus} />
+                        </td>
+
+                        {/* Publication Status */}
+                        <td className="py-4 px-6">
+                          <StatusBadge status={product.publicationStatus} />
                         </td>
 
                         {/* Action buttons */}
@@ -164,13 +172,16 @@ export default function AdminProductsPage() {
                           <Link href={`/admin/products/${urlId}/edit`} className="text-[#C99213] hover:text-[#a9831e]">
                             Edit
                           </Link>
+                          <Link href={`/admin/inventory/${urlId}/adjust`} className="text-neutral-500 hover:text-neutral-950 font-bold">
+                            Adjust Stock
+                          </Link>
                         </td>
                       </tr>
                     );
                   })
                 ) : (
                   <tr>
-                    <td colSpan={7} className="py-8 text-center text-xs text-neutral-400 font-medium">
+                    <td colSpan={8} className="py-8 text-center text-xs text-neutral-400 font-medium">
                       No products found.
                     </td>
                   </tr>

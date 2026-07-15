@@ -7,6 +7,7 @@ export type StatusType =
   | "Active" 
   | "Low Stock" 
   | "Out of Stock"
+  | "In Stock"
   | "Pending Payment"
   | "Confirmed"
   | "Packed"
@@ -38,7 +39,9 @@ export interface AdminProduct {
   category: string;
   price: string;
   stock: number;
-  status: StatusType;
+  status?: StatusType; // Keep for fallback compatibility
+  stockStatus: "In Stock" | "Low Stock" | "Out of Stock";
+  publicationStatus: "Active" | "Draft" | "Archived";
   image?: string;
 }
 
@@ -89,6 +92,7 @@ export interface AdminProductMedia {
   id: string;
   url: string;
   isPrimary: boolean;
+  altText?: string;
 }
 
 export interface AdminProductVariant {
@@ -107,24 +111,54 @@ export interface AdminProductFormData {
   shortDescription: string;
   description: string;
   category: string;
+  subcategory?: string;
+  brand?: string;
+  collection?: string;
   gender: string;
   occasion: string;
   material: string;
+  purity?: string;
+  hsnCode?: string;
+  unit?: string;
+  size?: string;
+  isReturnable?: boolean;
+  
+  // Sales Info
+  isSellable?: boolean;
   sellingPrice: string;
   mrp: string;
+  offerPrice?: string;
   discountPercent: number;
+  taxPreference?: string; // "Taxable" | "Exempt"
+  intraStateTaxRate?: string;
+  interStateTaxRate?: string;
+  priceIncludesGst?: boolean;
   taxCategory: string;
+  
+  // Purchase Info
+  isPurchasable?: boolean;
   costPrice?: string;
+  preferredVendor?: string;
+  purchaseNotes?: string;
+  
+  // Inventory
   trackInventory: boolean;
-  initialStock: number;
-  minStock: number;
+  initialStock: number; // Will represent Opening Stock on create
+  minStock: number; // Will represent Minimum Required Stock
+  reorderPoint?: number;
   allowBackorder: boolean;
+  
+  // Visibility and SEO
   status: "Draft" | "Active";
   isFeatured: boolean;
   isNewArrival: boolean;
   isBestSeller: boolean;
   showOnHomepage: boolean;
   publishDate?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoSlug?: string;
+  
   media: AdminProductMedia[];
   variants: AdminProductVariant[];
 }
@@ -179,6 +213,7 @@ export interface StockTransaction {
   reference: string;
   changedBy: string;
   isAutomatic?: boolean;
+  transactionType: "Opening Stock" | "Stock Added" | "Customer Sale" | "Damaged Item" | "Customer Return" | "Manual Correction";
 }
 
 export interface AdminAddress {
@@ -234,5 +269,9 @@ export interface AdminOrderDetails {
   stockDeductedQty: number;
   stockDeductionTime?: string;
   stockDeductionRef?: string;
+  stockDeductionProduct?: string;
+  stockDeductionVariant?: string;
+  stockDeductionBeforeStock?: number;
+  stockDeductionAfterStock?: number;
   timeline: OrderTimelineEvent[];
 }

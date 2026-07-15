@@ -3,15 +3,22 @@
 import React, { useState } from "react";
 import AdminTopbar from "@/components/admin/layout/AdminTopbar";
 import AdminStatCard from "@/components/admin/shared/AdminStatCard";
-import { customerStats, adminCustomers } from "@/data/admin/customers";
+import { getCustomers } from "@/services/orders.service";
+import { customerStatsFixture } from "@/data/fixtures/customers";
+import { AdminCustomer } from "@/types/admin";
 
 export default function AdminCustomersPage() {
+  const [customers, setCustomers] = useState<AdminCustomer[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const breadcrumbs = [{ label: "Dashboard" }];
 
+  React.useEffect(() => {
+    getCustomers().then(setCustomers);
+  }, []);
+
   // Filter customers by name or email or mobile
-  const filteredCustomers = adminCustomers.filter((customer) => {
+  const filteredCustomers = customers.filter((customer) => {
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       return (
@@ -40,14 +47,14 @@ export default function AdminCustomersPage() {
           <h1 className="text-xl font-bold tracking-wider text-neutral-900 uppercase font-sans">
             CUSTOMERS
           </h1>
-          <p className="text-[11px] text-neutral-400 mt-1 font-medium">
-            1,234 Total products in catalogue
+          <p className="text-[11px] text-neutral-450 mt-1 font-medium">
+            {customers.length} Registered customers
           </p>
         </div>
 
         {/* Customer Stats Row (4 Cards) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {customerStats.map((stat) => (
+          {customerStatsFixture.map((stat) => (
             <AdminStatCard
               key={stat.id}
               title={stat.title}

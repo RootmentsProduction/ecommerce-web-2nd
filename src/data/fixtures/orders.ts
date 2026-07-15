@@ -1,6 +1,25 @@
-import { AdminOrderDetails } from "@/types/admin";
+import { AdminOrder, AdminOrderDetails } from "@/types/admin";
 
-export const adminOrdersDetail: Record<string, AdminOrderDetails> = {
+export const adminOrdersFixture: AdminOrder[] = [
+  {
+    id: "#ORD-1234",
+    customerName: "Priya Sharma",
+    productName: "Golden Chain Ring",
+    value: "₹2,34,500",
+    status: "Delivered",
+    date: "24 Jun 2026",
+  },
+  {
+    id: "#ORD-5678",
+    customerName: "Aarav Mehta",
+    productName: "Classic Diamond Studs",
+    value: "₹1,20,000",
+    status: "Pending Payment",
+    date: "14 Jul 2026",
+  },
+];
+
+export const adminOrdersDetailFixture: Record<string, AdminOrderDetails> = {
   "ORD-1234": {
     id: "ORD-1234",
     date: "24 Jun 2026 11:24 AM",
@@ -24,15 +43,15 @@ export const adminOrdersDetail: Record<string, AdminOrderDetails> = {
     },
     items: [
       {
-        productId: "SKU-OO1",
-        productName: "Golden Chain | Ring",
-        sku: "SKU-OO1",
+        productId: "SKU-001",
+        productName: "Golden Chain Ring",
+        sku: "SKU-001",
         variant: "Gold / 16 inch",
         quantity: 2,
         unitPrice: "₹1,17,250",
         totalPrice: "₹2,34,500",
-        image: "/images/placeholder-ring-1.jpg",
-      }
+        image: "/product-main.png",
+      },
     ],
     payment: {
       method: "Razorpay (Credit Card)",
@@ -45,17 +64,21 @@ export const adminOrdersDetail: Record<string, AdminOrderDetails> = {
       discount: "₹0",
       grandTotal: "₹2,34,500",
     },
-    stockDeductionStatus: "Deducted Successfully",
+    stockDeductionStatus: "Completed",
     stockDeductedQty: 2,
     stockDeductionTime: "24 Jun 2026 11:28 AM",
-    stockDeductionRef: "TXN-INV-9921",
+    stockDeductionRef: "STK-TRX-1042",
+    stockDeductionProduct: "Golden Chain Ring",
+    stockDeductionVariant: "Gold / 16 inch",
+    stockDeductionBeforeStock: 26,
+    stockDeductionAfterStock: 24,
     timeline: [
       { title: "Order Placed", description: "Order successfully placed by customer", date: "24 Jun 2026 11:24 AM", status: "completed" },
       { title: "Payment Confirmed", description: "Razorpay payment verified & captured", date: "24 Jun 2026 11:28 AM", status: "completed" },
       { title: "Processing", description: "Order details sent to packaging desk", date: "24 Jun 2026 02:10 PM", status: "completed" },
       { title: "Shipped", description: "Shipped via BlueDart, AWB #8493021", date: "25 Jun 2026 10:00 AM", status: "completed" },
-      { title: "Delivered", description: "Handed over to customer", date: "27 Jun 2026 03:45 PM", status: "completed" }
-    ]
+      { title: "Delivered", description: "Handed over to customer", date: "27 Jun 2026 03:45 PM", status: "completed" },
+    ],
   },
   "ORD-5678": {
     id: "ORD-5678",
@@ -80,15 +103,15 @@ export const adminOrdersDetail: Record<string, AdminOrderDetails> = {
     },
     items: [
       {
-        productId: "SKU-OO2",
+        productId: "SKU-002",
         productName: "Classic Diamond Studs",
-        sku: "SKU-OO2",
+        sku: "SKU-002",
         variant: "White Gold / 1.0ct",
         quantity: 1,
         unitPrice: "₹1,20,000",
         totalPrice: "₹1,20,000",
-        image: "/images/placeholder-earring-1.jpg",
-      }
+        image: "/product-main.png",
+      },
     ],
     payment: {
       method: "Razorpay (Net Banking)",
@@ -105,18 +128,16 @@ export const adminOrdersDetail: Record<string, AdminOrderDetails> = {
     stockDeductedQty: 0,
     stockDeductionTime: undefined,
     stockDeductionRef: undefined,
+    stockDeductionProduct: "Classic Diamond Studs",
+    stockDeductionVariant: "White Gold / 1.0ct",
+    stockDeductionBeforeStock: 18,
+    stockDeductionAfterStock: 18,
     timeline: [
       { title: "Order Placed", description: "Order initialized by Aarav Mehta", date: "14 Jul 2026 10:00 AM", status: "completed" },
       { title: "Payment Confirmed", description: "Awaiting payment gateway confirmation", date: undefined, status: "current" },
       { title: "Processing", description: "Awaiting payment verification", date: undefined, status: "upcoming" },
       { title: "Shipped", description: "Awaiting package drop", date: undefined, status: "upcoming" },
-      { title: "Delivered", description: "Awaiting shipment arrival", date: undefined, status: "upcoming" }
-    ]
-  }
-};
-
-// Help map order ID including '#' prefixes
-export const getOrderDetailById = (id: string): AdminOrderDetails | undefined => {
-  const cleanId = id.replace("#", "").trim();
-  return adminOrdersDetail[cleanId] || adminOrdersDetail["ORD-1234"]; // Fallback to priority record
+      { title: "Delivered", description: "Awaiting shipment arrival", date: undefined, status: "upcoming" },
+    ],
+  },
 };

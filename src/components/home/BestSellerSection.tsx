@@ -2,12 +2,14 @@
 
 import React, { useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { products } from '../../data/products';
+import { Product } from '@/types/product';
 import ProductCard from '../product/ProductCard';
 
-export default function BestSellerSection() {
-  // Filter bestsellers and limit to 4 to match the screenshot grid
-  const bestSellers = products.filter((p) => p.isBestSeller).slice(0, 4);
+interface BestSellerSectionProps {
+  products: Product[];
+}
+
+export default function BestSellerSection({ products: bestSellers }: BestSellerSectionProps) {
 
   const scrollRef = useRef<HTMLDivElement>(null);
 

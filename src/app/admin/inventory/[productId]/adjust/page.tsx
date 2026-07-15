@@ -1,22 +1,40 @@
 "use client";
 
-import React, { use, useState } from "react";
+import React, { use, useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import AdminTopbar from "@/components/admin/layout/AdminTopbar";
 import StockAdjustmentForm from "@/components/admin/inventory/StockAdjustmentForm";
-import { getProductDetailById } from "@/data/admin/product-management";
-import { StockAdjustment } from "@/types/admin";
+import { getAdminProductBySku } from "@/services/products.service";
+import { AdminProductFormData, StockAdjustment } from "@/types/admin";
 
 interface PageProps {
   params: Promise<{ productId: string }>;
 }
 
-export default function AdminStockAdjustmentPage({ params }: PageProps) {
+function StockAdjustmentPageContent({ productId }: { productId: string }) {
   const router = useRouter();
-  const { productId } = use(params);
-  const product = getProductDetailById(productId);
+  const searchParams = useSearchParams();
+  const initialVariantId = searchParams.get("variant") || undefined;
+  
+  const [product, setProduct] = useState<AdminProductFormData | null>(null);
+  const [loading, setLoading] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    getAdminProductBySku(productId).then((res) => {
+      setProduct(res || null);
+      setLoading(false);
+    });
+  }, [productId]);
+
+  if (loading) {
+    return (
+      <div className="p-8 text-center text-xs font-semibold text-neutral-500">
+        Loading adjustment profile...
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -32,13 +50,18 @@ export default function AdminStockAdjustmentPage({ params }: PageProps) {
     { label: "Adjust Stock" }
   ];
 
-  const handleAdjustmentSubmit = (adjustmentData: StockAdjustment & { variantName?: string; newStock: number }) => {
-    // Show toast and route back
+  const handleAdjustmentSubmit = (adjustmentData: StockAdjustment & { variantName?: string; newStock: number; vendor?: string; invoiceNumber?: string }) => {
+    // Show success toast
     const scope = adjustmentData.variantName
       ? `variant "${adjustmentData.variantName}"`
       : `product "${product.name}"`;
 
-    setToastMessage(`Stock adjusted successfully for ${scope}! New stock: ${adjustmentData.newStock} units.`);
+    let detailMsg = `New stock: ${adjustmentData.newStock} units.`;
+    if (adjustmentData.vendor) {
+      detailMsg += ` Vendor: ${adjustmentData.vendor}.`;
+    }
+
+    setToastMessage(`Stock adjusted successfully for ${scope}! ${detailMsg}`);
 
     setTimeout(() => {
       setToastMessage(null);
@@ -47,10 +70,10 @@ export default function AdminStockAdjustmentPage({ params }: PageProps) {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8F8F8]">
+    <div className="flex-1 p-6 md:p-8 space-y-6 max-w-2xl w-full mx-auto">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-24 right-6 z-50 bg-[#1C1B19] text-white border border-[#C99213] rounded-lg shadow-xl px-5 py-3 text-xs font-semibold flex items-center space-x-2 animate-bounce">
+        <div className="fixed top-24 right-6 z-50 bg-neutral-900 text-white border border-[#C99213] rounded-lg shadow-xl px-5 py-3 text-xs font-semibold flex items-center space-x-2 animate-bounce">
           <svg className="w-4 h-4 text-[#C99213]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -64,27 +87,37 @@ export default function AdminStockAdjustmentPage({ params }: PageProps) {
         showSearch={false}
       />
 
-      {/* Main Content */}
-      <div className="flex-1 p-6 md:p-8 space-y-6 max-w-2xl w-full mx-auto">
-        {/* Title */}
-        <div>
-          <h1 className="text-xl font-bold tracking-wider text-neutral-900 uppercase font-sans">
-            ADJUST STOCK
-          </h1>
-          <p className="text-[11px] text-neutral-405 mt-1 font-medium">
-            Register manual inventory entries, write-offs, or returns.
-          </p>
-        </div>
-
-        {/* Form component */}
-        <div className="mt-6">
-          <StockAdjustmentForm
-            product={product}
-            onSubmit={handleAdjustmentSubmit}
-            onCancel={() => router.push(`/admin/inventory/${product.sku}`)}
-          />
-        </div>
+      {/* Title */}
+      <div>
+        <h1 className="text-xl font-bold tracking-wider text-neutral-900 uppercase font-sans">
+          ADJUST STOCK
+        </h1>
+        <p className="text-[11px] text-neutral-450 mt-1 font-medium">
+          Record a stock increase, decrease, return, damage, or correction
+        </p>
       </div>
+
+      {/* Form component */}
+      <div className="mt-6">
+        <StockAdjustmentForm
+          product={product}
+          initialVariantId={initialVariantId}
+          onSubmit={handleAdjustmentSubmit}
+          onCancel={() => router.push(`/admin/inventory/${product.sku}`)}
+        />
+      </div>
+    </div>
+  );
+}
+
+export default function AdminStockAdjustmentPage({ params }: PageProps) {
+  const { productId } = use(params);
+
+  return (
+    <div className="flex flex-col min-h-screen bg-[#F8F8F8]">
+      <Suspense fallback={<div className="p-8 text-center text-xs">Loading adjustment form...</div>}>
+        <StockAdjustmentPageContent productId={productId} />
+      </Suspense>
     </div>
   );
 }

@@ -5,16 +5,22 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '../../context/CartContext';
 import ProductCard from '../../components/product/ProductCard';
-import { products } from '../../data/products';
+import { getProducts } from '../../services/products.service';
+import { Product } from '../../types/product';
 
 export default function CartPage() {
   const { cartItems, cartSubtotal, updateQuantity, removeFromCart } = useCart();
+  const [recommendations, setRecommendations] = React.useState<Product[]>([]);
 
-  // Get 4 recommendations (excluding products currently in cart)
-  const cartProductIds = cartItems.map((item) => item.product.id);
-  const recommendations = products
-    .filter((p) => !cartProductIds.includes(p.id))
-    .slice(0, 4);
+  React.useEffect(() => {
+    getProducts().then((res) => {
+      const cartProductIds = cartItems.map((item) => item.product.id);
+      const filtered = res
+        .filter((p) => p.id !== "SKU-005" && !cartProductIds.includes(p.id))
+        .slice(0, 4);
+      setRecommendations(filtered);
+    });
+  }, [cartItems]);
 
   // Summary figures
   const tax = 189; // Static matching the screenshot
@@ -111,13 +117,11 @@ export default function CartPage() {
                           href={`/product/${item.product.slug}`}
                           className="block text-[15px] text-neutral-800 hover:text-[#B78924] transition-colors leading-tight"
                         >
-                          {item.product.title === 'Pearl Choker Necklace For Women'
-                            ? 'Multi-Layered Necklace Stack for Women'
-                            : item.product.title}
+                          {item.product.title}
                         </Link>
                         
                         <p className="text-[12px] text-neutral-450 leading-snug">
-                          Gold-Plated Alloy / Short Description
+                          {item.product.category} / {item.product.attributes?.[0]?.value || 'Fine Jewelry'}
                         </p>
                         
                         {/* Remove link */}

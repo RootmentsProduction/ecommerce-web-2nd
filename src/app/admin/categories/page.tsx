@@ -5,15 +5,19 @@ import AdminTopbar from "@/components/admin/layout/AdminTopbar";
 import AdminStatCard from "@/components/admin/shared/AdminStatCard";
 import CategoryTable from "@/components/admin/categories/CategoryTable";
 import CategoryForm from "@/components/admin/categories/CategoryForm";
-import { adminCategories as defaultCategories } from "@/data/admin/categories";
+import { getAdminCategories } from "@/services/categories.service";
 import { AdminCategory } from "@/types/admin";
 
 export default function AdminCategoriesPage() {
-  const [categories, setCategories] = useState<AdminCategory[]>(defaultCategories);
+  const [categories, setCategories] = useState<AdminCategory[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [editingCategory, setEditingCategory] = useState<AdminCategory | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    getAdminCategories().then(setCategories);
+  }, []);
 
   const breadcrumbs = [{ label: "Categories" }];
 

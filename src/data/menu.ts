@@ -6,10 +6,6 @@ export const menuItems: MenuItem[] = [
     href: '/shop',
   },
   {
-    name: 'Women',
-    href: '/shop?gender=women',
-  },
-  {
     name: 'Collections',
     href: '/shop',
     hasMegaMenu: true,
