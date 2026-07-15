@@ -24,6 +24,7 @@ export default function ProductMediaSection({ media, onChange }: ProductMediaPro
           id: `media-upload-${Date.now()}-${idx}`,
           url: localUrl,
           isPrimary: newMedia.length === 0, // Mark first as primary if empty
+          altText: "",
         });
       });
 
@@ -75,7 +76,7 @@ export default function ProductMediaSection({ media, onChange }: ProductMediaPro
             Product Images / Media
           </h2>
           <p className="text-[10px] text-neutral-400 mt-0.5">
-            Add up to 5 premium media files. Mark one as primary.
+            Add up to 5 premium media files. Mark one as primary. (Previews are local only)
           </p>
         </div>
         <span className="text-[11px] font-bold text-neutral-400">
@@ -95,10 +96,11 @@ export default function ProductMediaSection({ media, onChange }: ProductMediaPro
             }`}
           >
             {/* Image display */}
-            {/* We can use standard img tags for object URL local previews */}
+            {/* Native img is used intentionally for dynamic blob object URL previews */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={item.url}
-              alt="Product preview"
+              alt={item.altText || "Product preview"}
               className="w-full h-full object-cover"
               onError={(e) => {
                 // If local URL fails, fallback to gold ring SVG placeholder
@@ -157,7 +159,7 @@ export default function ProductMediaSection({ media, onChange }: ProductMediaPro
 
             {/* Badges visible outside hover */}
             {item.isPrimary && (
-              <span className="absolute top-1.5 left-1.5 bg-[#C99213] text-white text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shadow-sm">
+              <span className="absolute top-1.5 left-1.5 bg-[#C99213] text-white text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shadow-sm animate-fade-in">
                 Primary
               </span>
             )}
@@ -191,10 +193,47 @@ export default function ProductMediaSection({ media, onChange }: ProductMediaPro
         className="hidden"
       />
 
+      {/* Accessibility / Alt Text Fields */}
+      {media.length > 0 && (
+        <div className="space-y-3 pt-3 border-t border-neutral-100">
+          <h3 className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">
+            Image Accessibility (Alt Text)
+          </h3>
+          <div className="grid grid-cols-1 gap-2.5">
+            {media.map((item, idx) => (
+              <div key={item.id} className="flex items-center space-x-3 text-xs bg-neutral-50 p-2 rounded-lg border border-neutral-200/50">
+                <div className="w-10 h-10 rounded overflow-hidden border border-neutral-200 flex-shrink-0">
+                  {/* Native img is used intentionally for dynamic blob object URL previews */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={item.url} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1 flex flex-col space-y-1">
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wide">
+                    Image #{idx + 1} {item.isPrimary ? "(Primary)" : ""}
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="Enter descriptive alt text..."
+                    value={item.altText || ""}
+                    onChange={(e) => {
+                      const updated = media.map((m) =>
+                        m.id === item.id ? { ...m, altText: e.target.value } : m
+                      );
+                      onChange(updated);
+                    }}
+                    className="w-full px-2.5 py-1 border border-neutral-200 rounded text-xs outline-none focus:border-[#C99213] bg-white text-neutral-850"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Optional video field */}
-      <div className="flex flex-col space-y-1.5 pt-2 border-t border-neutral-50">
+      <div className="flex flex-col space-y-1.5 pt-2 border-t border-neutral-100">
         <label className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
-          Video LInk / Embed Placeholder
+          Video Link / Embed Placeholder
         </label>
         <input
           type="text"

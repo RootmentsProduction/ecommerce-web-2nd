@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { products } from '../../../data/products';
+import { getProductBySlug, getProducts } from '../../../services/products.service';
 import ProductDetailsClient from '../../../components/product/ProductDetailsClient';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 // Generate SEO Metadata dynamically
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const product = products.find((p) => p.slug === slug);
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     return {
@@ -33,15 +33,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductDetailPage({ params }: Props) {
   const { slug } = await params;
-  const product = products.find((p) => p.slug === slug);
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
 
-  // Get related products (excluding current product)
-  const relatedProducts = products
-    .filter((p) => p.id !== product.id)
+  // Get related products (excluding current product and drafts)
+  const allProducts = await getProducts();
+  const relatedProducts = allProducts
+    .filter((p) => p.id !== product.id && p.id !== "SKU-005")
     .slice(0, 4);
 
   return (

@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { AdminProductFormData } from "@/types/admin";
 import StatusBadge from "@/components/admin/shared/StatusBadge";
 
@@ -19,10 +20,12 @@ export default function InventoryProductDetails({ product }: InventoryProductDet
         {/* Image thumbnail placeholder */}
         <div className="w-16 h-16 rounded-lg bg-gradient-to-tr from-[#f4efdb] via-[#e8dbb4] to-[#c59b27]/40 border border-[#e8dbb4] flex items-center justify-center flex-shrink-0 relative overflow-hidden">
           {product.media?.find((m) => m.isPrimary)?.url ? (
-            <img
+            <Image
               src={product.media.find((m) => m.isPrimary)!.url}
               alt={product.name}
-              className="w-full h-full object-cover"
+              fill
+              sizes="64px"
+              className="object-cover"
             />
           ) : (
             <svg className="w-8 h-8 text-[#8c6a16]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">

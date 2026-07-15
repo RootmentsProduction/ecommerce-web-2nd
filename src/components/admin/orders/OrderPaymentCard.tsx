@@ -7,6 +7,10 @@ interface OrderPaymentProps {
   stockDeductedQty: number;
   stockDeductionTime?: string;
   stockDeductionRef?: string;
+  stockDeductionProduct?: string;
+  stockDeductionVariant?: string;
+  stockDeductionBeforeStock?: number;
+  stockDeductionAfterStock?: number;
 }
 
 export default function OrderPaymentCard({
@@ -15,6 +19,10 @@ export default function OrderPaymentCard({
   stockDeductedQty,
   stockDeductionTime,
   stockDeductionRef,
+  stockDeductionProduct,
+  stockDeductionVariant,
+  stockDeductionBeforeStock,
+  stockDeductionAfterStock,
 }: OrderPaymentProps) {
   return (
     <div className="space-y-6">
@@ -73,34 +81,73 @@ export default function OrderPaymentCard({
       {/* Stock Deduction Card */}
       <div className="bg-white border border-[#E5E5E5] rounded-[12px] p-6 shadow-sm space-y-4">
         <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-800 border-b border-neutral-100 pb-3 font-sans">
-          Stock Allocation Status
+          Stock Deduction Audit
         </h2>
 
         <div className="space-y-3 text-xs">
+          {/* Status */}
           <div className="flex justify-between">
             <span className="text-neutral-400 font-semibold">Deduction Status</span>
             <span className={`font-bold px-2 py-0.5 rounded text-[10px] ${
-              stockDeductedQty > 0
+              stockDeductionStatus === "Completed" || stockDeductedQty > 0
                 ? "bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9]/40"
                 : "bg-[#FFF3E0] text-[#E65100] border border-[#FFE0B2]/40"
             }`}>
               {stockDeductionStatus}
             </span>
           </div>
+
+          {/* Product */}
+          {stockDeductionProduct && (
+            <div className="flex justify-between">
+              <span className="text-neutral-400 font-semibold">Product</span>
+              <span className="font-semibold text-neutral-850">{stockDeductionProduct}</span>
+            </div>
+          )}
+
+          {/* Variant */}
+          {stockDeductionVariant && (
+            <div className="flex justify-between">
+              <span className="text-neutral-400 font-semibold">Variant</span>
+              <span className="font-semibold text-neutral-500">{stockDeductionVariant}</span>
+            </div>
+          )}
+
+          {/* Quantity */}
           <div className="flex justify-between">
             <span className="text-neutral-400 font-semibold">Quantity Deducted</span>
             <span className="font-bold text-neutral-800">{stockDeductedQty} units</span>
           </div>
-          {stockDeductionTime && (
+
+          {/* Before Stock */}
+          {stockDeductionBeforeStock !== undefined && (
             <div className="flex justify-between">
-              <span className="text-neutral-400 font-semibold">Allocation Time</span>
-              <span className="font-semibold text-neutral-700">{stockDeductionTime}</span>
+              <span className="text-neutral-400 font-semibold">Before Stock</span>
+              <span className="font-medium text-neutral-500">{stockDeductionBeforeStock} units</span>
             </div>
           )}
-          {stockDeductionRef && (
+
+          {/* After Stock */}
+          {stockDeductionAfterStock !== undefined && (
             <div className="flex justify-between">
-              <span className="text-neutral-400 font-semibold">Allocation Reference</span>
-              <span className="font-mono text-neutral-700 font-bold">{stockDeductionRef}</span>
+              <span className="text-neutral-400 font-semibold">After Stock</span>
+              <span className="font-bold text-[#C99213]">{stockDeductionAfterStock} units</span>
+            </div>
+          )}
+
+          {/* Reference */}
+          {stockDeductionRef && (
+            <div className="flex justify-between border-t border-neutral-50 pt-2">
+              <span className="text-neutral-400 font-semibold">Transaction Reference</span>
+              <span className="font-mono text-neutral-850 font-bold">{stockDeductionRef}</span>
+            </div>
+          )}
+
+          {/* Time */}
+          {stockDeductionTime && (
+            <div className="flex justify-between">
+              <span className="text-neutral-400 font-semibold">Deduction Time</span>
+              <span className="font-semibold text-neutral-700">{stockDeductionTime}</span>
             </div>
           )}
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { monthlySalesData } from "@/data/admin/dashboard";
+import { monthlySalesData } from "@/data/fixtures/dashboard";
 
 export default function SalesAnalyticsChart() {
   const [activeFilter, setActiveFilter] = useState("Month");

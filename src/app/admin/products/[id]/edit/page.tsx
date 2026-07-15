@@ -4,7 +4,8 @@ import React, { use } from "react";
 import Link from "next/link";
 import AdminTopbar from "@/components/admin/layout/AdminTopbar";
 import ProductForm from "@/components/admin/products/ProductForm";
-import { getProductDetailById } from "@/data/admin/product-management";
+import { getAdminProductBySku } from "@/services/products.service";
+import { AdminProductFormData } from "@/types/admin";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -12,7 +13,23 @@ interface PageProps {
 
 export default function EditProductPage({ params }: PageProps) {
   const { id } = use(params);
-  const product = getProductDetailById(id);
+  const [product, setProduct] = React.useState<AdminProductFormData | null>(null);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    getAdminProductBySku(id).then((res) => {
+      setProduct(res || null);
+      setLoading(false);
+    });
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="p-8 text-center text-xs font-semibold text-neutral-500">
+        Loading product details...
+      </div>
+    );
+  }
 
   if (!product) {
     return (

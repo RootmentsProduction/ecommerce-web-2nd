@@ -9,8 +9,8 @@ import OrderCustomerCard from "@/components/admin/orders/OrderCustomerCard";
 import OrderItemsTable from "@/components/admin/orders/OrderItemsTable";
 import OrderPaymentCard from "@/components/admin/orders/OrderPaymentCard";
 import OrderTimeline from "@/components/admin/orders/OrderTimeline";
-import { getOrderDetailById } from "@/data/admin/order-details";
-import { StatusType } from "@/types/admin";
+import { getOrderById } from "@/services/orders.service";
+import { AdminOrderDetails, StatusType } from "@/types/admin";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -19,10 +19,24 @@ interface PageProps {
 export default function AdminOrderDetailsPage({ params }: PageProps) {
   const router = useRouter();
   const { id } = use(params);
-  const orderData = getOrderDetailById(id);
-
-  const [order, setOrder] = useState(orderData);
+  const [order, setOrder] = useState<AdminOrderDetails | null>(null);
+  const [loading, setLoading] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    getOrderById(id).then((res) => {
+      setOrder(res || null);
+      setLoading(false);
+    });
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="p-8 text-center text-xs font-semibold text-neutral-500">
+        Loading order details...
+      </div>
+    );
+  }
 
   if (!order) {
     return (
@@ -143,6 +157,10 @@ export default function AdminOrderDetailsPage({ params }: PageProps) {
               stockDeductedQty={order.stockDeductedQty}
               stockDeductionTime={order.stockDeductionTime}
               stockDeductionRef={order.stockDeductionRef}
+              stockDeductionProduct={order.stockDeductionProduct}
+              stockDeductionVariant={order.stockDeductionVariant}
+              stockDeductionBeforeStock={order.stockDeductionBeforeStock}
+              stockDeductionAfterStock={order.stockDeductionAfterStock}
             />
           </div>
 

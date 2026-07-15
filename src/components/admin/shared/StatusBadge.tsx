@@ -19,6 +19,7 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
       case "Cancelled":
         return "bg-[#FFEBEE] text-[#C62828] border border-[#FFCDD2]/40";
       case "Active":
+      case "In Stock":
         return "bg-white text-[#2E7D32] border border-[#81C784]";
       case "Low Stock":
         return "bg-white text-[#E65100] border border-[#FFB74D]";

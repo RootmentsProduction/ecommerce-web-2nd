@@ -2,12 +2,14 @@
 
 import React, { useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { products } from '../../data/products';
+import { Product } from '@/types/product';
 import ProductCard from '../product/ProductCard';
 
-export default function NewArrivalsSection() {
-  // Filter new arrivals and limit to 4 to match the screenshot grid
-  const newArrivals = products.filter((p) => p.isNewArrival).slice(0, 4);
+interface NewArrivalsSectionProps {
+  products: Product[];
+}
+
+export default function NewArrivalsSection({ products: newArrivals }: NewArrivalsSectionProps) {
 
   const scrollRef = useRef<HTMLDivElement>(null);
 

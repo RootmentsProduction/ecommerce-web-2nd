@@ -26,6 +26,8 @@ export default function ProductPreviewCard({ formData }: ProductPreviewProps) {
       {/* Product Image Area */}
       <div className="aspect-square bg-gradient-to-tr from-[#f4efdb] via-[#e8dbb4] to-[#c59b27]/20 border-b border-neutral-100 flex items-center justify-center relative">
         {primaryImage ? (
+          /* Native img is used intentionally for dynamic blob object URL previews */
+          /* eslint-disable-next-line @next/next/no-img-element */
           <img src={primaryImage} alt={name} className="w-full h-full object-cover" />
         ) : (
           <div className="flex flex-col items-center justify-center text-neutral-400 space-y-2">

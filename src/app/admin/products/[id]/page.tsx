@@ -1,11 +1,13 @@
 "use client";
 
 import React, { use, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AdminTopbar from "@/components/admin/layout/AdminTopbar";
 import StatusBadge from "@/components/admin/shared/StatusBadge";
-import { getProductDetailById } from "@/data/admin/product-management";
+import { getAdminProductBySku } from "@/services/products.service";
+import { AdminProductFormData } from "@/types/admin";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -14,8 +16,24 @@ interface PageProps {
 export default function AdminProductDetailsPage({ params }: PageProps) {
   const router = useRouter();
   const { id } = use(params);
-  const product = getProductDetailById(id);
+  const [product, setProduct] = useState<AdminProductFormData | null>(null);
+  const [loading, setLoading] = useState(true);
   const [isArchived, setIsArchived] = useState(false);
+
+  React.useEffect(() => {
+    getAdminProductBySku(id).then((res) => {
+      setProduct(res || null);
+      setLoading(false);
+    });
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="p-8 text-center text-xs font-semibold text-neutral-500">
+        Loading product details...
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -30,12 +48,26 @@ export default function AdminProductDetailsPage({ params }: PageProps) {
     { label: product.name }
   ];
 
-  const primaryImage = product.media.find((m) => m.isPrimary)?.url;
+  const primaryImage = product.media.find((m) => m.isPrimary);
   const secondaryImages = product.media.filter((m) => !m.isPrimary);
 
   const mrpVal = parseFloat(product.mrp) || 0;
   const sellingPriceVal = parseFloat(product.sellingPrice) || 0;
+  const offerPriceVal = parseFloat(product.offerPrice || "") || 0;
   const discountAmt = mrpVal > sellingPriceVal ? mrpVal - sellingPriceVal : 0;
+  const costPriceVal = parseFloat(product.costPrice || "") || 0;
+  
+  // Calculate variant totals
+  const totalStock = product.variants?.length > 0
+    ? product.variants.reduce((sum, v) => sum + v.stock, 0)
+    : product.initialStock;
+
+  let stockStatus: "In Stock" | "Low Stock" | "Out of Stock" = "In Stock";
+  if (totalStock === 0) {
+    stockStatus = "Out of Stock";
+  } else if (totalStock <= product.minStock) {
+    stockStatus = "Low Stock";
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F8F8F8]">
@@ -46,7 +78,7 @@ export default function AdminProductDetailsPage({ params }: PageProps) {
       />
 
       {/* Main Container */}
-      <div className="flex-1 p-6 md:p-8 space-y-6 max-w-7xl w-full mx-auto">
+      <div className="flex-grow p-6 md:p-8 space-y-6 max-w-7xl w-full mx-auto">
         
         {/* Top actions */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -68,20 +100,16 @@ export default function AdminProductDetailsPage({ params }: PageProps) {
           {/* Action Row */}
           <div className="flex items-center space-x-2">
             <button
-              onClick={() => {
-                setIsArchived(!isArchived);
-              }}
+              onClick={() => setIsArchived(!isArchived)}
               className="px-4 py-2 border border-neutral-200 rounded-full bg-white text-xs font-semibold text-neutral-750 hover:bg-neutral-50 transition-colors cursor-pointer"
             >
               {isArchived ? "Unarchive" : "Archive Product"}
             </button>
             <button
-              onClick={() => {
-                alert("Product duplicated (Mock Action)");
-              }}
-              className="px-4 py-2 border border-neutral-200 rounded-full bg-white text-xs font-semibold text-neutral-750 hover:bg-neutral-50 transition-colors cursor-pointer"
+              onClick={() => router.push(`/admin/inventory/${product.sku}/adjust`)}
+              className="px-4 py-2 border border-[#C99213] rounded-full bg-white text-xs font-semibold text-[#C99213] hover:bg-neutral-50 transition-colors cursor-pointer"
             >
-              Duplicate
+              Adjust Stock
             </button>
             <button
               onClick={() => router.push(`/admin/products/${product.sku}/edit`)}
@@ -95,7 +123,7 @@ export default function AdminProductDetailsPage({ params }: PageProps) {
         {/* Content Details Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          {/* Column 1 & 2: Overview & Attributes */}
+          {/* Column 1 & 2: Overview, Pricing, Purchase Info, Variants */}
           <div className="lg:col-span-2 space-y-6">
             
             {/* Overview */}
@@ -114,42 +142,74 @@ export default function AdminProductDetailsPage({ params }: PageProps) {
                 <p className="text-xs text-neutral-700 leading-relaxed font-normal">
                   {product.description}
                 </p>
+                {product.shortDescription && (
+                  <p className="text-xs text-neutral-500 font-light italic">
+                    Snippet: &quot;{product.shortDescription}&quot;
+                  </p>
+                )}
               </div>
 
-              {/* Attributes Checklist */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-3 text-xs">
+              {/* Attributes Details */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-3 text-xs border-t border-neutral-100">
                 <div className="flex flex-col space-y-0.5">
                   <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Category</span>
                   <span className="font-semibold text-neutral-800">{product.category}</span>
+                </div>
+                <div className="flex flex-col space-y-0.5">
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Subcategory</span>
+                  <span className="font-semibold text-neutral-800">{product.subcategory || "—"}</span>
+                </div>
+                <div className="flex flex-col space-y-0.5">
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Brand</span>
+                  <span className="font-semibold text-neutral-800">{product.brand || "—"}</span>
+                </div>
+                <div className="flex flex-col space-y-0.5">
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Collection</span>
+                  <span className="font-semibold text-neutral-800">{product.collection || "—"}</span>
                 </div>
                 <div className="flex flex-col space-y-0.5">
                   <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Gender Target</span>
                   <span className="font-semibold text-neutral-800">{product.gender}</span>
                 </div>
                 <div className="flex flex-col space-y-0.5">
-                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Material / Metal</span>
-                  <span className="font-semibold text-neutral-800">{product.material}</span>
-                </div>
-                <div className="flex flex-col space-y-0.5">
                   <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Occasion</span>
                   <span className="font-semibold text-neutral-800">{product.occasion}</span>
                 </div>
                 <div className="flex flex-col space-y-0.5">
-                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Created Date</span>
-                  <span className="font-semibold text-neutral-500">2026-06-01</span>
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Material / Metal</span>
+                  <span className="font-semibold text-neutral-800">{product.material}</span>
                 </div>
                 <div className="flex flex-col space-y-0.5">
-                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Last Updated</span>
-                  <span className="font-semibold text-neutral-500">2026-07-14</span>
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Purity</span>
+                  <span className="font-semibold text-neutral-800">{product.purity || "—"}</span>
+                </div>
+                <div className="flex flex-col space-y-0.5">
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">HSN Code</span>
+                  <span className="font-semibold text-neutral-850 font-mono">{product.hsnCode || "—"}</span>
+                </div>
+                <div className="flex flex-col space-y-0.5">
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Unit of Measure</span>
+                  <span className="font-semibold text-neutral-800">{product.unit || "—"}</span>
+                </div>
+                <div className="flex flex-col space-y-0.5">
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Default Size</span>
+                  <span className="font-semibold text-neutral-800">{product.size || "—"}</span>
+                </div>
+                <div className="flex flex-col space-y-0.5">
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Returnable</span>
+                  <span className="font-semibold text-neutral-850">
+                    {product.isReturnable ? "Yes (Eligible for customer returns)" : "No (Final Sale)"}
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Pricing Card */}
+            {/* Pricing & Tax Details */}
             <div className="bg-white border border-[#E5E5E5] rounded-[12px] p-6 shadow-sm space-y-4">
               <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-800 border-b border-neutral-100 pb-3 font-sans">
-                Pricing Breakdown
+                Pricing & Sales Taxation
               </h2>
+              
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-medium text-neutral-600">
                 <div className="flex flex-col space-y-0.5">
                   <span className="text-[9px] uppercase tracking-wider text-neutral-400">MRP</span>
@@ -159,21 +219,70 @@ export default function AdminProductDetailsPage({ params }: PageProps) {
                   <span className="text-[9px] uppercase tracking-wider text-neutral-400">Selling Price</span>
                   <span className="text-sm font-bold text-[#C99213]">₹{sellingPriceVal.toLocaleString("en-IN")}</span>
                 </div>
+                {offerPriceVal > 0 && (
+                  <div className="flex flex-col space-y-0.5">
+                    <span className="text-[9px] uppercase tracking-wider text-neutral-400">Offer Price</span>
+                    <span className="text-sm font-bold text-[#C99213]">₹{offerPriceVal.toLocaleString("en-IN")}</span>
+                  </div>
+                )}
                 <div className="flex flex-col space-y-0.5">
-                  <span className="text-[9px] uppercase tracking-wider text-neutral-400">Discount Amount</span>
-                  <span className="text-sm font-bold text-[#2E7D32]">₹{discountAmt.toLocaleString("en-IN")}</span>
+                  <span className="text-[9px] uppercase tracking-wider text-neutral-400">Calculated Discount</span>
+                  <span className="text-sm font-bold text-[#2E7D32]">
+                    ₹{discountAmt.toLocaleString("en-IN")} ({product.discountPercent}% Off)
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-3 text-xs border-t border-neutral-100">
+                <div className="flex flex-col space-y-0.5">
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Tax Preference</span>
+                  <span className="font-semibold text-neutral-800">{product.taxPreference || "Taxable"}</span>
                 </div>
                 <div className="flex flex-col space-y-0.5">
-                  <span className="text-[9px] uppercase tracking-wider text-neutral-400">Discount %</span>
-                  <span className="text-sm font-bold text-[#2E7D32]">{product.discountPercent}% Off</span>
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Intra-State GST Rate</span>
+                  <span className="font-semibold text-neutral-800">{product.intraStateTaxRate || "3%"}</span>
+                </div>
+                <div className="flex flex-col space-y-0.5">
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Inter-State GST Rate</span>
+                  <span className="font-semibold text-neutral-800">{product.interStateTaxRate || "3%"}</span>
+                </div>
+                <div className="flex flex-col space-y-0.5">
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">GST treatment</span>
+                  <span className="font-semibold text-neutral-800">
+                    {product.priceIncludesGst !== false ? "Price Includes Tax" : "Tax Added Extra"}
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Variants table */}
+            {/* Purchase & Supplier Information */}
             <div className="bg-white border border-[#E5E5E5] rounded-[12px] p-6 shadow-sm space-y-4">
               <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-800 border-b border-neutral-100 pb-3 font-sans">
-                Variant Combinations
+                Purchase / Procurement Info
+              </h2>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                <div className="flex flex-col space-y-0.5">
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Cost Price</span>
+                  <span className="font-bold text-neutral-900">
+                    {costPriceVal > 0 ? `₹${costPriceVal.toLocaleString("en-IN")}` : "—"}
+                  </span>
+                </div>
+                <div className="flex flex-col space-y-0.5">
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Preferred Supplier</span>
+                  <span className="font-semibold text-neutral-800">{product.preferredVendor || "—"}</span>
+                </div>
+                <div className="flex flex-col space-y-0.5">
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Procurement Notes</span>
+                  <span className="font-normal text-neutral-600 italic">{product.purchaseNotes || "No procurement notes."}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Variant stock summary */}
+            <div className="bg-white border border-[#E5E5E5] rounded-[12px] p-6 shadow-sm space-y-4">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-800 border-b border-neutral-100 pb-3 font-sans">
+                Variant Details & Stock Allocation
               </h2>
               {product.variants && product.variants.length > 0 ? (
                 <div className="overflow-x-auto">
@@ -183,7 +292,7 @@ export default function AdminProductDetailsPage({ params }: PageProps) {
                         <th className="py-3 px-4">Variant Option</th>
                         <th className="py-3 px-4">SKU</th>
                         <th className="py-3 px-4">Price</th>
-                        <th className="py-3 px-4">Stock</th>
+                        <th className="py-3 px-4">Current Stock</th>
                         <th className="py-3 px-4">Status</th>
                       </tr>
                     </thead>
@@ -193,7 +302,7 @@ export default function AdminProductDetailsPage({ params }: PageProps) {
                           <td className="py-3 px-4 font-semibold text-neutral-800">{v.name}</td>
                           <td className="py-3 px-4 font-mono text-neutral-500">{v.sku}</td>
                           <td className="py-3 px-4 font-bold text-neutral-900">₹{parseFloat(v.price).toLocaleString("en-IN")}</td>
-                          <td className="py-3 px-4 font-semibold text-neutral-600">{v.stock}</td>
+                          <td className="py-3 px-4 font-semibold text-neutral-600">{v.stock} units</td>
                           <td className="py-3 px-4"><StatusBadge status={v.status} /></td>
                         </tr>
                       ))}
@@ -202,13 +311,13 @@ export default function AdminProductDetailsPage({ params }: PageProps) {
                 </div>
               ) : (
                 <p className="text-xs text-neutral-450 py-4 text-center">
-                  This product has no variations.
+                  This product has no variations. Stock is managed on the base product profile.
                 </p>
               )}
             </div>
           </div>
 
-          {/* Column 3: Media & Visibility Sidebar */}
+          {/* Column 3: Media, Visibility Sidebar, SEO */}
           <div className="space-y-6">
             
             {/* Website Visibility */}
@@ -263,21 +372,45 @@ export default function AdminProductDetailsPage({ params }: PageProps) {
                 {/* Main image */}
                 <div className="aspect-square rounded-lg bg-neutral-50 border border-neutral-100 overflow-hidden flex items-center justify-center relative">
                   {primaryImage ? (
-                    <img src={primaryImage} alt="Main" className="w-full h-full object-cover" />
+                    <div className="w-full h-full relative">
+                      <Image
+                        src={primaryImage.url}
+                        alt={primaryImage.altText || "Product Primary image"}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 400px"
+                        className="object-cover"
+                      />
+                      {primaryImage.altText && (
+                        <div className="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] p-1.5 truncate z-10">
+                          Alt: {primaryImage.altText}
+                        </div>
+                      )}
+                    </div>
                   ) : (
                     <span className="text-[10px] font-bold text-neutral-400">No Image</span>
                   )}
-                  <span className="absolute bottom-2 left-2 bg-neutral-900/80 text-white text-[8px] font-bold px-2 py-0.5 rounded tracking-wide uppercase">
+                  <span className="absolute top-2 left-2 bg-neutral-900/80 text-white text-[8px] font-bold px-2 py-0.5 rounded tracking-wide uppercase z-10">
                     Primary
                   </span>
                 </div>
 
                 {/* Gallery */}
                 {secondaryImages.length > 0 && (
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     {secondaryImages.map((m) => (
-                      <div key={m.id} className="aspect-square rounded-md bg-neutral-50 border border-neutral-100 overflow-hidden">
-                        <img src={m.url} alt="Gallery" className="w-full h-full object-cover" />
+                      <div key={m.id} className="group relative aspect-square rounded-md bg-neutral-50 border border-neutral-100 overflow-hidden">
+                        <Image
+                          src={m.url}
+                          alt={m.altText || "Secondary view"}
+                          fill
+                          sizes="(max-width: 1024px) 50vw, 200px"
+                          className="object-cover"
+                        />
+                        {m.altText && (
+                          <div className="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[8px] p-1 truncate opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                            {m.altText}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -295,22 +428,50 @@ export default function AdminProductDetailsPage({ params }: PageProps) {
                   href={`/admin/inventory/${product.sku}`}
                   className="text-[10px] text-[#C99213] font-bold uppercase tracking-wider hover:underline"
                 >
-                  Manage
+                  Manage Stock
                 </Link>
               </div>
 
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between">
                   <span className="text-neutral-400 font-semibold">Total Stock</span>
-                  <span className="font-bold text-neutral-900">{product.initialStock} units</span>
+                  <span className="font-bold text-neutral-900">{totalStock} units</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-neutral-400 font-semibold">Threshold</span>
+                  <span className="text-neutral-400 font-semibold">Stock Status</span>
+                  <span className="font-semibold text-neutral-800">
+                    <StatusBadge status={stockStatus} />
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-400 font-semibold">Reorder Threshold</span>
                   <span className="font-semibold text-neutral-800">{product.minStock} units</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-neutral-400 font-semibold">Backorder Allowed</span>
-                  <span className="font-semibold text-neutral-800">{product.allowBackorder ? "Yes" : "No"}</span>
+                <div className="flex justify-between border-t border-neutral-50 pt-2 mt-2">
+                  <span className="text-neutral-400 font-semibold">Backorders</span>
+                  <span className="font-semibold text-neutral-800">{product.allowBackorder ? "Allowed" : "Not Allowed"}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* SEO Information */}
+            <div className="bg-white border border-[#E5E5E5] rounded-[12px] p-6 shadow-sm space-y-4">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-800 border-b border-neutral-100 pb-3 font-sans">
+                SEO Metadata
+              </h2>
+              
+              <div className="space-y-2 text-xs">
+                <div>
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">SEO Title</span>
+                  <span className="font-semibold text-neutral-850">{product.seoTitle || "—"}</span>
+                </div>
+                <div>
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">SEO Slug</span>
+                  <span className="font-mono text-neutral-600 text-[10px]">{product.seoSlug || "—"}</span>
+                </div>
+                <div>
+                  <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">Meta Description</span>
+                  <span className="font-normal text-neutral-500 leading-normal block">{product.seoDescription || "No SEO description set."}</span>
                 </div>
               </div>
             </div>

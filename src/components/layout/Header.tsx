@@ -132,7 +132,7 @@ export default function Header() {
                     )}`}
                   >
                     <span>{item.name}</span>
-                    {(item.name === 'Women' || item.name === 'Collections') && (
+                    {item.name === 'Collections' && (
                       <svg className="w-2.5 h-2.5 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
                       </svg>

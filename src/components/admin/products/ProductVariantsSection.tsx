@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Link from "next/link";
 import { AdminProductVariant, StatusType } from "@/types/admin";
 
 interface ProductVariantsProps {
@@ -6,9 +7,10 @@ interface ProductVariantsProps {
   onChange: (variants: AdminProductVariant[]) => void;
   basePrice: string;
   baseSku: string;
+  mode: "create" | "edit";
 }
 
-export default function ProductVariantsSection({ variants, onChange, basePrice, baseSku }: ProductVariantsProps) {
+export default function ProductVariantsSection({ variants, onChange, basePrice, baseSku, mode }: ProductVariantsProps) {
   const [optionName, setOptionName] = useState("");
   const [optionValues, setOptionValues] = useState("");
 
@@ -91,7 +93,7 @@ export default function ProductVariantsSection({ variants, onChange, basePrice, 
           type="button"
           onClick={handleAddVariants}
           disabled={!optionName || !optionValues}
-          className="px-5 py-2.5 bg-neutral-900 text-white rounded text-xs font-semibold hover:bg-neutral-800 disabled:opacity-50 transition-colors cursor-pointer self-start md:self-auto"
+          className="px-5 py-2.5 bg-neutral-900 text-white rounded text-xs font-semibold hover:bg-neutral-850 disabled:opacity-50 transition-colors cursor-pointer self-start md:self-auto"
         >
           Add Variant Option
         </button>
@@ -106,7 +108,7 @@ export default function ProductVariantsSection({ variants, onChange, basePrice, 
                 <th className="py-2.5 px-4">Variant Name</th>
                 <th className="py-2.5 px-4">SKU</th>
                 <th className="py-2.5 px-4">Price (₹)</th>
-                <th className="py-2.5 px-4">Stock</th>
+                <th className="py-2.5 px-4">Opening/Current Stock</th>
                 <th className="py-2.5 px-4">Status</th>
                 <th className="py-2.5 px-4 text-center">Remove</th>
               </tr>
@@ -139,22 +141,34 @@ export default function ProductVariantsSection({ variants, onChange, basePrice, 
 
                   {/* Stock */}
                   <td className="py-2 px-2">
-                    <input
-                      type="number"
-                      value={variant.stock}
-                      onChange={(e) => {
-                        const stock = parseInt(e.target.value) || 0;
-                        handleRowChange(variant.id, "stock", stock);
-                        if (stock === 0) {
-                          handleRowChange(variant.id, "status", "Out of Stock");
-                        } else if (stock < 5) {
-                          handleRowChange(variant.id, "status", "Low Stock");
-                        } else {
-                          handleRowChange(variant.id, "status", "Active");
-                        }
-                      }}
-                      className="px-2 py-1 border border-neutral-200 rounded text-xs outline-none focus:border-[#C99213] w-20 bg-white"
-                    />
+                    {mode === "create" ? (
+                      <input
+                        type="number"
+                        value={variant.stock}
+                        onChange={(e) => {
+                          const stock = parseInt(e.target.value) || 0;
+                          handleRowChange(variant.id, "stock", stock);
+                          if (stock === 0) {
+                            handleRowChange(variant.id, "status", "Out of Stock");
+                          } else if (stock < 5) {
+                            handleRowChange(variant.id, "status", "Low Stock");
+                          } else {
+                            handleRowChange(variant.id, "status", "Active");
+                          }
+                        }}
+                        className="px-2 py-1 border border-neutral-200 rounded text-xs outline-none focus:border-[#C99213] w-20 bg-white"
+                      />
+                    ) : (
+                      <div className="flex items-center space-x-2 text-xs font-semibold px-2 py-1 text-neutral-800">
+                        <span>{variant.stock} units</span>
+                        <Link
+                          href={`/admin/inventory/${baseSku}/adjust?variant=${variant.id}`}
+                          className="text-[#C99213] hover:underline font-bold text-[9px] uppercase"
+                        >
+                          Adjust
+                        </Link>
+                      </div>
+                    )}
                   </td>
 
                   {/* Status */}
