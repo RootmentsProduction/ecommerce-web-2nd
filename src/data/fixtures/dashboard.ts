@@ -33,10 +33,7 @@ export const dashboardStats: AdminStat[] = [
   },
 ];
 
-// High fidelity curve points representing the screenshot
-// Month: index (0-11)
-// Revenue (Orange line): 0-100 scale matching visual curve height
-// Profit (Green line): 0-100 scale matching visual curve height
+// Monthly data curve points representing high-fidelity layout
 export const monthlySalesData = [
   { month: "Jan", revenue: 50, profit: 38 },
   { month: "Feb", revenue: 68, profit: 67 },

@@ -1,6 +1,6 @@
 import React from "react";
 import AdminStatCard from "../shared/AdminStatCard";
-import { dashboardStats } from "@/data/admin/dashboard";
+import { dashboardStats } from "@/data/fixtures/dashboard";
 
 export default function DashboardStats() {
   return (

@@ -8,105 +8,164 @@ interface ProductVisibilityProps {
 
 export default function ProductVisibilitySection({ formData, onChange }: ProductVisibilityProps) {
   return (
-    <div className="bg-white border border-[#E5E5E5] rounded-[12px] p-6 shadow-sm space-y-5">
-      <div className="border-b border-neutral-100 pb-3">
-        <h2 className="text-sm font-bold tracking-wide text-neutral-800 uppercase font-sans">
-          Product Visibility & Catalog Placement
-        </h2>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        {/* Status selection */}
-        <div className="flex flex-col space-y-1.5">
-          <label className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
-            Status
-          </label>
-          <select
-            value={formData.status || "Draft"}
-            onChange={(e) => onChange("status", e.target.value)}
-            className="px-3 py-2 border border-neutral-200 rounded text-xs bg-white outline-none focus:border-[#C99213] transition-all text-neutral-850"
-          >
-            <option value="Draft">Draft (Hidden from catalog)</option>
-            <option value="Active">Active (Visible in catalog)</option>
-          </select>
+    <div className="space-y-6">
+      {/* Visibility & Badges Card */}
+      <div className="bg-white border border-[#E5E5E5] rounded-[12px] p-6 shadow-sm space-y-5">
+        <div className="border-b border-neutral-100 pb-3">
+          <h2 className="text-sm font-bold tracking-wide text-neutral-800 uppercase font-sans">
+            Product Visibility & Catalog Placement
+          </h2>
         </div>
 
-        {/* Publish Date */}
-        <div className="flex flex-col space-y-1.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {/* Status selection */}
+          <div className="flex flex-col space-y-1.5">
+            <label className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
+              Status
+            </label>
+            <select
+              value={formData.status || "Draft"}
+              onChange={(e) => onChange("status", e.target.value)}
+              className="px-3 py-2 border border-neutral-200 rounded text-xs bg-white outline-none focus:border-[#C99213] transition-all text-neutral-850"
+            >
+              <option value="Draft">Draft (Hidden from catalog)</option>
+              <option value="Active">Active (Visible in catalog)</option>
+            </select>
+          </div>
+
+          {/* Publish Date */}
+          <div className="flex flex-col space-y-1.5">
+            <label className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
+              Publish Date
+            </label>
+            <input
+              type="date"
+              value={formData.publishDate || ""}
+              onChange={(e) => onChange("publishDate", e.target.value)}
+              className="px-3 py-2 border border-neutral-200 rounded text-xs outline-none focus:border-[#C99213] transition-all text-neutral-850"
+            />
+          </div>
+        </div>
+
+        {/* Catalog Badges toggles */}
+        <div className="flex flex-col space-y-3 pt-2">
           <label className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
-            Publish Date
+            Promotional Placements
           </label>
-          <input
-            type="date"
-            value={formData.publishDate || ""}
-            onChange={(e) => onChange("publishDate", e.target.value)}
-            className="px-3 py-2 border border-neutral-200 rounded text-xs outline-none focus:border-[#C99213] transition-all text-neutral-850"
-          />
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Featured Product */}
+            <label className="inline-flex items-start space-x-2.5 text-xs font-semibold text-neutral-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={formData.isFeatured || false}
+                onChange={(e) => onChange("isFeatured", e.target.checked)}
+                className="w-4 h-4 mt-0.5 rounded border-neutral-300 text-[#C99213] focus:ring-[#C99213] accent-[#C99213]"
+              />
+              <div className="flex flex-col">
+                <span>Featured Product</span>
+                <span className="text-[9px] text-neutral-450 font-normal">Display in top banners & recommendations</span>
+              </div>
+            </label>
+
+            {/* New Arrival */}
+            <label className="inline-flex items-start space-x-2.5 text-xs font-semibold text-neutral-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={formData.isNewArrival || false}
+                onChange={(e) => onChange("isNewArrival", e.target.checked)}
+                className="w-4 h-4 mt-0.5 rounded border-neutral-300 text-[#C99213] focus:ring-[#C99213] accent-[#C99213]"
+              />
+              <div className="flex flex-col">
+                <span>New Arrival</span>
+                <span className="text-[9px] text-neutral-450 font-normal">Add &quot;New&quot; tag overlay in storefront</span>
+              </div>
+            </label>
+
+            {/* Best Seller */}
+            <label className="inline-flex items-start space-x-2.5 text-xs font-semibold text-neutral-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={formData.isBestSeller || false}
+                onChange={(e) => onChange("isBestSeller", e.target.checked)}
+                className="w-4 h-4 mt-0.5 rounded border-neutral-300 text-[#C99213] focus:ring-[#C99213] accent-[#C99213]"
+              />
+              <div className="flex flex-col">
+                <span>Best Seller</span>
+                <span className="text-[9px] text-neutral-450 font-normal">Label as a top-selling collection item</span>
+              </div>
+            </label>
+
+            {/* Show on Homepage */}
+            <label className="inline-flex items-start space-x-2.5 text-xs font-semibold text-neutral-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={formData.showOnHomepage || false}
+                onChange={(e) => onChange("showOnHomepage", e.target.checked)}
+                className="w-4 h-4 mt-0.5 rounded border-neutral-300 text-[#C99213] focus:ring-[#C99213] accent-[#C99213]"
+              />
+              <div className="flex flex-col">
+                <span>Show on Homepage</span>
+                <span className="text-[9px] text-neutral-450 font-normal">Display in homepage sections</span>
+              </div>
+            </label>
+          </div>
         </div>
       </div>
 
-      {/* Catalog Badges toggles */}
-      <div className="flex flex-col space-y-3 pt-2">
-        <label className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
-          Promotional Placements
-        </label>
-        
-        <div className="grid grid-cols-2 gap-4">
-          {/* Featured Product */}
-          <label className="inline-flex items-center space-x-2.5 text-xs font-semibold text-neutral-700 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={formData.isFeatured || false}
-              onChange={(e) => onChange("isFeatured", e.target.checked)}
-              className="w-4 h-4 rounded border-neutral-300 text-[#C99213] focus:ring-[#C99213] accent-[#C99213]"
-            />
-            <div className="flex flex-col">
-              <span>Featured Product</span>
-              <span className="text-[9px] text-neutral-450 font-normal">Display in top banners & recommendations</span>
-            </div>
-          </label>
+      {/* SEO Information Card */}
+      <div className="bg-white border border-[#E5E5E5] rounded-[12px] p-6 shadow-sm space-y-5">
+        <div className="border-b border-neutral-100 pb-3">
+          <h2 className="text-sm font-bold tracking-wide text-neutral-800 uppercase font-sans">
+            Search Engine Optimization (SEO)
+          </h2>
+          <p className="text-[10px] text-neutral-400 mt-0.5">
+            Optimize how this product appears on search engines like Google.
+          </p>
+        </div>
 
-          {/* New Arrival */}
-          <label className="inline-flex items-center space-x-2.5 text-xs font-semibold text-neutral-700 cursor-pointer">
+        <div className="space-y-4">
+          {/* SEO Title */}
+          <div className="flex flex-col space-y-1.5">
+            <label className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
+              SEO Title
+            </label>
             <input
-              type="checkbox"
-              checked={formData.isNewArrival || false}
-              onChange={(e) => onChange("isNewArrival", e.target.checked)}
-              className="w-4 h-4 rounded border-neutral-300 text-[#C99213] focus:ring-[#C99213] accent-[#C99213]"
+              type="text"
+              value={formData.seoTitle || ""}
+              onChange={(e) => onChange("seoTitle", e.target.value)}
+              placeholder="e.g. Premium Gold Chain Ring | Zorucci"
+              className="px-3 py-2 border border-neutral-200 rounded text-xs outline-none focus:border-[#C99213] transition-all text-neutral-850 placeholder-neutral-400"
             />
-            <div className="flex flex-col">
-              <span>New Arrival</span>
-              <span className="text-[9px] text-neutral-450 font-normal">Add &quot;New&quot; tag overlay in storefront</span>
-            </div>
-          </label>
+          </div>
 
-          {/* Best Seller */}
-          <label className="inline-flex items-center space-x-2.5 text-xs font-semibold text-neutral-700 cursor-pointer">
+          {/* SEO Slug */}
+          <div className="flex flex-col space-y-1.5">
+            <label className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
+              SEO Slug / URL Handle
+            </label>
             <input
-              type="checkbox"
-              checked={formData.isBestSeller || false}
-              onChange={(e) => onChange("isBestSeller", e.target.checked)}
-              className="w-4 h-4 rounded border-neutral-300 text-[#C99213] focus:ring-[#C99213] accent-[#C99213]"
+              type="text"
+              value={formData.seoSlug || ""}
+              onChange={(e) => onChange("seoSlug", e.target.value)}
+              placeholder="e.g. premium-gold-chain-ring"
+              className="px-3 py-2 border border-neutral-200 rounded text-xs outline-none focus:border-[#C99213] transition-all text-neutral-850 placeholder-neutral-400"
             />
-            <div className="flex flex-col">
-              <span>Best Seller</span>
-              <span className="text-[9px] text-neutral-450 font-normal">Label as a top-selling collection item</span>
-            </div>
-          </label>
+          </div>
 
-          {/* Show on Homepage */}
-          <label className="inline-flex items-center space-x-2.5 text-xs font-semibold text-neutral-700 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={formData.showOnHomepage || false}
-              onChange={(e) => onChange("showOnHomepage", e.target.checked)}
-              className="w-4 h-4 rounded border-neutral-300 text-[#C99213] focus:ring-[#C99213] accent-[#C99213]"
+          {/* SEO Description */}
+          <div className="flex flex-col space-y-1.5">
+            <label className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
+              SEO Meta Description
+            </label>
+            <textarea
+              rows={3}
+              value={formData.seoDescription || ""}
+              onChange={(e) => onChange("seoDescription", e.target.value)}
+              placeholder="Summary for search results (under 160 characters)"
+              className="px-3 py-2 border border-neutral-200 rounded text-xs outline-none focus:border-[#C99213] transition-all text-neutral-850 placeholder-neutral-400"
             />
-            <div className="flex flex-col">
-              <span>Show on Homepage</span>
-              <span className="text-[9px] text-neutral-450 font-normal">Display in homepage sections</span>
-            </div>
-          </label>
+          </div>
         </div>
       </div>
     </div>

@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, use } from 'react';
-import { products } from '../../data/products';
+import { getProducts } from '../../services/products.service';
+import { Product } from '../../types/product';
 import ProductGrid from '../../components/product/ProductGrid';
 import FilterSidebar from '../../components/shop/FilterSidebar';
 import SortDropdown from '../../components/shop/SortDropdown';
@@ -18,6 +19,7 @@ export default function ShopPage({
   const paramSearch = resolvedParams.q as string || '';
   const paramCollection = resolvedParams.collection as string || '';
 
+  const [productsList, setProductsList] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState(paramCategory);
   const [selectedGender, setSelectedGender] = useState('');
   const [selectedOccasion, setSelectedOccasion] = useState('');
@@ -29,6 +31,13 @@ export default function ShopPage({
   const [prevCategory, setPrevCategory] = useState(paramCategory);
   const [prevSort, setPrevSort] = useState(paramSort);
 
+  React.useEffect(() => {
+    getProducts().then((res) => {
+      // Exclude draft products from customer catalog
+      setProductsList(res.filter((p) => p.id !== "SKU-005"));
+    });
+  }, []);
+
   if (paramCategory !== prevCategory) { setPrevCategory(paramCategory); setSelectedCategory(paramCategory); }
   if (paramSort !== prevSort) { setPrevSort(paramSort); setSortBy(paramSort); }
 
@@ -38,7 +47,7 @@ export default function ShopPage({
     window.history.pushState({}, '', '/shop');
   };
 
-  let filteredProducts = products.filter((product) => {
+  let filteredProducts = productsList.filter((product) => {
     if (selectedCategory && product.category.toLowerCase() !== selectedCategory.toLowerCase()) return false;
     if (selectedGender && product.gender.toLowerCase() !== selectedGender.toLowerCase()) return false;
     if (selectedOccasion && !product.occasion.map(o => o.toLowerCase()).includes(selectedOccasion.toLowerCase())) return false;

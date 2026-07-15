@@ -154,6 +154,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
           <ProductInventorySection
             formData={formData}
             onChange={handleFieldChange}
+            mode={mode}
           />
 
           <ProductVariantsSection
@@ -161,6 +162,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
             onChange={handleVariantsChange}
             basePrice={formData.sellingPrice}
             baseSku={formData.sku}
+            mode={mode}
           />
 
           <ProductVisibilitySection

@@ -14,58 +14,22 @@ export default function AdminSidebar() {
       sectionTitle: "OVERVIEW",
       items: [
         { title: "Dashboard", href: "/admin/dashboard", iconName: "dashboard" },
-        { title: "Analytics", href: "#", iconName: "analytics" },
-        { title: "Reports", href: "#", iconName: "reports" },
       ],
     },
     {
       sectionTitle: "COMMERCE",
       items: [
-        {
-          title: "Orders",
-          href: "/admin/orders",
-          iconName: "orders",
-          subItems: [
-            { title: "All Orders", href: "/admin/orders" },
-            { title: "Pending Orders", href: "/admin/orders?status=Pending" },
-            { title: "Add Orders", href: "#" },
-          ],
-        },
+        { title: "Orders", href: "/admin/orders", iconName: "orders" },
         { title: "Products", href: "/admin/products", iconName: "products" },
         { title: "Categories", href: "/admin/categories", iconName: "categories" },
-        { title: "Purchases", href: "#", iconName: "purchases" },
-        { title: "Sales", href: "#", iconName: "sales" },
       ],
     },
     {
       sectionTitle: "MANAGEMENT",
       items: [
         { title: "Customers", href: "/admin/customers", iconName: "customers" },
-        {
-          title: "Inventory",
-          href: "/admin/inventory",
-          iconName: "inventory",
-          subItems: [
-            { title: "Overview", href: "/admin/inventory" },
-            { title: "Transactions", href: "/admin/inventory/transactions" },
-          ],
-        },
-        { title: "Vendors", href: "/admin/vendors", iconName: "vendors" },
-      ],
-    },
-    {
-      sectionTitle: "GROWTH",
-      items: [
-        { title: "Marketing", href: "#", iconName: "marketing" },
-        { title: "Finance", href: "#", iconName: "finance" },
-      ],
-    },
-    {
-      sectionTitle: "SYSTEM",
-      items: [
-        { title: "Content", href: "#", iconName: "content" },
-        { title: "Users & Roles", href: "#", iconName: "users" },
-        { title: "Settings", href: "#", iconName: "settings" },
+        { title: "Inventory", href: "/admin/inventory", iconName: "inventory" },
+        { title: "Stock Transactions", href: "/admin/inventory/transactions", iconName: "transactions" },
       ],
     },
   ];
@@ -80,6 +44,12 @@ export default function AdminSidebar() {
             <rect width="7" height="5" x="14" y="3" rx="1" />
             <rect width="7" height="9" x="14" y="12" rx="1" />
             <rect width="7" height="5" x="3" y="16" rx="1" />
+          </svg>
+        );
+      case "transactions":
+        return (
+          <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
           </svg>
         );
       case "analytics":
