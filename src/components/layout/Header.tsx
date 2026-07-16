@@ -7,10 +7,13 @@ import { menuItems } from '../../data/menu';
 import { useCart } from '../../context/CartContext';
 import MegaMenu from './MegaMenu';
 import { MenuItem } from '../../types/menu';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Header() {
   const pathname = usePathname();
   const { cartCount } = useCart();
+  const { user, isAuthenticated, logout, isAdmin } = useAuth();
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   // Is this the home page?
   const isHomePage = pathname === '/';
@@ -176,16 +179,58 @@ export default function Header() {
                 </svg>
               </button>
 
-              {/* Profile User Icon */}
-              <Link
-                href="#"
-                className={`hidden md:flex w-16 items-center justify-center border-l border-r ${borderClass} ${iconButtonClass} transition-colors`}
-                aria-label="Profile"
-              >
-                <svg width="25" height="31" viewBox="0 0 25 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M23.8333 30.5V27.1667C23.8333 25.3986 23.131 23.7029 21.8807 22.4526C20.6305 21.2024 18.9348 20.5 17.1667 20.5H7.16667C5.39856 20.5 3.70286 21.2024 2.45262 22.4526C1.20238 23.7029 0.5 25.3986 0.5 27.1667V30.5M18.8333 7.16667C18.8333 10.8486 15.8486 13.8333 12.1667 13.8333C8.48477 13.8333 5.5 10.8486 5.5 7.16667C5.5 3.48477 8.48477 0.5 12.1667 0.5C15.8486 0.5 18.8333 3.48477 18.8333 7.16667Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </Link>
+              {/* Profile User Icon & Dropdown */}
+              <div className="relative flex items-stretch">
+                {isAuthenticated ? (
+                  <>
+                    <button
+                      onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                      className={`hidden md:flex w-16 items-center justify-center border-l border-r ${borderClass} ${iconButtonClass} transition-colors focus:outline-none cursor-pointer`}
+                      aria-label="Account menu"
+                    >
+                      <span className="font-questrial text-xs font-semibold tracking-wider text-[#c59b27] uppercase">
+                        {user?.firstName ? user.firstName.substring(0, 2) : 'US'}
+                      </span>
+                    </button>
+                    {profileDropdownOpen && (
+                      <div className="absolute right-0 top-[100%] w-48 bg-white border border-neutral-100 shadow-xl py-2 z-50 text-neutral-800">
+                        <div className="px-4 py-2 border-b border-neutral-100">
+                          <p className="font-questrial text-[10px] text-neutral-400 uppercase tracking-widest">Signed in as</p>
+                          <p className="font-raleway text-xs font-semibold text-neutral-800 truncate mt-0.5">{user?.firstName} {user?.lastName}</p>
+                        </div>
+                        {isAdmin && (
+                          <Link
+                            href="/admin/dashboard"
+                            onClick={() => setProfileDropdownOpen(false)}
+                            className="block px-4 py-2 text-xs font-questrial hover:bg-neutral-50 text-neutral-700 hover:text-[#c59b27] uppercase tracking-wider"
+                          >
+                            Admin Panel
+                          </Link>
+                        )}
+                        <button
+                          onClick={() => {
+                            setProfileDropdownOpen(false);
+                            logout();
+                          }}
+                          className="w-full text-left px-4 py-2 text-xs font-questrial hover:bg-neutral-50 text-neutral-700 hover:text-red-600 uppercase tracking-wider border-t border-neutral-50 cursor-pointer"
+                        >
+                          Log out
+                        </button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <Link
+                    href="/login"
+                    className={`hidden md:flex w-16 items-center justify-center border-l border-r ${borderClass} ${iconButtonClass} transition-colors`}
+                    aria-label="Profile"
+                  >
+                    <svg width="25" height="31" viewBox="0 0 25 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M23.8333 30.5V27.1667C23.8333 25.3986 23.131 23.7029 21.8807 22.4526C20.6305 21.2024 18.9348 20.5 17.1667 20.5H7.16667C5.39856 20.5 3.70286 21.2024 2.45262 22.4526C1.20238 23.7029 0.5 25.3986 0.5 27.1667V30.5M18.8333 7.16667C18.8333 10.8486 15.8486 13.8333 12.1667 13.8333C8.48477 13.8333 5.5 10.8486 5.5 7.16667C5.5 3.48477 8.48477 0.5 12.1667 0.5C15.8486 0.5 18.8333 3.48477 18.8333 7.16667Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </Link>
+                )}
+              </div>
 
               {/* Mobile Hamburger menu */}
               <div className="w-14 flex md:hidden items-center justify-center">
@@ -292,9 +337,56 @@ export default function Header() {
                 </div>
               ))}
             </div>
+
+            {/* Mobile Drawer Auth Section */}
+            <div className="px-4 py-6 border-t border-neutral-100 space-y-4">
+                {isAuthenticated ? (
+                  <>
+                    <div className="text-xs font-questrial text-neutral-500 mb-2">
+                      Logged in as: <strong className="text-neutral-800 font-medium">{user?.firstName} {user?.lastName}</strong>
+                    </div>
+                    {isAdmin && (
+                      <Link
+                        href="/admin/dashboard"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="block py-1 text-sm font-light text-neutral-800 uppercase tracking-widest hover:text-[#c59b27]"
+                      >
+                        Admin Panel
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        logout();
+                      }}
+                      className="block w-full text-left py-1 text-sm font-light text-red-600 uppercase tracking-widest hover:underline cursor-pointer"
+                    >
+                      Log out
+                    </button>
+                  </>
+                ) : (
+                  <div className="flex gap-4">
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-xs font-questrial uppercase tracking-widest text-[#111111] hover:text-[#c59b27] border border-[#111111] px-4 py-2 flex-1 text-center font-medium"
+                    >
+                      Log In
+                    </Link>
+                    <Link
+                      href="/signup"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-xs font-questrial uppercase tracking-widest text-white hover:bg-neutral-800 bg-[#111111] px-4 py-2 flex-1 text-center font-medium"
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       {/* Expandable Search Modal Overlay */}
       {searchOpen && (
