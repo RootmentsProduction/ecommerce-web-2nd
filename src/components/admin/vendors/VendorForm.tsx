@@ -278,7 +278,8 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
       bankAccounts: cleanBankAccounts,
       remarks,
       attachments,
-      status: "Active"
+      status: "Active",
+      createdAt: new Date().toISOString()
     };
 
     if (isEdit) {
@@ -487,7 +488,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                 <div>
                   <label className="block text-[11px] font-semibold text-neutral-500 uppercase tracking-wider mb-2 flex items-center gap-1">
                     <span>GST Treatment</span>
-                    <HelpCircle className="w-3.5 h-3.5 text-neutral-400" title="Defines GST filing regulations" />
+                    <span title="Defines GST filing regulations"><HelpCircle className="w-3.5 h-3.5 text-neutral-400" /></span>
                   </label>
                   <PortalDropdown
                     align="left"

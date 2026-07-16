@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 import { Plus, ArrowRight, X, ChevronDown } from "lucide-react";
 import { PurchaseOrder, POItem } from "@/types/purchase-order";
 import { Vendor } from "@/types/vendor";
-import { localStorageService } from "@/services/localStorage.service";
+import { localStorageService, INDIAN_STATES } from "@/services/localStorage.service";
 import { adminProductsDetailFixture } from "@/data/fixtures/products";
 import PortalDropdown from "@/components/admin/shared/PortalDropdown";
 
