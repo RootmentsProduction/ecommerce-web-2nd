@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Plus, Download, Search, CheckCircle2, AlertCircle } from "lucide-react";
+import { Download, Search, CheckCircle2, AlertCircle } from "lucide-react";
 import AdminTopbar from "@/components/admin/layout/AdminTopbar";
-import { localStorageService } from "@/services/localStorage.service";
+import { getVendors } from "@/services/vendors.service";
 import { Vendor } from "@/types/vendor";
 
 export default function VendorsListPage() {
@@ -13,10 +13,7 @@ export default function VendorsListPage() {
   const [statusFilter, setStatusFilter] = useState<"All" | "Active" | "Inactive">("All");
 
   useEffect(() => {
-    // Load vendors from localStorage service deferred to microtask
-    Promise.resolve().then(() => {
-      setVendors(localStorageService.getVendors());
-    });
+    getVendors().then(setVendors);
   }, []);
 
   // Filter vendors based on status and search query
@@ -71,7 +68,7 @@ export default function VendorsListPage() {
   const breadcrumbs = [{ label: "Dashboard", href: "/admin/dashboard" }, { label: "Vendors" }];
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f5f7fb] admin-dashboard-root">
+    <div className="flex flex-col min-h-screen bg-[#F8F8F8] admin-dashboard-root">
       {/* Topbar */}
       <AdminTopbar
         breadcrumbItems={breadcrumbs}
@@ -84,10 +81,10 @@ export default function VendorsListPage() {
         {/* Header Block */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-neutral-900 tracking-tight font-sans">
+            <h1 className="text-xl font-bold tracking-wider text-neutral-900 uppercase font-sans">
               Vendors
             </h1>
-            <p className="text-xs text-neutral-500 mt-1">
+            <p className="text-[11px] text-neutral-450 mt-1 font-medium">
               Manage your supplier relationships, bank details, and payables.
             </p>
           </div>
@@ -96,18 +93,18 @@ export default function VendorsListPage() {
             {/* Export CSV Button */}
             <button
               onClick={handleExportCSV}
-              className="flex items-center space-x-2 px-4 py-2 border border-[#e1e5f5] rounded-full bg-[#fff7ed] hover:bg-[#ffedd5] text-[#b45309] text-xs font-semibold tracking-wide transition-colors cursor-pointer"
+              className="flex items-center space-x-2 px-4 py-2 border border-neutral-200 rounded-full bg-white hover:bg-neutral-100 text-neutral-800 text-xs font-semibold tracking-wide transition-colors cursor-pointer"
             >
-              <Download className="w-4 h-4" />
+              <Download className="w-4 h-4 text-neutral-400" />
               <span>Export CSV</span>
             </button>
 
             {/* New Vendor Button */}
             <Link
               href="/admin/vendors/new"
-              className="flex items-center space-x-2 px-5 py-2.5 bg-[#3762f9] hover:bg-[#2748c9] text-white rounded-full text-xs font-semibold tracking-wide transition-all shadow-[0_4px_12px_rgba(55,98,249,0.2)] cursor-pointer"
+              className="flex items-center space-x-2 px-5 py-2.5 bg-neutral-950 hover:bg-neutral-850 text-white rounded-full text-xs font-semibold tracking-wide transition-all cursor-pointer"
             >
-              <Plus className="w-4 h-4" />
+              <span className="text-[#C99213] font-bold text-sm leading-none">+</span>
               <span>New Vendor</span>
             </Link>
           </div>
@@ -117,7 +114,7 @@ export default function VendorsListPage() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           
           {/* Left Sidebar Status Filter */}
-          <div className="lg:col-span-1 bg-white border border-[#e1e5f5] rounded-3xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] space-y-4">
+          <div className="lg:col-span-1 bg-white border border-neutral-200 rounded-[12px] p-5 shadow-sm space-y-4">
             <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400">
               Filter Status
             </h2>
@@ -128,7 +125,7 @@ export default function VendorsListPage() {
                   onClick={() => setStatusFilter(status)}
                   className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                     statusFilter === status
-                      ? "bg-[#3762f9]/10 text-[#3762f9]"
+                      ? "bg-neutral-950 text-white"
                       : "text-neutral-600 hover:bg-neutral-50"
                   }`}
                 >
@@ -139,10 +136,10 @@ export default function VendorsListPage() {
           </div>
 
           {/* Right Main Table Card */}
-          <div className="lg:col-span-4 bg-white border border-[#e1e5f5] rounded-3xl shadow-[0_30px_90px_-40px_rgba(15,23,42,0.15)] overflow-hidden flex flex-col">
+          <div className="lg:col-span-4 bg-white border border-neutral-200 rounded-[12px] shadow-sm overflow-hidden flex flex-col">
             
             {/* Search and Filters Header */}
-            <div className="p-5 border-b border-[#e1e5f5] flex items-center justify-between gap-4">
+            <div className="p-5 border-b border-neutral-100 flex items-center justify-between gap-4">
               <div className="relative flex-1 max-w-md">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
                   <Search className="w-4 h-4 text-neutral-400" />
@@ -152,7 +149,7 @@ export default function VendorsListPage() {
                   placeholder="Search by name, company, email or phone..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-2xl text-xs outline-none focus:border-[#3762f9] focus:bg-white transition-all text-neutral-800 placeholder-neutral-400"
+                  className="w-full pl-10 pr-4 py-2 bg-white border border-neutral-200 rounded-full text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 placeholder-neutral-400"
                 />
               </div>
 
@@ -165,23 +162,23 @@ export default function VendorsListPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[#f5f6ff] text-[11px] font-semibold uppercase tracking-[0.18em] text-[#64748b] border-b border-[#e1e5f5]">
-                    <th className="py-4 px-6 font-semibold w-12">#</th>
-                    <th className="py-4 px-6 font-semibold">Display Name</th>
-                    <th className="py-4 px-6 font-semibold">Company</th>
-                    <th className="py-4 px-6 font-semibold">Email</th>
-                    <th className="py-4 px-6 font-semibold">Work Phone</th>
-                    <th className="py-4 px-6 font-semibold">GST Treatment</th>
-                    <th className="py-4 px-6 font-semibold text-right">Payables</th>
-                    <th className="py-4 px-6 font-semibold text-right">Credits</th>
+                  <tr className="bg-[#1C1B19] text-white text-[10px] font-semibold uppercase tracking-[0.15em] border-b border-neutral-800">
+                    <th className="py-4 px-6 font-semibold w-12 text-neutral-200">#</th>
+                    <th className="py-4 px-6 font-semibold text-neutral-200">Display Name</th>
+                    <th className="py-4 px-6 font-semibold text-neutral-200">Company</th>
+                    <th className="py-4 px-6 font-semibold text-neutral-200">Email</th>
+                    <th className="py-4 px-6 font-semibold text-neutral-200">Work Phone</th>
+                    <th className="py-4 px-6 font-semibold text-neutral-200">GST Treatment</th>
+                    <th className="py-4 px-6 font-semibold text-right text-neutral-200">Payables</th>
+                    <th className="py-4 px-6 font-semibold text-right text-neutral-200">Credits</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#e1e5f5]">
+                <tbody className="divide-y divide-neutral-100">
                   {filteredVendors.length > 0 ? (
                     filteredVendors.map((v, idx) => (
                       <tr
                         key={v.id}
-                        className="hover:bg-[#fafbff] transition-colors group"
+                        className="hover:bg-neutral-50 transition-colors group"
                       >
                         {/* Index */}
                         <td className="py-4 px-6 text-xs text-neutral-400 font-medium">
@@ -189,7 +186,7 @@ export default function VendorsListPage() {
                         </td>
 
                         {/* Display Name */}
-                        <td className="py-4 px-6 text-xs font-bold text-[#3762f9] hover:underline cursor-pointer">
+                        <td className="py-4 px-6 text-xs font-bold text-neutral-900 hover:text-[#C99213] hover:underline cursor-pointer">
                           <Link href={`/admin/vendors/${v.id}`}>
                             {v.displayName}
                           </Link>

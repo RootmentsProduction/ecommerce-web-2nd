@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Edit, Trash2, Printer, FileText } from "lucide-react";
 import AdminTopbar from "@/components/admin/layout/AdminTopbar";
-import { localStorageService } from "@/services/localStorage.service";
+import { getPurchaseOrderById, updatePurchaseOrder, updatePurchaseOrderStatus, receivePurchaseOrderItems } from "@/services/purchase-orders.service";
 import { PurchaseOrder } from "@/types/purchase-order";
 
 export default function PurchaseOrderDetailPage() {
@@ -14,37 +14,97 @@ export default function PurchaseOrderDetailPage() {
   const poId = params.id as string;
 
   const [po, setPo] = useState<PurchaseOrder | null>(null);
+  
+  // Goods receipt states
+  const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
+  const [receivedBy, setReceivedBy] = useState("");
+  const [receiveNotes, setReceiveNotes] = useState("");
+  const [receiveQuantities, setReceiveQuantities] = useState<Record<string, number>>({});
 
   useEffect(() => {
     if (poId) {
-      const data = localStorageService.getPurchaseOrderById(poId);
-      if (data) {
-        Promise.resolve().then(() => {
+      getPurchaseOrderById(poId).then((data) => {
+        if (data) {
           setPo(data);
-        });
-      } else {
-        router.push("/admin/purchase-orders");
-      }
+        } else {
+          router.push("/admin/purchase-orders");
+        }
+      });
     }
   }, [poId, router]);
+
+  useEffect(() => {
+    if (po && isReceiveModalOpen) {
+      const initialQtys: Record<string, number> = {};
+      po.items.forEach((item) => {
+        const remaining = item.quantity - (item.receivedQuantity || 0);
+        initialQtys[item.sku] = remaining > 0 ? remaining : 0;
+      });
+      setReceiveQuantities(initialQtys);
+    }
+  }, [po, isReceiveModalOpen]);
 
   if (!po) return null;
 
   // Change status quick
-  const handleUpdateStatus = (newStatus: "Draft" | "Sent" | "Received" | "Cancelled") => {
-    const updated = {
-      ...po,
-      status: newStatus
-    };
-    localStorageService.savePurchaseOrder(updated);
-    setPo(updated);
+  const handleUpdateStatus = async (newStatus: "Draft" | "Sent" | "Received" | "Cancelled" | "Partially_Received") => {
+    try {
+      const updated = await updatePurchaseOrderStatus(po.id, newStatus);
+      setPo({ ...po, ...updated });
+    } catch (err) {
+      console.error("Failed to update PO status:", err);
+    }
   };
 
-  // Delete PO
-  const handleDeletePO = () => {
+  const handleConfirmReceive = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!receivedBy.trim()) {
+      alert("Please enter who is receiving the goods.");
+      return;
+    }
+
+    const payloadItems = Object.entries(receiveQuantities)
+      .map(([sku, qty]) => ({
+        sku,
+        quantityReceived: Number(qty) || 0,
+      }))
+      .filter((item) => item.quantityReceived > 0);
+
+    if (payloadItems.length === 0) {
+      alert("Please enter a quantity greater than 0 for at least one item.");
+      return;
+    }
+
+    try {
+      await receivePurchaseOrderItems(po.id, {
+        receivedBy,
+        notes: receiveNotes || undefined,
+        items: payloadItems,
+      });
+
+      // Close modal and reload PO details
+      setIsReceiveModalOpen(false);
+      setReceivedBy("");
+      setReceiveNotes("");
+      
+      const refreshed = await getPurchaseOrderById(po.id);
+      if (refreshed) {
+        setPo(refreshed);
+      }
+    } catch (err: any) {
+      alert(err.message || "Failed to receive goods.");
+    }
+  };
+
+  // Delete PO  
+  const handleDeletePO = async () => {
     if (confirm(`Are you sure you want to delete purchase order ${po.id}?`)) {
-      localStorageService.deletePurchaseOrder(po.id);
-      router.push("/admin/purchase-orders");
+      try {
+        await updatePurchaseOrderStatus(po.id, "Cancelled");
+        router.push("/admin/purchase-orders");
+      } catch (err) {
+        console.error("Failed to delete PO:", err);
+      }
     }
   };
 
@@ -86,13 +146,15 @@ export default function PurchaseOrderDetailPage() {
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                   po.status === "Received"
                     ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
+                    : po.status === "Partially_Received"
+                    ? "bg-amber-50 text-amber-600 border border-amber-100"
                     : po.status === "Sent"
                     ? "bg-purple-55 text-purple-600 border border-purple-100"
                     : po.status === "Cancelled"
-                    ? "bg-red-50 text-red-650 border border-red-100"
+                    ? "bg-red-50 text-red-655 border border-red-100"
                     : "bg-neutral-100 text-neutral-500 border border-neutral-200"
                 }`}>
-                  {po.status}
+                  {po.status.replace("_", " ")}
                 </span>
               </div>
               <p className="text-xs text-neutral-500 mt-0.5">
@@ -116,10 +178,10 @@ export default function PurchaseOrderDetailPage() {
               )}
               {po.status !== "Received" && po.status !== "Cancelled" && (
                 <button
-                  onClick={() => handleUpdateStatus("Received")}
+                  onClick={() => setIsReceiveModalOpen(true)}
                   className="px-3.5 py-2 hover:bg-emerald-50 text-emerald-600 transition-colors border-r border-[#e1e5f5] cursor-pointer"
                 >
-                  Mark Received
+                  Receive Goods
                 </button>
               )}
               {po.status !== "Cancelled" && po.status !== "Received" && (
@@ -390,6 +452,104 @@ export default function PurchaseOrderDetailPage() {
         </div>
 
       </div>
+
+      {/* Goods Receipt Modal */}
+      {isReceiveModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl border border-[#e1e5f5] max-w-2xl w-full p-8 shadow-2xl mx-4 space-y-6">
+            <div>
+              <h2 className="text-lg font-bold text-neutral-900 font-sans tracking-tight">Log Goods Receipt</h2>
+              <p className="text-xs text-neutral-500 mt-1 font-medium">
+                Record physical shipment receipt into inventory. This action automatically adjusts stock levels in the database.
+              </p>
+            </div>
+
+            <form onSubmit={handleConfirmReceive} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block font-sans">Received By *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter your name / email"
+                    value={receivedBy}
+                    onChange={(e) => setReceivedBy(e.target.value)}
+                    className="w-full border border-neutral-200 rounded-xl px-3.5 py-2 text-xs outline-none focus:border-[#3762f9] focus:ring-1 focus:ring-[#3762f9] transition-all text-neutral-850 font-semibold"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block font-sans">Notes / Invoice Ref</label>
+                  <input
+                    type="text"
+                    placeholder="Optional details..."
+                    value={receiveNotes}
+                    onChange={(e) => setReceiveNotes(e.target.value)}
+                    className="w-full border border-neutral-200 rounded-xl px-3.5 py-2 text-xs outline-none focus:border-[#3762f9] focus:ring-1 focus:ring-[#3762f9] transition-all text-neutral-850 font-semibold"
+                  />
+                </div>
+              </div>
+
+              <div className="border border-neutral-100 rounded-2xl overflow-hidden max-h-60 overflow-y-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-neutral-50 text-[10px] font-bold uppercase text-neutral-450 border-b border-neutral-100 font-sans">
+                      <th className="py-2.5 px-4 font-semibold">Item & SKU</th>
+                      <th className="py-2.5 px-4 text-center font-semibold">Remaining</th>
+                      <th className="py-2.5 px-4 text-right w-32 font-semibold">Qty Received</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-100 font-sans">
+                    {po.items.map((item) => {
+                      const remaining = item.quantity - (item.receivedQuantity || 0);
+                      return (
+                        <tr key={item.sku} className="hover:bg-neutral-50/20 transition-colors">
+                          <td className="py-3 px-4">
+                            <p className="font-bold text-neutral-900">{item.name}</p>
+                            <p className="text-[10px] text-neutral-450 font-medium font-mono">{item.sku}</p>
+                          </td>
+                          <td className="py-3 px-4 text-center font-bold text-neutral-600">
+                            {remaining > 0 ? `${remaining} units` : "Fully Received"}
+                          </td>
+                          <td className="py-3 px-4 text-right">
+                            <input
+                              type="number"
+                              min="0"
+                              max={remaining}
+                              disabled={remaining <= 0}
+                              value={receiveQuantities[item.sku] ?? 0}
+                              onChange={(e) => {
+                                const val = Math.min(remaining, Math.max(0, parseInt(e.target.value) || 0));
+                                setReceiveQuantities((prev) => ({ ...prev, [item.sku]: val }));
+                              }}
+                              className="w-20 border border-neutral-200 rounded-lg px-2.5 py-1 text-center outline-none focus:border-[#3762f9] transition-all text-xs font-bold text-neutral-850 disabled:bg-neutral-100 disabled:text-neutral-400"
+                            />
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="flex justify-end space-x-3 pt-4 border-t border-neutral-100 font-sans">
+                <button
+                  type="button"
+                  onClick={() => setIsReceiveModalOpen(false)}
+                  className="px-4 py-2 border border-neutral-200 rounded-xl hover:bg-neutral-50 text-xs font-semibold text-neutral-600 transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold tracking-wide transition-colors cursor-pointer"
+                >
+                  Confirm Receipt
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

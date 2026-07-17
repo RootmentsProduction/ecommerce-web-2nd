@@ -34,6 +34,7 @@ export interface AdminOrder {
 }
 
 export interface AdminProduct {
+  id?: string;
   sku: string;
   name: string;
   category: string;
@@ -46,6 +47,7 @@ export interface AdminProduct {
 }
 
 export interface AdminInventoryItem {
+  productId?: string;
   sku: string;
   name: string;
   category: string;
@@ -65,12 +67,20 @@ export interface AdminVendor {
 
 export interface AdminCustomer {
   id: string;
-  name: string;
-  mobile: string;
+  // Legacy fixture fields
+  name?: string;
+  mobile?: string;
+  ordersCount?: number;
+  dateJoined?: string;
+  // Real API fields
+  firstName?: string;
+  lastName?: string;
   email: string;
-  ordersCount: number;
-  totalSpend: string;
-  dateJoined: string;
+  status?: string;
+  orderCount?: number;
+  totalSpend?: number | string;
+  joinedDate?: string | Date;
+  createdAt?: string | Date;
 }
 
 export interface AdminNavItem {
@@ -93,6 +103,7 @@ export interface AdminProductMedia {
   url: string;
   isPrimary: boolean;
   altText?: string;
+  file?: File;
 }
 
 export interface AdminProductVariant {
@@ -105,6 +116,7 @@ export interface AdminProductVariant {
 }
 
 export interface AdminProductFormData {
+  id?: string;
   name: string;
   sku: string;
   slug: string;

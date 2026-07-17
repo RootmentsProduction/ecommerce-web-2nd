@@ -1,11 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { monthlySalesData } from "@/data/fixtures/dashboard";
+import { getDashboardStats } from "@/services/dashboard.service";
 
 export default function SalesAnalyticsChart() {
   const [activeFilter, setActiveFilter] = useState("Month");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [chartData, setChartData] = useState(monthlySalesData);
+
+  useEffect(() => {
+    getDashboardStats().then((s) => {
+      if (s?.monthlySales && s.monthlySales.length > 0) {
+        setChartData(s.monthlySales);
+      }
+    });
+  }, []);
 
   // Chart configuration
   const width = 900;
@@ -22,8 +32,8 @@ export default function SalesAnalyticsChart() {
   const pointsRevenue: [number, number][] = [];
   const pointsProfit: [number, number][] = [];
 
-  monthlySalesData.forEach((d, i) => {
-    const x = paddingLeft + (i * chartWidth) / (monthlySalesData.length - 1);
+  chartData.forEach((d, i) => {
+    const x = paddingLeft + (i * chartWidth) / (chartData.length - 1);
     
     // Scale: y-axis goes from 0 to 100
     // SVG coordinate system starts at top (0) and goes down

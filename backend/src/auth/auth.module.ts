@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Module } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
@@ -7,7 +7,9 @@ import { AuthController } from './auth.controller';
 import { AdminAuthController } from './admin-auth.controller';
 import { UsersModule } from '../users/users.module';
 import { EmailModule } from '../email/email.module';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
+@Global()
 @Module({
   imports: [
     UsersModule,
@@ -26,8 +28,8 @@ import { EmailModule } from '../email/email.module';
       }),
     }),
   ],
-  providers: [AuthService],
+  providers: [AuthService, JwtAuthGuard],
   controllers: [AuthController, AdminAuthController],
-  exports: [AuthService, JwtModule],
+  exports: [AuthService, JwtModule, JwtAuthGuard, UsersModule],
 })
 export class AuthModule {}

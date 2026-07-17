@@ -3,6 +3,7 @@ export interface POItem {
   name: string;
   size: string;
   quantity: number;
+  receivedQuantity?: number;
   rate: number;
   taxRate: number;
   taxAmount: number;
@@ -22,7 +23,7 @@ export interface PurchaseOrder {
   deliveryDate?: string;
   paymentTerms: string;
   shipmentPreference?: string;
-  status: "Draft" | "Sent" | "Received" | "Cancelled";
+  status: "Draft" | "Sent" | "Received" | "Cancelled" | "Partially_Received" | "Partially Received";
   items: POItem[];
   
   subtotal: number;

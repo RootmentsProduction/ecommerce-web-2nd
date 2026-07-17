@@ -313,7 +313,7 @@ export const localStorageService = {
     const existingIdx = vendors.findIndex((v) => v.id === vendor.id);
 
     const fullVendor: Vendor = {
-      ...vendor,
+      ...(vendor as any),
       payables: vendor.payables ?? 0,
       unusedCredits: vendor.unusedCredits ?? 0,
       createdAt: vendor.createdAt ?? new Date().toISOString(),

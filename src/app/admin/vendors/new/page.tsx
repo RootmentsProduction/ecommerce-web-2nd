@@ -12,15 +12,15 @@ export default function NewVendorPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f5f7fb] admin-dashboard-root">
+    <div className="flex flex-col min-h-screen bg-[#F8F8F8] admin-dashboard-root">
       {/* Topbar */}
-      <AdminTopbar breadcrumbItems={breadcrumbs} showSearch={false} />
+      <AdminTopbar breadcrumbItems={breadcrumbs} showSearch={false} maxWidthClass="max-w-5xl" />
 
       {/* Main Container */}
       <div className="flex-1 p-6 md:p-8 space-y-6 max-w-5xl w-full mx-auto">
         {/* Title Block */}
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 tracking-tight font-sans">
+          <h1 className="text-xl font-bold tracking-wider text-neutral-900 uppercase font-sans">
             Add New Vendor
           </h1>
           <p className="text-xs text-neutral-500 mt-1">

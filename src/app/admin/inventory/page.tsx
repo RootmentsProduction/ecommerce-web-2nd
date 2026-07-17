@@ -14,7 +14,7 @@ export default function AdminInventoryPage() {
   const [activeTab, setActiveTab] = useState("All Inventories");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const breadcrumbs = [{ label: "Inventory" }];
+  const breadcrumbs = [{ label: "Dashboard", href: "/admin/dashboard" }, { label: "Inventory" }];
 
   const tabs = ["All Inventories", "Low Stock", "Out Of Stock"];
 
@@ -203,7 +203,7 @@ export default function AdminInventoryPage() {
                     itemStatus = "Low Stock";
                   }
 
-                  const urlId = item.sku.replace("#", "").trim();
+                  const urlId = item.productId || item.sku.replace("#", "").trim();
                   return (
                     <tr key={idx} className="hover:bg-neutral-50/50 transition-colors">
                       {/* SKU */}

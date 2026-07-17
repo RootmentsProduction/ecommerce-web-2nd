@@ -12,6 +12,7 @@ import {
 import * as express from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/auth.dto';
+import { Public } from './decorators/public.decorator';
 
 @Controller('admin/auth')
 export class AdminAuthController {
@@ -31,6 +32,7 @@ export class AdminAuthController {
     });
   }
 
+  @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(

@@ -25,6 +25,7 @@ export default function ProductMediaSection({ media, onChange }: ProductMediaPro
           url: localUrl,
           isPrimary: newMedia.length === 0, // Mark first as primary if empty
           altText: "",
+          file,
         });
       });
 

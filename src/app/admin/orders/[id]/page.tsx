@@ -9,7 +9,7 @@ import OrderCustomerCard from "@/components/admin/orders/OrderCustomerCard";
 import OrderItemsTable from "@/components/admin/orders/OrderItemsTable";
 import OrderPaymentCard from "@/components/admin/orders/OrderPaymentCard";
 import OrderTimeline from "@/components/admin/orders/OrderTimeline";
-import { getOrderById } from "@/services/orders.service";
+import { getOrderById, updateOrderStatus } from "@/services/orders.service";
 import { AdminOrderDetails, StatusType } from "@/types/admin";
 
 interface PageProps {
@@ -51,39 +51,21 @@ export default function AdminOrderDetailsPage({ params }: PageProps) {
     { label: order.id }
   ];
 
-  const handleStatusChange = (newStatus: StatusType) => {
-    // Dynamically update local order status and timeline
-    setOrder((prev) => {
-      if (!prev) return prev;
+  const handleStatusChange = async (newStatus: StatusType) => {
+    try {
+      await updateOrderStatus(id, newStatus);
       
-      // Construct a new timeline matching the status
-      const updatedTimeline = prev.timeline.map((step) => {
-        // Simple mock mapping to adjust completed steps based on new order state
-        let stepStatus = step.status;
-        if (newStatus === "Delivered") {
-          stepStatus = "completed";
-        } else if (newStatus === "Pending Payment") {
-          stepStatus = step.title === "Order Placed" ? "completed" : step.title === "Payment Confirmed" ? "current" : "upcoming";
-        } else if (newStatus === "Confirmed") {
-          stepStatus = step.title === "Order Placed" || step.title === "Payment Confirmed" ? "completed" : step.title === "Processing" ? "current" : "upcoming";
-        } else if (newStatus === "Processing" || newStatus === "Packed") {
-          stepStatus = step.title === "Order Placed" || step.title === "Payment Confirmed" || step.title === "Processing" ? "completed" : step.title === "Shipped" ? "current" : "upcoming";
-        } else if (newStatus === "Shipped") {
-          stepStatus = step.title !== "Delivered" ? "completed" : "current";
-        }
-        
-        return { ...step, status: stepStatus as "completed" | "current" | "upcoming" };
-      });
-
-      return {
-        ...prev,
-        status: newStatus,
-        timeline: updatedTimeline,
-      };
-    });
-
-    setToastMessage(`Order status updated to "${newStatus}"!`);
-    setTimeout(() => setToastMessage(null), 3000);
+      // Reload order details to refresh ledger transaction fields, payment status, etc.
+      const res = await getOrderById(id);
+      if (res) {
+        setOrder(res);
+      }
+      
+      setToastMessage(`Order status updated to "${newStatus}"!`);
+      setTimeout(() => setToastMessage(null), 3000);
+    } catch (err: any) {
+      alert(err.message || "Failed to update order status.");
+    }
   };
 
   return (

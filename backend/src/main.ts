@@ -36,7 +36,10 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Accept, Authorization',
   });
 
-  const port = configService.get<number>('PORT') ?? 7001;
+  let port = Number(configService.get('PORT')) || 7001;
+  if (port === 7000) {
+    port = 7001;
+  }
   await app.listen(port);
   logger.log(`Application is running on: http://localhost:${port}`);
   logger.log(`API health check endpoint: http://localhost:${port}/api/health`);

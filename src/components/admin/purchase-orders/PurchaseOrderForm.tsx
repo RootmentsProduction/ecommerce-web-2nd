@@ -6,8 +6,10 @@ import { createPortal } from "react-dom";
 import { Plus, ArrowRight, X, ChevronDown } from "lucide-react";
 import { PurchaseOrder, POItem } from "@/types/purchase-order";
 import { Vendor } from "@/types/vendor";
-import { localStorageService, INDIAN_STATES } from "@/services/localStorage.service";
-import { adminProductsDetailFixture } from "@/data/fixtures/products";
+import { INDIAN_STATES } from "@/services/localStorage.service";
+import { getVendors, createVendor } from "@/services/vendors.service";
+import { createPurchaseOrder, updatePurchaseOrder, getPurchaseOrderById } from "@/services/purchase-orders.service";
+import { getAdminProducts } from "@/services/products.service";
 import PortalDropdown from "@/components/admin/shared/PortalDropdown";
 
 // Deliver-to Warehouse Options
@@ -29,13 +31,8 @@ const WAREHOUSES = [
   }
 ];
 
-// Product catalog options mapped from fixtures
-const PRODUCTS = Object.values(adminProductsDetailFixture).map((p) => ({
-  sku: p.sku,
-  name: p.name,
-  description: p.shortDescription || p.description,
-  costPrice: Number(p.costPrice || 0) || Number(p.sellingPrice || 0) * 0.7 // fallback
-}));
+// Product catalog is loaded dynamically; this local const is only for type reference
+const PRODUCTS: { sku: string; name: string; description: string; costPrice: number }[] = [];
 
 // Tax Rates
 const TAX_RATES = [
@@ -108,84 +105,87 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
   const [fileInputVal, setFileInputVal] = useState("");
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  // Dynamic products list loaded from backend
+  const [products, setProducts] = useState<typeof PRODUCTS>([]);
 
   // 1. Initial configuration
   useEffect(() => {
-    // Load vendors list
-    const activeVendors = localStorageService.getVendors();
-    
-    // Default dates
-    const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-    const twoWeeksLater = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
-    
-    Promise.resolve().then(() => {
-      setVendors(activeVendors);
+    // Load vendors list from backend
+    getVendors().then((vendorList) => {
+      setVendors(vendorList as any[]);
 
-      // Set auto-generated PO number
+      // Default dates
+      const today = new Date().toISOString().split("T")[0];
+      const twoWeeksLater = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+
       if (!isEdit) {
         const generatedNo = `PO-${String(Math.floor(1000 + Math.random() * 9000))}`;
         setPoNumber(generatedNo);
         setDate(today);
         setDeliveryDate(twoWeeksLater);
 
-        // Pre-select vendor from search query if any
         const qVendorId = searchParams.get("vendorId");
         if (qVendorId) {
           setSelectedVendorId(qVendorId);
-        } else if (activeVendors.length > 0) {
-          setSelectedVendorId(activeVendors[0].id);
+        } else if (vendorList.length > 0) {
+          setSelectedVendorId((vendorList[0] as any).id);
         }
       } else if (isEdit && initialPOId) {
-        // Prepopulate
-        const po = localStorageService.getPurchaseOrderById(initialPOId);
-        if (po) {
-          setPoNumber(po.id);
-          setSelectedVendorId(po.vendorId);
-          setReferenceNumber(po.referenceNumber || "");
-          
-          // Convert dates from DD/MM/YYYY back to YYYY-MM-DD for picker
-          const parseDate = (dStr?: string) => {
-            if (!dStr) return "";
-            const parts = dStr.split("/");
-            if (parts.length === 3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
-            return dStr;
-          };
-          setDate(parseDate(po.date));
-          setDeliveryDate(parseDate(po.deliveryDate));
-          
-          setPaymentTerms(po.paymentTerms);
-          setShipmentPreference(po.shipmentPreference || "");
-          
-          // Match warehouse
-          const wIdx = WAREHOUSES.findIndex((w) => w.name === po.deliverToBranch);
-          if (wIdx >= 0) setSelectedWarehouseIdx(wIdx);
-          
-          setItems(po.items);
-          setDiscountType(po.discountType);
-          setDiscountValue(po.discountValue);
-          setDiscountUnit(po.discountUnit);
-          setDiscountAfterTax(po.discountAfterTax);
-          
-          setTdsTcsType(po.tdsTcsType);
-          setTdsTcsRate(po.tdsTcsRate);
-          setTdsTcsName(po.tdsTcsName || "None");
-          
-          setAdjustment(po.adjustment);
-          setCustomerNotes(po.customerNotes || "");
-          setTermsAndConditions(po.termsAndConditions || "");
-          setAttachments(po.attachments || []);
-        }
+        getPurchaseOrderById(initialPOId).then((po) => {
+          if (po) {
+            setPoNumber(po.id);
+            setSelectedVendorId(po.vendorId);
+            setReferenceNumber(po.referenceNumber || "");
+
+            const parseDate = (dStr?: string) => {
+              if (!dStr) return "";
+              const parts = dStr.split("/");
+              if (parts.length === 3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
+              return dStr;
+            };
+            setDate(parseDate(po.date));
+            setDeliveryDate(parseDate(po.deliveryDate));
+            setPaymentTerms(po.paymentTerms);
+            setShipmentPreference(po.shipmentPreference || "");
+
+            const wIdx = WAREHOUSES.findIndex((w) => w.name === po.deliverToBranch);
+            if (wIdx >= 0) setSelectedWarehouseIdx(wIdx);
+
+            setItems(po.items);
+            setDiscountType(po.discountType);
+            setDiscountValue(po.discountValue);
+            setDiscountUnit(po.discountUnit);
+            setDiscountAfterTax(po.discountAfterTax);
+            setTdsTcsType(po.tdsTcsType);
+            setTdsTcsRate(po.tdsTcsRate);
+            setTdsTcsName(po.tdsTcsName || "None");
+            setAdjustment(po.adjustment);
+            setCustomerNotes(po.customerNotes || "");
+            setTermsAndConditions(po.termsAndConditions || "");
+            setAttachments(po.attachments || []);
+          }
+        });
       }
+    });
+
+    // Load products from backend
+    getAdminProducts().then((prods) => {
+      setProducts(prods.map((p: any) => ({
+        sku: p.sku,
+        name: p.name,
+        description: p.shortDescription || p.description || "",
+        costPrice: Number(p.costPrice || 0) || Number(p.sellingPrice || 0) * 0.7,
+      })));
     });
   }, [isEdit, initialPOId, searchParams]);
 
-  // Listen to new vendor added triggers from portal modal
+  // When a new vendor is created in the modal, reload vendor list
   const handleReloadVendors = (newId?: string) => {
-    const updated = localStorageService.getVendors();
-    setVendors(updated);
-    if (newId) {
-      setSelectedVendorId(newId);
-    }
+    getVendors().then((updated) => {
+      setVendors(updated as any[]);
+      if (newId) setSelectedVendorId(newId);
+    });
   };
 
   const selectedVendor = vendors.find((v) => v.id === selectedVendorId);
@@ -197,7 +197,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
   };
 
   const handleRowItemChange = (idx: number, sku: string) => {
-    const match = PRODUCTS.find((p) => p.sku === sku);
+    const match = products.find((p) => p.sku === sku);
     if (match) {
       const updated = [...items];
       updated[idx] = {
@@ -352,7 +352,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
   };
 
   // Submit form
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validation
@@ -375,46 +375,60 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
       return dateString;
     };
 
-    const poPayload: PurchaseOrder = {
-      id: poNumber,
-      vendorId: selectedVendorId,
-      vendorName: selectedVendor?.displayName || "Unknown Vendor",
-      vendorState: selectedVendor?.sourceOfSupply || "Maharashtra",
-      deliverToBranch: selectedWarehouse.name,
-      deliverToState: selectedWarehouse.state,
-      deliverToAddress: selectedWarehouse.address,
-      referenceNumber,
-      date: formatDate(date),
-      deliveryDate: formatDate(deliveryDate),
-      paymentTerms,
-      shipmentPreference,
-      status: isEdit ? (localStorageService.getPurchaseOrderById(initialPOId!)?.status || "Draft") : "Draft",
-      items: calculatedItems,
-      subtotal,
-      discountType,
-      discountValue,
-      discountUnit,
-      discountAfterTax,
-      discountAmount,
-      taxSplitType,
-      cgstAmount,
-      sgstAmount,
-      igstAmount,
-      taxTotal,
-      tdsTcsType,
-      tdsTcsRate,
-      tdsTcsAmount,
-      tdsTcsName,
-      adjustment,
-      total: finalTotal,
-      customerNotes,
-      termsAndConditions,
-      attachments,
-      createdAt: isEdit ? (localStorageService.getPurchaseOrderById(initialPOId!)?.createdAt || new Date().toISOString()) : new Date().toISOString()
-    };
+    setIsSubmitting(true);
+    try {
+      const poPayload: Omit<PurchaseOrder, "id"> = {
+        vendorId: selectedVendorId,
+        vendorName: (selectedVendor as any)?.displayName || "Unknown Vendor",
+        vendorState: (selectedVendor as any)?.sourceOfSupply || "Maharashtra",
+        deliverToBranch: selectedWarehouse.name,
+        deliverToState: selectedWarehouse.state,
+        deliverToAddress: selectedWarehouse.address,
+        referenceNumber,
+        date: formatDate(date),
+        deliveryDate: formatDate(deliveryDate),
+        paymentTerms,
+        shipmentPreference,
+        status: "Draft",
+        items: calculatedItems,
+        subtotal,
+        discountType,
+        discountValue,
+        discountUnit,
+        discountAfterTax,
+        discountAmount,
+        taxSplitType,
+        cgstAmount,
+        sgstAmount,
+        igstAmount,
+        taxTotal,
+        tdsTcsType,
+        tdsTcsRate,
+        tdsTcsAmount,
+        tdsTcsName,
+        adjustment,
+        total: finalTotal,
+        customerNotes,
+        termsAndConditions,
+        attachments,
+        createdAt: new Date().toISOString(),
+      };
 
-    localStorageService.savePurchaseOrder(poPayload);
-    router.push(`/admin/purchase-orders/${poNumber}`);
+      let resultId: string;
+      if (isEdit && initialPOId) {
+        const result = await updatePurchaseOrder(initialPOId, poPayload as any);
+        resultId = result.id;
+      } else {
+        const result = await createPurchaseOrder(poPayload);
+        resultId = result.id;
+      }
+      router.push(`/admin/purchase-orders/${resultId}`);
+    } catch (err: any) {
+      console.error(err);
+      setErrors((prev) => ({ ...prev, submit: err.message || "Failed to save purchase order." }));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -686,7 +700,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                           >
                             <span className="truncate">
                               {item.sku
-                                ? `${PRODUCTS.find((p) => p.sku === item.sku)?.name} (${item.sku})`
+                                ? `${products.find((p) => p.sku === item.sku)?.name} (${item.sku})`
                                 : "-- Select Product --"}
                             </span>
                             <ChevronDown className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0 ml-1" />
@@ -704,7 +718,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                             >
                               -- Select Product --
                             </button>
-                            {PRODUCTS.map((p) => (
+                            {products.map((p) => (
                               <button
                                 key={p.sku}
                                 type="button"
@@ -727,7 +741,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                       />
                       {item.sku && (
                         <p className="mt-1 text-[10px] text-neutral-400 leading-normal line-clamp-1">
-                          {PRODUCTS.find((p) => p.sku === item.sku)?.description}
+                          {products.find((p) => p.sku === item.sku)?.description}
                         </p>
                       )}
                     </td>
@@ -1231,13 +1245,11 @@ function CustomOnTheFlyVendorForm({ onComplete, onCancel }: { onComplete: (v: Ve
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstName, lastName, companyName]);
 
-  const handleFormSave = (e: React.FormEvent) => {
+  const handleFormSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!displayName) return;
 
-    const id = `VND-${String(Math.floor(1000 + Math.random() * 9000))}`;
-    const newVendor: Vendor = {
-      id,
+    const newVendorPayload = {
       salutation: "Mr.",
       firstName,
       lastName,
@@ -1259,14 +1271,13 @@ function CustomOnTheFlyVendorForm({ onComplete, onCancel }: { onComplete: (v: Ve
       contactPersons: [],
       bankAccounts: [],
       remarks: "Onboarded during Purchase Order drafting.",
-      payables: 0,
-      unusedCredits: 0,
-      status: "Active",
-      createdAt: new Date().toISOString()
     };
-
-    localStorageService.saveVendor(newVendor);
-    onComplete(newVendor);
+    try {
+      const created = await createVendor(newVendorPayload);
+      onComplete(created);
+    } catch (err) {
+      console.error("Failed to create vendor:", err);
+    }
   };
 
   return (

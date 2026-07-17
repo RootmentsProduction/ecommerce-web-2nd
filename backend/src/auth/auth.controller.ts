@@ -16,6 +16,7 @@ import * as express from 'express';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
+import { Public } from './decorators/public.decorator';
 import { OtpPurpose } from '../generated/prisma/client.js';
 import {
   SignupDto,
@@ -51,6 +52,7 @@ export class AuthController {
     });
   }
 
+  @Public()
   @Post('signup')
   async signup(@Body() dto: SignupDto) {
     await this.authService.signup(dto);
@@ -59,6 +61,7 @@ export class AuthController {
     };
   }
 
+  @Public()
   @Post('verify-email')
   @HttpCode(HttpStatus.OK)
   async verifyEmail(@Body() dto: VerifyOtpDto) {
@@ -70,6 +73,7 @@ export class AuthController {
     return { message: 'Email verified successfully. You can now log in.' };
   }
 
+  @Public()
   @Post('resend-otp')
   @HttpCode(HttpStatus.OK)
   async resendOtp(@Body() dto: ResendOtpDto) {
@@ -77,6 +81,7 @@ export class AuthController {
     return { message: 'Verification OTP code resent if email exists.' };
   }
 
+  @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(
@@ -94,6 +99,7 @@ export class AuthController {
     };
   }
 
+  @Public()
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   async refresh(
@@ -119,6 +125,7 @@ export class AuthController {
     }
   }
 
+  @Public()
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(
@@ -139,6 +146,7 @@ export class AuthController {
     return { user: this.authService.sanitizeUser(user) };
   }
 
+  @Public()
   @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
   async forgotPassword(@Body() dto: ForgotPasswordDto) {
@@ -148,6 +156,7 @@ export class AuthController {
     };
   }
 
+  @Public()
   @Post('reset-password')
   @HttpCode(HttpStatus.OK)
   async resetPassword(@Body() dto: ResetPasswordDto) {

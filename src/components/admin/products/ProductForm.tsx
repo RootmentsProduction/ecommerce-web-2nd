@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AdminProductFormData, AdminProductMedia, AdminProductVariant } from "@/types/admin";
+import { createProduct, updateProduct } from "@/services/products.service";
+import { uploadFile } from "@/services/media.service";
 import ProductBasicInfoSection from "./ProductBasicInfoSection";
 import ProductPricingSection from "./ProductPricingSection";
 import ProductMediaSection from "./ProductMediaSection";
@@ -92,7 +94,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
     return Object.keys(tempErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent, statusOverride?: "Draft" | "Active") => {
+  const handleSubmit = async (e: React.FormEvent, statusOverride?: "Draft" | "Active") => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -102,20 +104,59 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
     }
 
     setIsSubmitting(true);
-    
-    // Simulating save
-    setTimeout(() => {
-      setIsSubmitting(false);
-      const actionText = mode === "create" ? "created" : "updated";
+    try {
+      // 1. Upload files to S3/fallback storage asynchronously
+      const uploadPromises = formData.media.map(async (m) => {
+        if (m.file) {
+          const uploadedUrl = await uploadFile(m.file, "products/images");
+          // Remove the File object from the object so it doesn't get serialized to JSON
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { file, ...rest } = m;
+          return {
+            ...rest,
+            url: uploadedUrl,
+          };
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { file, ...rest } = m;
+        return rest;
+      });
+      const finalMedia = await Promise.all(uploadPromises);
+
+      // 2. Prepare payload
       const finalStatus = statusOverride || formData.status;
-      
+      const payload: AdminProductFormData = {
+        ...formData,
+        status: finalStatus,
+        media: finalMedia,
+      };
+
+      // 3. Call backend services
+      if (mode === "create") {
+        await createProduct(payload);
+      } else {
+        const productId = (initialData as any)?.id;
+        if (!productId) {
+          throw new Error("Product ID not found for editing");
+        }
+        await updateProduct(productId, payload);
+      }
+
+      const actionText = mode === "create" ? "created" : "updated";
       setToastMessage(`Product successfully ${actionText} as ${finalStatus}!`);
       
       setTimeout(() => {
         setToastMessage(null);
         router.push("/admin/products");
       }, 1500);
-    }, 1000);
+    } catch (err: unknown) {
+      console.error(err);
+      const msg = err instanceof Error ? err.message : "Failed to save product.";
+      setToastMessage(msg);
+      setTimeout(() => setToastMessage(null), 4000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -162,6 +203,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
             onChange={handleVariantsChange}
             basePrice={formData.sellingPrice}
             baseSku={formData.sku}
+            productId={formData.id}
             mode={mode}
           />
 

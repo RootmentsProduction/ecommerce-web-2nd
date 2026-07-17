@@ -1,0 +1,59 @@
+import { InventoryService, AdjustStockDto } from './inventory.service';
+export declare class AdjustStockBodyDto implements AdjustStockDto {
+    productId?: string;
+    variantId?: string;
+    type: string;
+    quantity: number;
+    reason: string;
+}
+export declare class InventoryController {
+    private readonly inventoryService;
+    constructor(inventoryService: InventoryService);
+    getInventoryLevels(): Promise<{
+        id: string;
+        productId: string;
+        variantId: string | null;
+        sku: string;
+        productName: string;
+        variantName: string | null;
+        imageUrl: string;
+        currentStock: number;
+        reservedStock: number;
+        incomingStock: number;
+        minimumRequired: number;
+        reorderPoint: number;
+        updatedAt: Date;
+    }[]>;
+    adjustStock(dto: AdjustStockBodyDto, admin: any): Promise<{
+        inventoryId: string;
+        beforeStock: number;
+        afterStock: number;
+        transaction: {
+            id: string;
+            createdAt: Date;
+            productId: string;
+            variantId: string | null;
+            type: import("../generated/prisma/enums").StockTransactionType;
+            quantity: number;
+            beforeStock: number;
+            afterStock: number;
+            reason: string;
+            reference: string | null;
+            changedBy: string;
+        };
+    }>;
+    getTransactionHistory(): Promise<{
+        id: string;
+        date: Date;
+        type: import("../generated/prisma/enums").StockTransactionType;
+        quantity: number;
+        beforeStock: number;
+        afterStock: number;
+        reason: string;
+        changedBy: string;
+        productId: string;
+        productName: string;
+        variantName: string | null;
+        sku: string;
+    }[]>;
+}

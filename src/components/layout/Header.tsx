@@ -162,9 +162,11 @@ export default function Header() {
                   <svg width="32" height="27" viewBox="0 0 32 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="0.482878" y="0.482878" width="31.0342" height="26.0342" rx="2.51712" stroke="currentColor" strokeWidth="0.965756" />
                   </svg>
-                  <span className="absolute -top-2 -right-2 bg-[#B78924] text-white text-[9px] font-semibold w-4 h-4 flex items-center justify-center rounded-full">
-                    {cartCount > 0 ? cartCount : 2}
-                  </span>
+                  {cartCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-[#B78924] text-white text-[9px] font-semibold w-4 h-4 flex items-center justify-center rounded-full">
+                      {cartCount}
+                    </span>
+                  )}
                 </div>
               </Link>
 
@@ -207,6 +209,13 @@ export default function Header() {
                             Admin Panel
                           </Link>
                         )}
+                        <Link
+                          href="/orders"
+                          onClick={() => setProfileDropdownOpen(false)}
+                          className="block px-4 py-2 text-xs font-questrial hover:bg-neutral-50 text-neutral-700 hover:text-[#c59b27] uppercase tracking-wider"
+                        >
+                          My Orders
+                        </Link>
                         <button
                           onClick={() => {
                             setProfileDropdownOpen(false);

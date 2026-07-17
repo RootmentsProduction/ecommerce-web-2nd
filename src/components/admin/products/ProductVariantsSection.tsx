@@ -7,10 +7,11 @@ interface ProductVariantsProps {
   onChange: (variants: AdminProductVariant[]) => void;
   basePrice: string;
   baseSku: string;
+  productId?: string;
   mode: "create" | "edit";
 }
 
-export default function ProductVariantsSection({ variants, onChange, basePrice, baseSku, mode }: ProductVariantsProps) {
+export default function ProductVariantsSection({ variants, onChange, basePrice, baseSku, productId, mode }: ProductVariantsProps) {
   const [optionName, setOptionName] = useState("");
   const [optionValues, setOptionValues] = useState("");
 
@@ -162,7 +163,7 @@ export default function ProductVariantsSection({ variants, onChange, basePrice, 
                       <div className="flex items-center space-x-2 text-xs font-semibold px-2 py-1 text-neutral-800">
                         <span>{variant.stock} units</span>
                         <Link
-                          href={`/admin/inventory/${baseSku}/adjust?variant=${variant.id}`}
+                          href={`/admin/inventory/${productId || baseSku}/adjust?variant=${variant.id}`}
                           className="text-[#C99213] hover:underline font-bold text-[9px] uppercase"
                         >
                           Adjust

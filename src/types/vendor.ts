@@ -65,4 +65,9 @@ export interface Vendor {
   unusedCredits: number;
   status: "Active" | "Inactive";
   createdAt: string;
+  // Server-persisted JSON blobs for comments and audit history
+  commentsJson?: string | null;
+  historyJson?: string | null;
+  // Backend may also return nested relations
+  [key: string]: any;
 }

@@ -106,13 +106,13 @@ export default function AdminProductDetailsPage({ params }: PageProps) {
               {isArchived ? "Unarchive" : "Archive Product"}
             </button>
             <button
-              onClick={() => router.push(`/admin/inventory/${product.sku}/adjust`)}
+              onClick={() => router.push(`/admin/inventory/${product.id}/adjust`)}
               className="px-4 py-2 border border-[#C99213] rounded-full bg-white text-xs font-semibold text-[#C99213] hover:bg-neutral-50 transition-colors cursor-pointer"
             >
               Adjust Stock
             </button>
             <button
-              onClick={() => router.push(`/admin/products/${product.sku}/edit`)}
+              onClick={() => router.push(`/admin/products/${product.id}/edit`)}
               className="px-5 py-2 bg-neutral-950 hover:bg-neutral-850 text-white rounded-full text-xs font-semibold tracking-wide transition-colors cursor-pointer"
             >
               Edit Product
@@ -425,7 +425,7 @@ export default function AdminProductDetailsPage({ params }: PageProps) {
                   Inventory Level
                 </h2>
                 <Link
-                  href={`/admin/inventory/${product.sku}`}
+                  href={`/admin/inventory/${product.id}`}
                   className="text-[10px] text-[#C99213] font-bold uppercase tracking-wider hover:underline"
                 >
                   Manage Stock

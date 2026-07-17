@@ -5,7 +5,12 @@ import AdminTopbar from "@/components/admin/layout/AdminTopbar";
 import AdminStatCard from "@/components/admin/shared/AdminStatCard";
 import CategoryTable from "@/components/admin/categories/CategoryTable";
 import CategoryForm from "@/components/admin/categories/CategoryForm";
-import { getAdminCategories } from "@/services/categories.service";
+import {
+  getAdminCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+} from "@/services/categories.service";
 import { AdminCategory } from "@/types/admin";
 
 export default function AdminCategoriesPage() {
@@ -19,7 +24,7 @@ export default function AdminCategoriesPage() {
     getAdminCategories().then(setCategories);
   }, []);
 
-  const breadcrumbs = [{ label: "Categories" }];
+  const breadcrumbs = [{ label: "Dashboard", href: "/admin/dashboard" }, { label: "Categories" }];
 
   // Calculations for stats
   const totalCategories = categories.length;
@@ -44,26 +49,22 @@ export default function AdminCategoriesPage() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  const handleFormSubmit = (data: Partial<AdminCategory>) => {
-    if (data.id) {
-      // Editing
-      setCategories((prev) =>
-        prev.map((c) => (c.id === data.id ? { ...c, ...data } : c))
-      );
-      showToast(`Category "${data.name}" updated successfully!`);
-    } else {
-      // Creating
-      const newCat: AdminCategory = {
-        id: `cat-${Date.now()}`,
-        name: data.name || "",
-        slug: data.slug || "",
-        description: data.description || "",
-        status: data.status || "Active",
-        productCount: 0,
-        displayOrder: data.displayOrder || 1,
-      };
-      setCategories((prev) => [...prev, newCat]);
-      showToast(`Category "${data.name}" created successfully!`);
+  const refreshCategories = () => {
+    getAdminCategories().then(setCategories);
+  };
+
+  const handleFormSubmit = async (data: Partial<AdminCategory>) => {
+    try {
+      if (data.id) {
+        await updateCategory(data.id, data);
+        showToast(`Category "${data.name}" updated successfully!`);
+      } else {
+        await createCategory(data as Omit<AdminCategory, "id" | "productCount">);
+        showToast(`Category "${data.name}" created successfully!`);
+      }
+      refreshCategories();
+    } catch (err) {
+      showToast(`Error: ${err instanceof Error ? err.message : "Unknown error"}`);
     }
     setIsFormOpen(false);
     setEditingCategory(null);
@@ -74,23 +75,28 @@ export default function AdminCategoriesPage() {
     setIsFormOpen(true);
   };
 
-  const handleToggleStatus = (id: string) => {
-    setCategories((prev) =>
-      prev.map((c) => {
-        if (c.id === id) {
-          const nextStatus = c.status === "Active" ? "Hidden" : "Active";
-          showToast(`Category "${c.name}" marked as ${nextStatus}!`);
-          return { ...c, status: nextStatus as "Active" | "Draft" | "Hidden" };
-        }
-        return c;
-      })
-    );
+  const handleToggleStatus = async (id: string) => {
+    const cat = categories.find((c) => c.id === id);
+    if (!cat) return;
+    const nextStatus = cat.status === "Active" ? "Hidden" : "Active";
+    try {
+      await updateCategory(id, { status: nextStatus });
+      showToast(`Category "${cat.name}" marked as ${nextStatus}!`);
+      refreshCategories();
+    } catch (err) {
+      showToast(`Error: ${err instanceof Error ? err.message : "Unknown error"}`);
+    }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     const name = categories.find((c) => c.id === id)?.name;
-    setCategories((prev) => prev.filter((c) => c.id !== id));
-    showToast(`Category "${name || id}" deleted successfully!`);
+    try {
+      await deleteCategory(id);
+      showToast(`Category "${name || id}" deleted successfully!`);
+      refreshCategories();
+    } catch (err) {
+      showToast(`Error: ${err instanceof Error ? err.message : "Unknown error"}`);
+    }
     if (editingCategory?.id === id) {
       setIsFormOpen(false);
       setEditingCategory(null);

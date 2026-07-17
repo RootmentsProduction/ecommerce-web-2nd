@@ -19,8 +19,9 @@ import {
   Trash2
 } from "lucide-react";
 import AdminTopbar from "@/components/admin/layout/AdminTopbar";
-import { localStorageService } from "@/services/localStorage.service";
-import { Vendor, VendorComment } from "@/types/vendor";
+import { getVendorById, updateVendor, deleteVendor } from "@/services/vendors.service";
+import { getPurchaseOrders } from "@/services/purchase-orders.service";
+import { VendorComment } from "@/types/vendor";
 import { PurchaseOrder } from "@/types/purchase-order";
 
 export default function VendorDetailPage() {
@@ -28,7 +29,7 @@ export default function VendorDetailPage() {
   const router = useRouter();
   const vendorId = params.id as string;
 
-  const [vendor, setVendor] = useState<Vendor | null>(null);
+  const [vendor, setVendor] = useState<any>(null);
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
   const [activeTab, setActiveTab] = useState<"Overview" | "Comments" | "Bills" | "History">("Overview");
   
@@ -41,59 +42,84 @@ export default function VendorDetailPage() {
 
   useEffect(() => {
     if (vendorId) {
-      const data = localStorageService.getVendorById(vendorId);
-      if (data) {
-        Promise.resolve().then(() => {
-          setVendor(data);
-          setComments(localStorageService.getVendorComments(vendorId));
-          setHistoryLogs(localStorageService.getVendorHistory(vendorId));
-          
-          // Find POs related to this vendor
-          const allPOs = localStorageService.getPurchaseOrders();
-          const related = allPOs.filter((po) => po.vendorId === vendorId);
-          setPurchaseOrders(related);
-        });
-      } else {
-        router.push("/admin/vendors");
-      }
+      getVendorById(vendorId).then((data) => {
+        if (!data) {
+          router.push("/admin/vendors");
+          return;
+        }
+        setVendor(data);
+
+        // Parse commentsJson and historyJson stored in the DB
+        try {
+          setComments(data.commentsJson ? JSON.parse(data.commentsJson as any) : []);
+        } catch { setComments([]); }
+        try {
+          setHistoryLogs(data.historyJson ? JSON.parse(data.historyJson as any) : []);
+        } catch { setHistoryLogs([]); }
+      });
+
+      // Load purchase orders for this vendor
+      getPurchaseOrders().then((allPOs) => {
+        setPurchaseOrders(allPOs.filter((po) => po.vendorId === vendorId));
+      });
     }
   }, [vendorId, router]);
 
   if (!vendor) return null;
 
   // Toggle status Active/Inactive
-  const handleToggleStatus = () => {
+  const handleToggleStatus = async () => {
     const nextStatus = vendor.status === "Active" ? "Inactive" : "Active";
-    const updatedVendor = {
-      ...vendor,
-      status: nextStatus as "Active" | "Inactive"
-    };
-    localStorageService.saveVendor(updatedVendor);
-    localStorageService.logHistory(vendor.id, `Vendor status changed to ${nextStatus}`);
-    
-    setVendor(updatedVendor);
-    setHistoryLogs(localStorageService.getVendorHistory(vendor.id));
+    const newHistory = [`Vendor status changed to ${nextStatus}`, ...historyLogs];
+    try {
+      const updated = await updateVendor(vendor.id, {
+        status: nextStatus,
+        historyJson: JSON.stringify(newHistory),
+      });
+      setVendor({ ...vendor, ...updated });
+      setHistoryLogs(newHistory);
+    } catch (err) {
+      console.error("Failed to toggle status:", err);
+    }
   };
 
   // Delete Vendor
-  const handleDeleteVendor = () => {
+  const handleDeleteVendor = async () => {
     if (confirm(`Are you sure you want to delete vendor "${vendor.displayName}"? This will permanently remove their records.`)) {
-      localStorageService.deleteVendor(vendor.id);
-      router.push("/admin/vendors");
+      try {
+        await deleteVendor(vendor.id);
+        router.push("/admin/vendors");
+      } catch (err) {
+        console.error("Failed to delete vendor:", err);
+      }
     }
   };
 
   // Submit comment
-  const handleAddComment = (e: React.FormEvent) => {
+  const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCommentText.trim()) return;
 
-    const added = localStorageService.addVendorComment(vendor.id, newCommentText.trim());
-    localStorageService.logHistory(vendor.id, `Internal comment added: "${newCommentText.substring(0, 30)}..."`);
-    
-    setComments([...comments, added]);
-    setNewCommentText("");
-    setHistoryLogs(localStorageService.getVendorHistory(vendor.id));
+    const newComment: VendorComment = {
+      id: `comment-${Date.now()}`,
+      author: "Admin",
+      text: newCommentText.trim(),
+      date: new Date().toISOString(),
+    };
+    const updatedComments = [...comments, newComment];
+    const newHistory = [`Internal comment added: "${newCommentText.substring(0, 30)}..."`, ...historyLogs];
+
+    try {
+      await updateVendor(vendor.id, {
+        commentsJson: JSON.stringify(updatedComments),
+        historyJson: JSON.stringify(newHistory),
+      });
+      setComments(updatedComments);
+      setHistoryLogs(newHistory);
+      setNewCommentText("");
+    } catch (err) {
+      console.error("Failed to save comment:", err);
+    }
   };
 
   const breadcrumbs = [
@@ -354,7 +380,7 @@ export default function VendorDetailPage() {
                           Registered Bank Accounts
                         </h3>
                         <div className="grid grid-cols-1 gap-3">
-                          {vendor.bankAccounts.map((acct, idx) => (
+                          {(vendor.bankAccounts || []).map((acct: any, idx: number) => (
                             <div key={idx} className="border border-[#e1e5f5] rounded-2xl p-4 bg-white space-y-2">
                               <div className="flex justify-between items-center text-xs font-bold text-neutral-800">
                                 <span>{acct.bankName}</span>

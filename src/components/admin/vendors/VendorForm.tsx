@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2, Plus, AlertTriangle, ArrowRight, HelpCircle, ChevronDown } from "lucide-react";
-import { Vendor, VendorAddress, ContactPerson, BankAccount } from "@/types/vendor";
-import { localStorageService, INDIAN_STATES } from "@/services/localStorage.service";
+import { VendorAddress, ContactPerson, BankAccount } from "@/types/vendor";
+import { INDIAN_STATES } from "@/services/localStorage.service";
+import { getVendorById, createVendor, updateVendor } from "@/services/vendors.service";
+import { uploadFile } from "@/services/media.service";
 import PortalDropdown from "@/components/admin/shared/PortalDropdown";
 
 interface VendorFormProps {
@@ -84,6 +86,10 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
   const [remarks, setRemarks] = useState("");
   const [attachments, setAttachments] = useState<string[]>([]);
   const [fileInputVal, setFileInputVal] = useState("");
+  const [uploadingDoc, setUploadingDoc] = useState(false);
+
+  // Submission state
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Error/validation messages
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -104,9 +110,8 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
   // Prepopulate if Edit Mode
   useEffect(() => {
     if (isEdit && initialVendorId) {
-      const vendor = localStorageService.getVendorById(initialVendorId);
-      if (vendor) {
-        Promise.resolve().then(() => {
+      getVendorById(initialVendorId).then((vendor) => {
+        if (vendor) {
           setSalutation(vendor.salutation || "Mr.");
           setFirstName(vendor.firstName);
           setLastName(vendor.lastName);
@@ -123,19 +128,32 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
           setCurrency(vendor.currency);
           setPaymentTerms(vendor.paymentTerms);
           setTdsRate(vendor.tdsRate);
-          setBillingAddress(vendor.billingAddress);
-          setShippingAddress(vendor.shippingAddress);
-          setContactPersons(vendor.contactPersons);
-          setRemarks(vendor.remarks);
-          setAttachments(vendor.attachments || []);
-
-          const mappedBank = vendor.bankAccounts.map((b) => ({
+          // Backend returns addresses array; extract billing/shipping
+          const addresses = (vendor as any).addresses || [];
+          const billing = addresses.find((a: any) => a.type === 'BILLING');
+          const shipping = addresses.find((a: any) => a.type === 'SHIPPING');
+          if (billing) setBillingAddress(billing);
+          if (shipping) setShippingAddress(shipping);
+          const contacts = (vendor as any).contacts || vendor.contactPersons || [];
+          setContactPersons(contacts);
+          setRemarks(vendor.remarks || "");
+          // attachments is stored as serialized JSON string in DB
+          const rawAttachments = (vendor as any).attachments;
+          if (rawAttachments) {
+            try {
+              setAttachments(JSON.parse(rawAttachments));
+            } catch {
+              setAttachments([]);
+            }
+          }
+          const banks = (vendor as any).bankAccounts || vendor.bankAccounts || [];
+          const mappedBank = banks.map((b: any) => ({
             ...b,
             reAccountNumber: b.accountNumber,
           }));
           setBankAccounts(mappedBank);
-        });
-      }
+        }
+      });
     }
   }, [isEdit, initialVendorId]);
 
@@ -202,12 +220,23 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
     setBankAccounts(updated);
   };
 
-  // File Upload mock handler
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // File Upload handler — uploads to S3 and stores URLs
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const names = Array.from(e.target.files).map((f) => f.name);
-      setAttachments([...attachments, ...names]);
-      setFileInputVal("");
+      const filesArray = Array.from(e.target.files);
+      setUploadingDoc(true);
+      try {
+        const uploadedUrls = await Promise.all(
+          filesArray.map((file) => uploadFile(file, "vendors/documents"))
+        );
+        setAttachments((prev) => [...prev, ...uploadedUrls]);
+      } catch (err: any) {
+        console.error(err);
+        setErrors((prev) => ({ ...prev, upload: err.message || "Failed to upload document." }));
+      } finally {
+        setUploadingDoc(false);
+        setFileInputVal("");
+      }
     }
   };
 
@@ -216,7 +245,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
   };
 
   // Form submit handler
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validation
@@ -235,7 +264,6 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      // Switch tab to where errors might be
       if (Object.keys(validationErrors).some((key) => key.startsWith("bank_"))) {
         setActiveTab("Bank Details");
       }
@@ -243,58 +271,58 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
       return;
     }
 
-    // Prepare data
-    const id = isEdit && initialVendorId ? initialVendorId : `VND-${String(Math.floor(1000 + Math.random() * 9000))}`;
-    
-    // Extract clean bank accounts
-    const cleanBankAccounts: BankAccount[] = bankAccounts.map((b) => ({
-      accountHolderName: b.accountHolderName,
-      bankName: b.bankName,
-      accountNumber: b.accountNumber,
-      ifscCode: b.ifscCode
-    }));
+    setIsSubmitting(true);
+    try {
+      // Extract clean bank accounts
+      const cleanBankAccounts: BankAccount[] = bankAccounts.map((b) => ({
+        accountHolderName: b.accountHolderName,
+        bankName: b.bankName,
+        accountNumber: b.accountNumber,
+        ifscCode: b.ifscCode,
+      }));
 
-    const vendorPayload: Omit<Vendor, "payables" | "unusedCredits"> & { payables?: number; unusedCredits?: number } = {
-      id,
-      salutation,
-      firstName,
-      lastName,
-      companyName,
-      displayName,
-      email,
-      workPhone,
-      mobile,
-      language,
-      gstTreatment,
-      sourceOfSupply,
-      pan,
-      gstin,
-      currency,
-      paymentTerms,
-      tdsRate,
-      billingAddress,
-      shippingAddress,
-      contactPersons,
-      bankAccounts: cleanBankAccounts,
-      remarks,
-      attachments,
-      status: "Active",
-      createdAt: new Date().toISOString()
-    };
+      const vendorPayload = {
+        salutation,
+        firstName,
+        lastName,
+        companyName,
+        displayName,
+        email,
+        workPhone,
+        mobile,
+        language,
+        gstTreatment,
+        sourceOfSupply,
+        pan,
+        gstin,
+        currency,
+        paymentTerms,
+        tdsRate,
+        billingAddress,
+        shippingAddress,
+        contactPersons,
+        bankAccounts: cleanBankAccounts,
+        remarks,
+        attachments: JSON.stringify(attachments),
+      };
 
-    if (isEdit) {
-      // Retain existing payables and unusedCredits
-      const old = localStorageService.getVendorById(initialVendorId);
-      if (old) {
-        vendorPayload.payables = old.payables;
-        vendorPayload.unusedCredits = old.unusedCredits;
-        vendorPayload.status = old.status;
-        vendorPayload.createdAt = old.createdAt;
+      let resultId: string;
+      if (isEdit && initialVendorId) {
+        const result = await updateVendor(initialVendorId, vendorPayload as any);
+        resultId = result.id;
+      } else {
+        const result = await createVendor(vendorPayload);
+        resultId = result.id;
       }
-    }
 
-    localStorageService.saveVendor(vendorPayload);
-    router.push(`/admin/vendors/${id}`);
+      router.push(`/admin/vendors/${resultId}`);
+    } catch (err: any) {
+      console.error(err);
+      setErrors((prev) => ({ ...prev, submit: err.message || "Failed to save vendor." }));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -1227,8 +1255,16 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       Choose Files
                     </button>
                   </div>
-                  <span className="text-[11px] text-neutral-400">Upload agreement documents, tax forms or certificates.</span>
+                  {uploadingDoc ? (
+                    <span className="text-[11px] text-blue-500 font-semibold flex items-center space-x-1">
+                      <span className="inline-block border-2 border-t-transparent border-blue-400 rounded-full h-3 w-3 animate-spin"></span>
+                      <span>Uploading...</span>
+                    </span>
+                  ) : (
+                    <span className="text-[11px] text-neutral-400">Upload agreement documents, tax forms or certificates.</span>
+                  )}
                 </div>
+                {errors.upload && <p className="text-[10px] text-red-500 mt-1">{errors.upload}</p>}
 
                 {attachments.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-2">
@@ -1257,6 +1293,12 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
       </div>
 
       {/* Form Submission Buttons */}
+      {errors.submit && (
+        <div className="flex items-center space-x-2 text-xs text-red-600 bg-red-50 border border-red-200 px-4 py-2.5 rounded-xl">
+          <AlertTriangle className="w-4 h-4 shrink-0" />
+          <span>{errors.submit}</span>
+        </div>
+      )}
       <div className="flex items-center gap-3 justify-end pt-4 border-t border-[#e1e5f5]">
         <button
           type="button"
@@ -1268,10 +1310,20 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
 
         <button
           type="submit"
-          className="flex items-center space-x-2 px-8 py-3 bg-[#3762f9] hover:bg-[#2748c9] text-white rounded-full text-xs font-bold tracking-wide transition-all shadow-[0_4px_12px_rgba(55,98,249,0.2)] cursor-pointer"
+          disabled={isSubmitting || uploadingDoc}
+          className="flex items-center space-x-2 px-8 py-3 bg-[#3762f9] hover:bg-[#2748c9] disabled:opacity-60 disabled:cursor-not-allowed text-white rounded-full text-xs font-bold tracking-wide transition-all shadow-[0_4px_12px_rgba(55,98,249,0.2)] cursor-pointer"
         >
-          <span>Save Vendor</span>
-          <ArrowRight className="w-4 h-4" />
+          {isSubmitting ? (
+            <>
+              <span className="inline-block border-2 border-t-transparent border-white rounded-full h-3 w-3 animate-spin"></span>
+              <span>Saving...</span>
+            </>
+          ) : (
+            <>
+              <span>Save Vendor</span>
+              <ArrowRight className="w-4 h-4" />
+            </>
+          )}
         </button>
       </div>
 

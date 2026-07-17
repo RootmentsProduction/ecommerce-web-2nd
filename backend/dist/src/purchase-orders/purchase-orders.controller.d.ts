@@ -1,0 +1,407 @@
+import { PurchaseOrdersService, CreatePurchaseOrderDto, CreatePOItemDto, ReceivePOItemsDto } from './purchase-orders.service';
+declare class CreatePOItemBodyDto implements CreatePOItemDto {
+    sku: string;
+    name: string;
+    size?: string;
+    quantity: number;
+    rate: number;
+    taxRate: number;
+    taxAmount: number;
+    amount: number;
+}
+export declare class CreatePOBodyDto implements CreatePurchaseOrderDto {
+    vendorId: string;
+    vendorName: string;
+    vendorState: string;
+    deliverToBranch: string;
+    deliverToState: string;
+    deliverToAddress: string;
+    referenceNumber?: string;
+    date: string;
+    deliveryDate?: string;
+    paymentTerms: string;
+    shipmentPreference?: string;
+    status: string;
+    items: CreatePOItemBodyDto[];
+    subtotal: number;
+    discountType: string;
+    discountValue: number;
+    discountUnit: string;
+    discountAfterTax: boolean;
+    discountAmount: number;
+    taxSplitType: string;
+    cgstAmount: number;
+    sgstAmount: number;
+    igstAmount: number;
+    taxTotal: number;
+    tdsTcsType: string;
+    tdsTcsRate: number;
+    tdsTcsAmount: number;
+    tdsTcsName?: string;
+    adjustment: number;
+    total: number;
+    customerNotes?: string;
+    termsAndConditions?: string;
+    attachments?: string;
+}
+declare class ReceiveItemDto {
+    sku: string;
+    quantityReceived: number;
+}
+export declare class ReceivePOBodyDto implements ReceivePOItemsDto {
+    receivedBy: string;
+    notes?: string;
+    items: ReceiveItemDto[];
+}
+export declare class UpdatePOBodyDto {
+    vendorId?: string;
+    vendorName?: string;
+    vendorState?: string;
+    deliverToBranch?: string;
+    deliverToState?: string;
+    deliverToAddress?: string;
+    referenceNumber?: string;
+    date?: string;
+    deliveryDate?: string;
+    paymentTerms?: string;
+    shipmentPreference?: string;
+    status?: string;
+    subtotal?: number;
+    discountType?: string;
+    discountValue?: number;
+    discountUnit?: string;
+    discountAfterTax?: boolean;
+    discountAmount?: number;
+    taxSplitType?: string;
+    cgstAmount?: number;
+    sgstAmount?: number;
+    igstAmount?: number;
+    taxTotal?: number;
+    tdsTcsType?: string;
+    tdsTcsRate?: number;
+    tdsTcsAmount?: number;
+    tdsTcsName?: string;
+    adjustment?: number;
+    total?: number;
+    customerNotes?: string;
+    termsAndConditions?: string;
+    attachments?: string;
+    items?: CreatePOItemBodyDto[];
+}
+export declare class PurchaseOrdersController {
+    private readonly poService;
+    constructor(poService: PurchaseOrdersService);
+    getPurchaseOrders(): Promise<({
+        vendor: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            status: string;
+            email: string;
+            firstName: string;
+            lastName: string;
+            salutation: string | null;
+            companyName: string;
+            displayName: string;
+            workPhone: string;
+            mobile: string;
+            language: string;
+            gstTreatment: string;
+            sourceOfSupply: string;
+            pan: string;
+            gstin: string;
+            currency: string;
+            paymentTerms: string;
+            tdsRate: string;
+            remarks: string;
+            attachments: string | null;
+            commentsJson: string | null;
+            historyJson: string | null;
+            payables: import("@prisma/client-runtime-utils").Decimal;
+            unusedCredits: import("@prisma/client-runtime-utils").Decimal;
+        };
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
+        paymentTerms: string;
+        attachments: string | null;
+        vendorId: string;
+        vendorName: string;
+        vendorState: string;
+        deliverToBranch: string;
+        deliverToState: string;
+        deliverToAddress: string;
+        referenceNumber: string | null;
+        date: Date;
+        deliveryDate: Date | null;
+        shipmentPreference: string | null;
+        subtotal: import("@prisma/client-runtime-utils").Decimal;
+        discountType: string;
+        discountValue: import("@prisma/client-runtime-utils").Decimal;
+        discountUnit: string;
+        discountAfterTax: boolean;
+        discountAmount: import("@prisma/client-runtime-utils").Decimal;
+        taxSplitType: string;
+        cgstAmount: import("@prisma/client-runtime-utils").Decimal;
+        sgstAmount: import("@prisma/client-runtime-utils").Decimal;
+        igstAmount: import("@prisma/client-runtime-utils").Decimal;
+        taxTotal: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsType: string;
+        tdsTcsRate: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsAmount: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsName: string | null;
+        adjustment: import("@prisma/client-runtime-utils").Decimal;
+        total: import("@prisma/client-runtime-utils").Decimal;
+        customerNotes: string | null;
+        termsAndConditions: string | null;
+    })[]>;
+    getPurchaseOrderDetails(id: string): Promise<{
+        vendor: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            status: string;
+            email: string;
+            firstName: string;
+            lastName: string;
+            salutation: string | null;
+            companyName: string;
+            displayName: string;
+            workPhone: string;
+            mobile: string;
+            language: string;
+            gstTreatment: string;
+            sourceOfSupply: string;
+            pan: string;
+            gstin: string;
+            currency: string;
+            paymentTerms: string;
+            tdsRate: string;
+            remarks: string;
+            attachments: string | null;
+            commentsJson: string | null;
+            historyJson: string | null;
+            payables: import("@prisma/client-runtime-utils").Decimal;
+            unusedCredits: import("@prisma/client-runtime-utils").Decimal;
+        };
+        items: {
+            id: string;
+            name: string;
+            sku: string;
+            quantity: number;
+            purchaseOrderId: string;
+            size: string | null;
+            receivedQuantity: number;
+            rate: import("@prisma/client-runtime-utils").Decimal;
+            taxRate: import("@prisma/client-runtime-utils").Decimal;
+            taxAmount: import("@prisma/client-runtime-utils").Decimal;
+            amount: import("@prisma/client-runtime-utils").Decimal;
+        }[];
+        receipts: ({
+            items: {
+                id: string;
+                sku: string;
+                receiptId: string;
+                quantityReceived: number;
+            }[];
+        } & {
+            id: string;
+            createdAt: Date;
+            purchaseOrderId: string;
+            receivedBy: string;
+            notes: string | null;
+        })[];
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
+        paymentTerms: string;
+        attachments: string | null;
+        vendorId: string;
+        vendorName: string;
+        vendorState: string;
+        deliverToBranch: string;
+        deliverToState: string;
+        deliverToAddress: string;
+        referenceNumber: string | null;
+        date: Date;
+        deliveryDate: Date | null;
+        shipmentPreference: string | null;
+        subtotal: import("@prisma/client-runtime-utils").Decimal;
+        discountType: string;
+        discountValue: import("@prisma/client-runtime-utils").Decimal;
+        discountUnit: string;
+        discountAfterTax: boolean;
+        discountAmount: import("@prisma/client-runtime-utils").Decimal;
+        taxSplitType: string;
+        cgstAmount: import("@prisma/client-runtime-utils").Decimal;
+        sgstAmount: import("@prisma/client-runtime-utils").Decimal;
+        igstAmount: import("@prisma/client-runtime-utils").Decimal;
+        taxTotal: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsType: string;
+        tdsTcsRate: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsAmount: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsName: string | null;
+        adjustment: import("@prisma/client-runtime-utils").Decimal;
+        total: import("@prisma/client-runtime-utils").Decimal;
+        customerNotes: string | null;
+        termsAndConditions: string | null;
+    }>;
+    createPurchaseOrder(dto: CreatePOBodyDto): Promise<{
+        items: {
+            id: string;
+            name: string;
+            sku: string;
+            quantity: number;
+            purchaseOrderId: string;
+            size: string | null;
+            receivedQuantity: number;
+            rate: import("@prisma/client-runtime-utils").Decimal;
+            taxRate: import("@prisma/client-runtime-utils").Decimal;
+            taxAmount: import("@prisma/client-runtime-utils").Decimal;
+            amount: import("@prisma/client-runtime-utils").Decimal;
+        }[];
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
+        paymentTerms: string;
+        attachments: string | null;
+        vendorId: string;
+        vendorName: string;
+        vendorState: string;
+        deliverToBranch: string;
+        deliverToState: string;
+        deliverToAddress: string;
+        referenceNumber: string | null;
+        date: Date;
+        deliveryDate: Date | null;
+        shipmentPreference: string | null;
+        subtotal: import("@prisma/client-runtime-utils").Decimal;
+        discountType: string;
+        discountValue: import("@prisma/client-runtime-utils").Decimal;
+        discountUnit: string;
+        discountAfterTax: boolean;
+        discountAmount: import("@prisma/client-runtime-utils").Decimal;
+        taxSplitType: string;
+        cgstAmount: import("@prisma/client-runtime-utils").Decimal;
+        sgstAmount: import("@prisma/client-runtime-utils").Decimal;
+        igstAmount: import("@prisma/client-runtime-utils").Decimal;
+        taxTotal: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsType: string;
+        tdsTcsRate: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsAmount: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsName: string | null;
+        adjustment: import("@prisma/client-runtime-utils").Decimal;
+        total: import("@prisma/client-runtime-utils").Decimal;
+        customerNotes: string | null;
+        termsAndConditions: string | null;
+    }>;
+    updatePurchaseOrder(id: string, dto: CreatePOBodyDto): Promise<{
+        items: {
+            id: string;
+            name: string;
+            sku: string;
+            quantity: number;
+            purchaseOrderId: string;
+            size: string | null;
+            receivedQuantity: number;
+            rate: import("@prisma/client-runtime-utils").Decimal;
+            taxRate: import("@prisma/client-runtime-utils").Decimal;
+            taxAmount: import("@prisma/client-runtime-utils").Decimal;
+            amount: import("@prisma/client-runtime-utils").Decimal;
+        }[];
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
+        paymentTerms: string;
+        attachments: string | null;
+        vendorId: string;
+        vendorName: string;
+        vendorState: string;
+        deliverToBranch: string;
+        deliverToState: string;
+        deliverToAddress: string;
+        referenceNumber: string | null;
+        date: Date;
+        deliveryDate: Date | null;
+        shipmentPreference: string | null;
+        subtotal: import("@prisma/client-runtime-utils").Decimal;
+        discountType: string;
+        discountValue: import("@prisma/client-runtime-utils").Decimal;
+        discountUnit: string;
+        discountAfterTax: boolean;
+        discountAmount: import("@prisma/client-runtime-utils").Decimal;
+        taxSplitType: string;
+        cgstAmount: import("@prisma/client-runtime-utils").Decimal;
+        sgstAmount: import("@prisma/client-runtime-utils").Decimal;
+        igstAmount: import("@prisma/client-runtime-utils").Decimal;
+        taxTotal: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsType: string;
+        tdsTcsRate: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsAmount: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsName: string | null;
+        adjustment: import("@prisma/client-runtime-utils").Decimal;
+        total: import("@prisma/client-runtime-utils").Decimal;
+        customerNotes: string | null;
+        termsAndConditions: string | null;
+    }>;
+    updateStatus(id: string, dto: UpdatePOStatusBodyDto): Promise<{
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
+        paymentTerms: string;
+        attachments: string | null;
+        vendorId: string;
+        vendorName: string;
+        vendorState: string;
+        deliverToBranch: string;
+        deliverToState: string;
+        deliverToAddress: string;
+        referenceNumber: string | null;
+        date: Date;
+        deliveryDate: Date | null;
+        shipmentPreference: string | null;
+        subtotal: import("@prisma/client-runtime-utils").Decimal;
+        discountType: string;
+        discountValue: import("@prisma/client-runtime-utils").Decimal;
+        discountUnit: string;
+        discountAfterTax: boolean;
+        discountAmount: import("@prisma/client-runtime-utils").Decimal;
+        taxSplitType: string;
+        cgstAmount: import("@prisma/client-runtime-utils").Decimal;
+        sgstAmount: import("@prisma/client-runtime-utils").Decimal;
+        igstAmount: import("@prisma/client-runtime-utils").Decimal;
+        taxTotal: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsType: string;
+        tdsTcsRate: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsAmount: import("@prisma/client-runtime-utils").Decimal;
+        tdsTcsName: string | null;
+        adjustment: import("@prisma/client-runtime-utils").Decimal;
+        total: import("@prisma/client-runtime-utils").Decimal;
+        customerNotes: string | null;
+        termsAndConditions: string | null;
+    }>;
+    receiveItems(id: string, dto: ReceivePOBodyDto): Promise<{
+        receiptId: string;
+        status: string;
+    }>;
+}
+export declare enum PurchaseOrderStatus {
+    DRAFT = "Draft",
+    SENT = "Sent",
+    PARTIALLY_RECEIVED = "Partially_Received",
+    RECEIVED = "Received",
+    CANCELLED = "Cancelled"
+}
+export declare class UpdatePOStatusBodyDto {
+    status: PurchaseOrderStatus;
+}
+export {};

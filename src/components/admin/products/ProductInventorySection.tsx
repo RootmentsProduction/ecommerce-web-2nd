@@ -114,7 +114,7 @@ export default function ProductInventorySection({ formData, onChange, mode }: Pr
                 <div className="flex items-center justify-between px-3 py-2 border border-neutral-200 bg-neutral-50 rounded text-xs text-neutral-800 font-semibold">
                   <span>{formData.initialStock} units</span>
                   <Link
-                    href={`/admin/inventory/${formData.sku}/adjust`}
+                    href={`/admin/inventory/${formData.id || formData.sku}/adjust`}
                     className="text-[#C99213] hover:underline font-bold text-[10px] uppercase"
                   >
                     Adjust Stock

@@ -4,31 +4,37 @@ import React, { useState } from "react";
 import AdminTopbar from "@/components/admin/layout/AdminTopbar";
 import AdminStatCard from "@/components/admin/shared/AdminStatCard";
 import { getCustomers } from "@/services/orders.service";
-import { customerStatsFixture } from "@/data/fixtures/customers";
 import { AdminCustomer } from "@/types/admin";
 
 export default function AdminCustomersPage() {
   const [customers, setCustomers] = useState<AdminCustomer[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const breadcrumbs = [{ label: "Dashboard" }];
+  const breadcrumbs = [{ label: "Dashboard", href: "/admin/dashboard" }, { label: "Customers" }];
 
   React.useEffect(() => {
     getCustomers().then(setCustomers);
   }, []);
 
-  // Filter customers by name or email or mobile
+  // Filter customers by name or email
   const filteredCustomers = customers.filter((customer) => {
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
-      return (
-        customer.name.toLowerCase().includes(q) ||
-        customer.email.toLowerCase().includes(q) ||
-        customer.mobile.includes(q)
-      );
+      const name = `${customer.firstName ?? ""} ${customer.lastName ?? ""}`.toLowerCase();
+      return name.includes(q) || customer.email.toLowerCase().includes(q);
     }
     return true;
   });
+
+  // Compute stats from real data
+  const totalSpend = customers.reduce((s, c) => s + (typeof c.totalSpend === "number" ? c.totalSpend : 0), 0);
+  const activeCustomers = customers.filter((c) => c.status === "ACTIVE").length;
+  const customerStats = [
+    { id: "total", title: "TOTAL CUSTOMERS", value: customers.length.toString(), subNote: "registered" },
+    { id: "active", title: "ACTIVE CUSTOMERS", value: activeCustomers.toString(), subNote: "verified accounts" },
+    { id: "spend", title: "TOTAL REVENUE", value: `₹${totalSpend.toLocaleString("en-IN")}`, subNote: "from all orders" },
+    { id: "avg", title: "AVG ORDER VALUE", value: customers.length > 0 ? `₹${Math.round(totalSpend / customers.length).toLocaleString("en-IN")}` : "₹0", subNote: "per customer" },
+  ];
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F8F8F8]">
@@ -54,7 +60,7 @@ export default function AdminCustomersPage() {
 
         {/* Customer Stats Row (4 Cards) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {customerStatsFixture.map((stat) => (
+          {customerStats.map((stat) => (
             <AdminStatCard
               key={stat.id}
               title={stat.title}
@@ -72,9 +78,9 @@ export default function AdminCustomersPage() {
               <thead>
                 <tr className="bg-[#1E1D1B] text-white text-[10px] font-bold uppercase tracking-wider">
                   <th className="py-4 px-6 font-semibold">CUSTOMER</th>
-                  <th className="py-4 px-6 font-semibold">MOBILE NUMBER</th>
                   <th className="py-4 px-6 font-semibold">EMAIL</th>
-                  <th className="py-4 px-6 font-semibold">ORDER</th>
+                  <th className="py-4 px-6 font-semibold">STATUS</th>
+                  <th className="py-4 px-6 font-semibold">ORDERS</th>
                   <th className="py-4 px-6 font-semibold">TOTAL SPEND</th>
                   <th className="py-4 px-6 font-semibold">DATE JOINED</th>
                 </tr>
@@ -86,41 +92,46 @@ export default function AdminCustomersPage() {
                       {/* Customer Profile + Name */}
                       <td className="py-4 px-6">
                         <div className="flex items-center space-x-3">
-                          {/* Muted luxury profile circle */}
                           <div className="w-8 h-8 rounded-full bg-neutral-900 border border-neutral-200 flex items-center justify-center text-white text-xs font-semibold overflow-hidden">
                             <svg className="w-3.5 h-3.5 text-neutral-300" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                             </svg>
                           </div>
                           <span className="text-xs font-semibold text-neutral-800 whitespace-nowrap">
-                            {customer.name}
+                            {customer.firstName} {customer.lastName}
                           </span>
                         </div>
                       </td>
 
-                      {/* Mobile Number */}
+                      {/* Email */}
                       <td className="py-4 px-6 text-xs text-neutral-600 font-semibold whitespace-nowrap">
-                        {customer.mobile}
+                        {customer.email}
                       </td>
 
-                      {/* Email */}
+                      {/* Status */}
                       <td className="py-4 px-6 text-xs text-neutral-500 font-medium whitespace-nowrap">
-                        {customer.email}
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                          customer.status === "ACTIVE" ? "bg-green-50 text-green-700" : "bg-neutral-100 text-neutral-500"
+                        }`}>
+                          {customer.status}
+                        </span>
                       </td>
 
                       {/* Order Count */}
                       <td className="py-4 px-6 text-xs font-semibold text-neutral-600">
-                        {customer.ordersCount < 10 ? `0${customer.ordersCount}` : customer.ordersCount}
+                        {(customer.orderCount ?? 0) < 10 ? `0${customer.orderCount ?? 0}` : customer.orderCount}
                       </td>
 
                       {/* Total Spend */}
                       <td className="py-4 px-6 text-xs font-bold text-neutral-900">
-                        {customer.totalSpend}
+                        {typeof customer.totalSpend === "number"
+                          ? `₹${customer.totalSpend.toLocaleString("en-IN")}`
+                          : customer.totalSpend ?? "₹0"}
                       </td>
 
                       {/* Date Joined */}
                       <td className="py-4 px-6 text-xs text-neutral-400 font-medium whitespace-nowrap">
-                        {customer.dateJoined}
+                        {customer.joinedDate ? new Date(customer.joinedDate as string).toLocaleDateString("en-IN") : "—"}
                       </td>
                     </tr>
                   ))
