@@ -1,11 +1,46 @@
 import { Category } from "@/types/category";
 import { AdminCategory } from "@/types/admin";
-import { categoriesFixture, adminCategoriesFixture } from "@/data/fixtures/categories";
+import { apiFetch } from "@/services/api";
 
+// ----- Public storefront -----
 export async function getCategories(): Promise<Category[]> {
-  return categoriesFixture;
+  try {
+    const data = await apiFetch<Category[]>("/api/categories");
+    return data ?? [];
+  } catch {
+    return [];
+  }
 }
 
+// ----- Admin CRUD -----
 export async function getAdminCategories(): Promise<AdminCategory[]> {
-  return adminCategoriesFixture;
+  try {
+    const data = await apiFetch<AdminCategory[]>("/api/categories/admin");
+    return data ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export async function createCategory(
+  payload: Omit<AdminCategory, "id" | "productCount">
+): Promise<AdminCategory> {
+  return apiFetch<AdminCategory>("/api/categories", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function updateCategory(
+  id: string,
+  payload: Partial<AdminCategory>
+): Promise<AdminCategory> {
+  return apiFetch<AdminCategory>(`/api/categories/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function deleteCategory(id: string): Promise<void> {
+  await apiFetch<void>(`/api/categories/${id}`, { method: "DELETE" });
 }

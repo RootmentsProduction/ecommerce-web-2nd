@@ -4,10 +4,412 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum StockTransactionType {
+  OPENING_STOCK
+  STOCK_ADDED
+  STOCK_REMOVED
+  SALE
+  CUSTOMER_RETURN
+  DAMAGED
+  MANUAL_CORRECTION
+  PURCHASE_RECEIPT
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  image       String?
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id                String             @id @default(uuid())
+  name              String
+  slug              String             @unique
+  sku               String             @unique
+  shortDescription  String?
+  description       String?
+  sellingPrice      Decimal            @db.Decimal(12, 2)
+  mrp               Decimal?           @db.Decimal(12, 2)
+  costPrice         Decimal?           @db.Decimal(12, 2)
+  status            ProductStatus      @default(DRAFT)
+  featured          Boolean            @default(false)
+  newArrival        Boolean            @default(false)
+  bestSeller        Boolean            @default(false)
+  showOnHomepage    Boolean            @default(false)
+  categoryId        String
+  category          Category           @relation(fields: [categoryId], references: [id])
+  images            ProductImage[]
+  variants          ProductVariant[]
+  inventory         Inventory?
+  stockTransactions StockTransaction[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  orderItems        OrderItem[]
+
+  @@index([categoryId])
+  @@index([status])
+}
+
+model ProductImage {
+  id        String   @id @default(uuid())
+  url       String
+  altText   String?
+  isPrimary Boolean  @default(false)
+  sortOrder Int      @default(0)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+}
+
+model ProductVariant {
+  id                String             @id @default(uuid())
+  name              String
+  sku               String             @unique
+  sellingPrice      Decimal?           @db.Decimal(12, 2)
+  isActive          Boolean            @default(true)
+  productId         String
+  product           Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+  inventory         Inventory?
+  stockTransactions StockTransaction[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  orderItems        OrderItem[]
+
+  @@index([productId])
+}
+
+model Inventory {
+  id              String          @id @default(uuid())
+  currentStock    Int             @default(0)
+  reservedStock   Int             @default(0)
+  incomingStock   Int             @default(0)
+  minimumRequired Int             @default(0)
+  reorderPoint    Int             @default(0)
+  productId       String?         @unique
+  product         Product?        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variantId       String?         @unique
+  variant         ProductVariant? @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model StockTransaction {
+  id          String               @id @default(uuid())
+  type        StockTransactionType
+  quantity    Int
+  beforeStock Int
+  afterStock  Int
+  reason      String
+  reference   String?
+  changedBy   String
+  productId   String
+  product     Product              @relation(fields: [productId], references: [id])
+  variantId   String?
+  variant     ProductVariant?      @relation(fields: [variantId], references: [id])
+  createdAt   DateTime             @default(now())
+
+  @@index([productId])
+  @@index([variantId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  BLOCKED
+}
+
+enum OtpPurpose {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
+model User {
+  id           String            @id @default(uuid())
+  email        String            @unique
+  passwordHash String
+  firstName    String?
+  lastName     String?
+  role         UserRole          @default(CUSTOMER)
+  status       UserStatus        @default(PENDING_VERIFICATION)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  otps         EmailOtp[]
+  sessions     RefreshSession[]
+  orders       Order[]
+  addresses    CustomerAddress[]
+}
+
+model EmailOtp {
+  id        String     @id @default(uuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  otpHash   String
+  purpose   OtpPurpose
+  expiresAt DateTime
+  attempts  Int        @default(0)
+  createdAt DateTime   @default(now())
+
+  @@index([userId])
+}
+
+model RefreshSession {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  userAgent String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Vendor {
+  id             String              @id @default(uuid())
+  salutation     String?
+  firstName      String
+  lastName       String
+  companyName    String
+  displayName    String
+  email          String
+  workPhone      String
+  mobile         String
+  language       String
+  gstTreatment   String
+  sourceOfSupply String
+  pan            String
+  gstin          String
+  currency       String
+  paymentTerms   String
+  tdsRate        String
+  remarks        String
+  attachments    String? // JSON array of urls
+  commentsJson   String? // Serialized comments history
+  historyJson    String? // Serialized status/activity logs
+  payables       Decimal             @default(0.00) @db.Decimal(12, 2)
+  unusedCredits  Decimal             @default(0.00) @db.Decimal(12, 2)
+  status         String              @default("Active") // "Active" | "Inactive"
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  addresses      VendorAddress[]
+  contacts       VendorContact[]
+  bankAccounts   VendorBankAccount[]
+  purchaseOrders PurchaseOrder[]
+}
+
+model VendorAddress {
+  id            String  @id @default(uuid())
+  vendorId      String
+  vendor        Vendor  @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  type          String // "BILLING" | "SHIPPING"
+  attention     String?
+  countryRegion String?
+  street1       String
+  street2       String?
+  city          String
+  state         String
+  zipCode       String
+  phone         String?
+  fax           String?
+
+  @@index([vendorId])
+}
+
+model VendorContact {
+  id         String  @id @default(uuid())
+  vendorId   String
+  vendor     Vendor  @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  salutation String?
+  firstName  String
+  lastName   String
+  email      String
+  workPhone  String?
+  mobile     String?
+
+  @@index([vendorId])
+}
+
+model VendorBankAccount {
+  id                String @id @default(uuid())
+  vendorId          String
+  vendor            Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  accountHolderName String
+  bankName          String
+  accountNumber     String
+  ifscCode          String
+
+  @@index([vendorId])
+}
+
+model PurchaseOrder {
+  id                 String              @id @default(uuid())
+  vendorId           String
+  vendor             Vendor              @relation(fields: [vendorId], references: [id])
+  vendorName         String
+  vendorState        String
+  deliverToBranch    String
+  deliverToState     String
+  deliverToAddress   String
+  referenceNumber    String?
+  date               DateTime
+  deliveryDate       DateTime?
+  paymentTerms       String
+  shipmentPreference String?
+  status             String              @default("Draft") // "Draft", "Sent", "Partially_Received", "Received", "Cancelled"
+  subtotal           Decimal             @db.Decimal(12, 2)
+  discountType       String // "line" | "transaction"
+  discountValue      Decimal             @db.Decimal(12, 2)
+  discountUnit       String // "%" | "₹"
+  discountAfterTax   Boolean             @default(false)
+  discountAmount     Decimal             @db.Decimal(12, 2)
+  taxSplitType       String // "Intra-state" | "Inter-state"
+  cgstAmount         Decimal             @db.Decimal(12, 2)
+  sgstAmount         Decimal             @db.Decimal(12, 2)
+  igstAmount         Decimal             @db.Decimal(12, 2)
+  taxTotal           Decimal             @db.Decimal(12, 2)
+  tdsTcsType         String // "TDS" | "TCS" | "None"
+  tdsTcsRate         Decimal             @db.Decimal(5, 2)
+  tdsTcsAmount       Decimal             @db.Decimal(12, 2)
+  tdsTcsName         String?
+  adjustment         Decimal             @db.Decimal(12, 2)
+  total              Decimal             @db.Decimal(12, 2)
+  customerNotes      String?
+  termsAndConditions String?
+  attachments        String? // JSON array of urls
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  items              PurchaseOrderItem[]
+  receipts           PurchaseReceipt[]
+
+  @@index([vendorId])
+}
+
+model PurchaseOrderItem {
+  id               String        @id @default(uuid())
+  purchaseOrderId  String
+  purchaseOrder    PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  sku              String
+  name             String
+  size             String?
+  quantity         Int
+  receivedQuantity Int           @default(0)
+  rate             Decimal       @db.Decimal(12, 2)
+  taxRate          Decimal       @db.Decimal(5, 2)
+  taxAmount        Decimal       @db.Decimal(12, 2)
+  amount           Decimal       @db.Decimal(12, 2)
+
+  @@index([purchaseOrderId])
+}
+
+model PurchaseReceipt {
+  id              String                @id @default(uuid())
+  purchaseOrderId String
+  purchaseOrder   PurchaseOrder         @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  receivedBy      String
+  notes           String?
+  createdAt       DateTime              @default(now())
+  items           PurchaseReceiptItem[]
+
+  @@index([purchaseOrderId])
+}
+
+model PurchaseReceiptItem {
+  id               String          @id @default(uuid())
+  receiptId        String
+  receipt          PurchaseReceipt @relation(fields: [receiptId], references: [id], onDelete: Cascade)
+  sku              String
+  quantityReceived Int
+
+  @@index([receiptId])
+}
+
+model CustomerAddress {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String // "BILLING" | "SHIPPING"
+  street1   String
+  street2   String?
+  city      String
+  state     String
+  zipCode   String
+  country   String   @default("India")
+  phone     String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  orderNumber     String      @unique
+  customerId      String
+  customer        User        @relation(fields: [customerId], references: [id])
+  status          String      @default("PENDING_PAYMENT") // PENDING_PAYMENT, CONFIRMED, PROCESSING, PACKED, SHIPPED, DELIVERED, CANCELLED, RETURNED
+  paymentStatus   String      @default("PENDING") // PENDING, PAID, FAILED, REFUNDED
+  subtotal        Decimal     @db.Decimal(12, 2)
+  taxTotal        Decimal     @db.Decimal(12, 2)
+  shippingCharge  Decimal     @default(0.00) @db.Decimal(12, 2)
+  discountAmount  Decimal     @default(0.00) @db.Decimal(12, 2)
+  total           Decimal     @db.Decimal(12, 2)
+  shippingAddress Json? // snapshotted address info
+  billingAddress  Json? // snapshotted address info
+  notes           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+
+  @@index([customerId])
+}
+
+model OrderItem {
+  id          String          @id @default(uuid())
+  orderId     String
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product         @relation(fields: [productId], references: [id])
+  variantId   String?
+  variant     ProductVariant? @relation(fields: [variantId], references: [id])
+  name        String // snapshotted
+  sku         String // snapshotted
+  variantName String? // snapshotted
+  quantity    Int
+  price       Decimal         @db.Decimal(12, 2)
+
+  @@index([orderId])
+  @@index([productId])
+  @@index([variantId])
 }

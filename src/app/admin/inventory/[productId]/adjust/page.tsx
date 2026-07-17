@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import AdminTopbar from "@/components/admin/layout/AdminTopbar";
 import StockAdjustmentForm from "@/components/admin/inventory/StockAdjustmentForm";
 import { getAdminProductBySku } from "@/services/products.service";
+import { adjustStock } from "@/services/inventory.service";
 import { AdminProductFormData, StockAdjustment } from "@/types/admin";
 
 interface PageProps {
@@ -46,27 +47,62 @@ function StockAdjustmentPageContent({ productId }: { productId: string }) {
 
   const breadcrumbs = [
     { label: "Inventory", href: "/admin/inventory" },
-    { label: product.name, href: `/admin/inventory/${product.sku}` },
+    { label: product.name, href: `/admin/inventory/${product.id}` },
     { label: "Adjust Stock" }
   ];
 
-  const handleAdjustmentSubmit = (adjustmentData: StockAdjustment & { variantName?: string; newStock: number; vendor?: string; invoiceNumber?: string }) => {
-    // Show success toast
-    const scope = adjustmentData.variantName
-      ? `variant "${adjustmentData.variantName}"`
-      : `product "${product.name}"`;
-
-    let detailMsg = `New stock: ${adjustmentData.newStock} units.`;
-    if (adjustmentData.vendor) {
-      detailMsg += ` Vendor: ${adjustmentData.vendor}.`;
+  const handleAdjustmentSubmit = async (adjustmentData: StockAdjustment & { variantName?: string; newStock: number; vendor?: string; invoiceNumber?: string }) => {
+    let currentStock = 0;
+    if (adjustmentData.variantId) {
+      const v = product.variants?.find((varItem) => varItem.id === adjustmentData.variantId);
+      currentStock = v ? v.stock : 0;
+    } else {
+      currentStock = product.initialStock ?? 0;
     }
 
-    setToastMessage(`Stock adjusted successfully for ${scope}! ${detailMsg}`);
+    let apiType = "MANUAL_CORRECTION";
+    let apiQuantity = adjustmentData.quantity;
 
-    setTimeout(() => {
-      setToastMessage(null);
-      router.push(`/admin/inventory/${product.sku}`);
-    }, 2000);
+    if (adjustmentData.adjustmentType === "Add Stock") {
+      apiType = "STOCK_ADDED";
+    } else if (adjustmentData.adjustmentType === "Remove Stock") {
+      apiType = "STOCK_REMOVED";
+    } else if (adjustmentData.adjustmentType === "Damaged Item") {
+      apiType = "DAMAGED";
+    } else if (adjustmentData.adjustmentType === "Returned Item") {
+      apiType = "CUSTOMER_RETURN";
+    } else if (adjustmentData.adjustmentType === "Set Exact Quantity" || adjustmentData.adjustmentType === "Manual Correction") {
+      apiType = "MANUAL_CORRECTION";
+      apiQuantity = adjustmentData.newStock - currentStock;
+    }
+
+    try {
+      await adjustStock({
+        productId: adjustmentData.variantId ? undefined : product.id,
+        variantId: adjustmentData.variantId || undefined,
+        type: apiType,
+        quantity: apiQuantity,
+        reason: adjustmentData.reason + (adjustmentData.vendor ? ` (Vendor: ${adjustmentData.vendor}, Invoice: ${adjustmentData.invoiceNumber || 'N/A'})` : ""),
+      });
+
+      const scope = adjustmentData.variantName
+        ? `variant "${adjustmentData.variantName}"`
+        : `product "${product.name}"`;
+
+      let detailMsg = `New stock: ${adjustmentData.newStock} units.`;
+      if (adjustmentData.vendor) {
+        detailMsg += ` Vendor: ${adjustmentData.vendor}.`;
+      }
+
+      setToastMessage(`Stock adjusted successfully for ${scope}! ${detailMsg}`);
+
+      setTimeout(() => {
+        setToastMessage(null);
+        router.push(`/admin/inventory/${product.id}`);
+      }, 2000);
+    } catch (err: any) {
+      alert(err.message || "Failed to adjust stock. Please try again.");
+    }
   };
 
   return (
@@ -103,7 +139,7 @@ function StockAdjustmentPageContent({ productId }: { productId: string }) {
           product={product}
           initialVariantId={initialVariantId}
           onSubmit={handleAdjustmentSubmit}
-          onCancel={() => router.push(`/admin/inventory/${product.sku}`)}
+          onCancel={() => router.push(`/admin/inventory/${product.id}`)}
         />
       </div>
     </div>

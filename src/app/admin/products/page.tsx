@@ -13,7 +13,7 @@ export default function AdminProductsPage() {
   const [activeTab, setActiveTab] = useState("All Products");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const breadcrumbs = [{ label: "Products" }];
+  const breadcrumbs = [{ label: "Dashboard", href: "/admin/dashboard" }, { label: "Products" }];
 
   const tabs = ["All Products", "Active", "Draft", "Archived"];
 
@@ -114,7 +114,7 @@ export default function AdminProductsPage() {
               <tbody className="divide-y divide-neutral-100">
                 {filteredProducts.length > 0 ? (
                   filteredProducts.map((product, idx) => {
-                    const urlId = product.sku.replace("#", "").trim();
+                    const urlId = product.id || product.sku.replace("#", "").trim();
                     return (
                       <tr key={idx} className="hover:bg-neutral-50/50 transition-colors">
                         {/* SKU */}

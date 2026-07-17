@@ -22,4 +22,7 @@ export interface Product {
   isBestSeller?: boolean;
   isNewArrival?: boolean;
   stock: number;
+  sku?: string;
+  variants?: unknown[];
+  name?: string;
 }

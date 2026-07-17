@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { AdminCategory } from "@/types/admin";
+import { uploadFile } from "@/services/media.service";
 
 interface CategoryFormProps {
   initialData?: AdminCategory | null;
@@ -13,13 +14,33 @@ export default function CategoryForm({ initialData, onSubmit, onCancel }: Catego
   const [description, setDescription] = useState(initialData?.description || "");
   const [status, setStatus] = useState<"Active" | "Draft" | "Hidden">(initialData?.status || "Active");
   const [displayOrder, setDisplayOrder] = useState(initialData?.displayOrder || 1);
+  const [imageUrl, setImageUrl] = useState(initialData?.image || "");
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setName(val);
     // Auto slugify if not custom
     setSlug(val.toLowerCase().replace(/\s+/g, "-").replace(/[^\w\-]+/g, ""));
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setUploading(true);
+      setError("");
+      try {
+        const url = await uploadFile(file, "categories");
+        setImageUrl(url);
+      } catch (err: any) {
+        setError(err.message || "Failed to upload image.");
+      } finally {
+        setUploading(false);
+      }
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -40,6 +61,7 @@ export default function CategoryForm({ initialData, onSubmit, onCancel }: Catego
       description,
       status,
       displayOrder: Number(displayOrder) || 1,
+      image: imageUrl,
     });
   };
 
@@ -129,13 +151,40 @@ export default function CategoryForm({ initialData, onSubmit, onCancel }: Catego
         </div>
       </div>
 
-      {/* Category Image Placeholder */}
+      {/* Category Image Banner */}
       <div className="flex flex-col space-y-1 pt-1">
         <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
           Category Image Banner
         </label>
-        <div className="h-20 rounded border-2 border-dashed border-neutral-250 bg-neutral-50 hover:bg-neutral-100 flex items-center justify-center cursor-pointer transition-colors text-neutral-400 text-[10px] font-bold uppercase tracking-wider">
-          Click to upload preview image
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept="image/*"
+          className="hidden"
+        />
+        <div
+          onClick={() => fileInputRef.current?.click()}
+          className="h-24 rounded border-2 border-dashed border-neutral-250 bg-neutral-50 hover:bg-neutral-100 flex flex-col items-center justify-center cursor-pointer transition-colors relative overflow-hidden text-neutral-400"
+        >
+          {uploading ? (
+            <div className="flex flex-col items-center space-y-1">
+              <span className="inline-block border-2 border-t-transparent border-neutral-400 rounded-full h-4 w-4 animate-spin"></span>
+              <span className="text-[9px] uppercase tracking-wider font-semibold">Uploading...</span>
+            </div>
+          ) : imageUrl ? (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={imageUrl} alt="Category preview" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[9px] uppercase tracking-widest font-bold">
+                Change Image
+              </div>
+            </>
+          ) : (
+            <span className="text-[10px] font-bold uppercase tracking-wider">
+              Click to upload preview image
+            </span>
+          )}
         </div>
       </div>
 

@@ -13,7 +13,7 @@ export default function AdminOrdersPage() {
   const [activeTab, setActiveTab] = useState("All Orders");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const breadcrumbs = [{ label: "Dashboard" }];
+  const breadcrumbs = [{ label: "Dashboard", href: "/admin/dashboard" }, { label: "Orders" }];
 
   const tabs = [
     "All Orders",

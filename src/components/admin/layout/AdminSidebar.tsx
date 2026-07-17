@@ -20,6 +20,7 @@ export default function AdminSidebar() {
       sectionTitle: "COMMERCE",
       items: [
         { title: "Orders", href: "/admin/orders", iconName: "orders" },
+        { title: "Purchase Orders", href: "/admin/purchase-orders", iconName: "purchases" },
         { title: "Products", href: "/admin/products", iconName: "products" },
         { title: "Categories", href: "/admin/categories", iconName: "categories" },
       ],
@@ -28,6 +29,7 @@ export default function AdminSidebar() {
       sectionTitle: "MANAGEMENT",
       items: [
         { title: "Customers", href: "/admin/customers", iconName: "customers" },
+        { title: "Vendors", href: "/admin/vendors", iconName: "vendors" },
         { title: "Inventory", href: "/admin/inventory", iconName: "inventory" },
         { title: "Stock Transactions", href: "/admin/inventory/transactions", iconName: "transactions" },
       ],

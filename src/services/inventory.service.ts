@@ -1,70 +1,55 @@
-import { AdminInventoryItem, InventoryDetails, StatusType, StockTransaction } from "@/types/admin";
-import { adminProductsDetailFixture } from "@/data/fixtures/products";
-import { adminInventoryTransactionsFixture } from "@/data/fixtures/stock-transactions";
+import { AdminInventoryItem, InventoryDetails, StockTransaction } from "@/types/admin";
+import { apiFetch } from "@/services/api";
 
+// ----- Admin inventory levels -----
 export async function getInventoryItems(): Promise<AdminInventoryItem[]> {
-  // Derive inventory list from products source of truth
-  return Object.values(adminProductsDetailFixture).map((p) => {
-    const currentStock = p.variants?.length > 0
-      ? p.variants.reduce((sum, v) => sum + v.stock, 0)
-      : p.initialStock;
+  try {
+    const data = await apiFetch<AdminInventoryItem[]>("/api/inventory");
+    return data ?? [];
+  } catch {
+    return [];
+  }
+}
 
-    let status = "In Stock";
-    if (currentStock === 0) {
-      status = "Out of Stock";
-    } else if (currentStock <= p.minStock) {
-      status = "Low Stock";
-    }
+export async function getInventoryById(id: string): Promise<InventoryDetails | undefined> {
+  try {
+    return await apiFetch<InventoryDetails>(`/api/inventory/${id}`);
+  } catch {
+    return undefined;
+  }
+}
 
-    return {
-      sku: p.sku,
-      name: p.name,
-      category: p.category,
-      currentStock,
-      minRequired: p.minStock,
-      status: status as StatusType,
-    };
+// ----- Manual stock adjustments -----
+export interface AdjustStockPayload {
+  productId?: string;
+  variantId?: string;
+  type: string;
+  quantity: number;
+  reason: string;
+}
+
+export async function adjustStock(payload: AdjustStockPayload): Promise<{
+  inventoryId: string;
+  beforeStock: number;
+  afterStock: number;
+}> {
+  return apiFetch("/api/inventory/adjust", {
+    method: "POST",
+    body: JSON.stringify(payload),
   });
 }
 
-export async function getInventoryBySku(sku: string): Promise<InventoryDetails | undefined> {
-  const cleanSku = sku.replace("#", "").trim();
-  const product = adminProductsDetailFixture[cleanSku];
-  if (!product) return undefined;
-
-  const currentStock = product.variants?.length > 0
-    ? product.variants.reduce((sum, v) => sum + v.stock, 0)
-    : product.initialStock;
-
-  const reservedStock = product.variants?.length > 0
-    ? Math.round(currentStock * 0.15) || 1
-    : 2;
-
-  const availableStock = currentStock > reservedStock ? currentStock - reservedStock : 0;
-  const incomingStock = currentStock <= product.minStock ? 15 : 0;
-
-  return {
-    productId: product.sku,
-    productName: product.name,
-    sku: product.sku,
-    category: product.category,
-    image: product.media[0]?.url,
-    currentStock,
-    minRequired: product.minStock,
-    availableStock,
-    reservedStock,
-    incomingStock,
-    status: product.status === "Active" ? "Active" : "Draft",
-    variantsStock: product.variants,
-  };
-}
-
+// ----- Transaction history -----
 export async function getStockTransactions(sku?: string): Promise<StockTransaction[]> {
-  if (sku) {
-    const cleanSku = sku.replace("#", "").trim();
-    return adminInventoryTransactionsFixture.filter(
-      (tx) => tx.sku.replace("#", "").trim() === cleanSku
-    );
+  try {
+    const data = await apiFetch<StockTransaction[]>("/api/inventory/transactions");
+    if (!data) return [];
+    if (sku) {
+      const cleanSku = sku.replace("#", "").trim();
+      return data.filter((tx) => tx.sku && tx.sku.replace("#", "").trim() === cleanSku);
+    }
+    return data;
+  } catch {
+    return [];
   }
-  return adminInventoryTransactionsFixture;
 }
