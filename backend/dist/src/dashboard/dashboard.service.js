@@ -24,48 +24,75 @@ let DashboardService = class DashboardService {
         const startOfMonth = new Date();
         startOfMonth.setDate(1);
         startOfMonth.setHours(0, 0, 0, 0);
-        const todaysOrdersList = await this.prisma.order.findMany({
-            where: {
-                createdAt: { gte: startOfToday },
-                status: { notIn: ['PENDING_PAYMENT', 'CANCELLED'] },
-            },
-        });
-        const todaysRevenue = todaysOrdersList.reduce((sum, o) => sum + Number(o.total), 0);
-        const monthlyOrdersList = await this.prisma.order.findMany({
-            where: {
-                createdAt: { gte: startOfMonth },
-                status: { notIn: ['PENDING_PAYMENT', 'CANCELLED'] },
-            },
-        });
-        const monthlyRevenue = monthlyOrdersList.reduce((sum, o) => sum + Number(o.total), 0);
-        const todaysOrdersCount = await this.prisma.order.count({
-            where: {
-                createdAt: { gte: startOfToday },
-            },
-        });
-        const newCustomersCount = await this.prisma.user.count({
-            where: {
-                role: client_js_1.UserRole.CUSTOMER,
-                createdAt: { gte: startOfToday },
-            },
-        });
-        const orderItemsToday = await this.prisma.orderItem.findMany({
-            where: {
-                order: {
+        const startOfYear = new Date();
+        startOfYear.setMonth(0, 1);
+        startOfYear.setHours(0, 0, 0, 0);
+        const endOfYear = new Date();
+        endOfYear.setMonth(11, 31);
+        endOfYear.setHours(23, 59, 59, 999);
+        const [todaysRevenueResult, monthlyRevenueResult, todaysOrdersCount, newCustomersCount, orderItemsTodayResult, lowStockResult, totalProducts, totalCategories, yearOrders,] = await Promise.all([
+            this.prisma.order.aggregate({
+                where: {
                     createdAt: { gte: startOfToday },
                     status: { notIn: ['PENDING_PAYMENT', 'CANCELLED'] },
                 },
-            },
-        });
-        const productsSoldToday = orderItemsToday.reduce((sum, item) => sum + item.quantity, 0);
-        const lowStockResult = await this.prisma.$queryRaw(client_js_1.Prisma.sql `SELECT COUNT(*)::int as count FROM "Inventory" WHERE "currentStock" <= "minimumRequired"`);
+                _sum: {
+                    total: true,
+                },
+            }),
+            this.prisma.order.aggregate({
+                where: {
+                    createdAt: { gte: startOfMonth },
+                    status: { notIn: ['PENDING_PAYMENT', 'CANCELLED'] },
+                },
+                _sum: {
+                    total: true,
+                },
+            }),
+            this.prisma.order.count({
+                where: {
+                    createdAt: { gte: startOfToday },
+                },
+            }),
+            this.prisma.user.count({
+                where: {
+                    role: client_js_1.UserRole.CUSTOMER,
+                    createdAt: { gte: startOfToday },
+                },
+            }),
+            this.prisma.orderItem.aggregate({
+                where: {
+                    order: {
+                        createdAt: { gte: startOfToday },
+                        status: { notIn: ['PENDING_PAYMENT', 'CANCELLED'] },
+                    },
+                },
+                _sum: {
+                    quantity: true,
+                },
+            }),
+            this.prisma.$queryRaw(client_js_1.Prisma.sql `SELECT COUNT(*)::int as count FROM "Inventory" WHERE "currentStock" <= "minimumRequired"`),
+            this.prisma.product.count({
+                where: { status: 'ACTIVE' },
+            }),
+            this.prisma.category.count({
+                where: { isActive: true },
+            }),
+            this.prisma.order.findMany({
+                where: {
+                    createdAt: { gte: startOfYear, lte: endOfYear },
+                    status: { notIn: ['PENDING_PAYMENT', 'CANCELLED'] },
+                },
+                select: {
+                    total: true,
+                    createdAt: true,
+                },
+            }),
+        ]);
+        const todaysRevenue = Number(todaysRevenueResult._sum?.total ?? 0);
+        const monthlyRevenue = Number(monthlyRevenueResult._sum?.total ?? 0);
+        const productsSoldToday = orderItemsTodayResult._sum?.quantity ?? 0;
         const lowStockCount = lowStockResult[0]?.count ?? 0;
-        const totalProducts = await this.prisma.product.count({
-            where: { status: 'ACTIVE' },
-        });
-        const totalCategories = await this.prisma.category.count({
-            where: { isActive: true },
-        });
         const monthlySales = [];
         const months = [
             'Jan',
@@ -81,20 +108,15 @@ let DashboardService = class DashboardService {
             'Nov',
             'Dec',
         ];
+        const revenueByMonth = new Array(12).fill(0);
+        for (const order of yearOrders) {
+            const monthIndex = new Date(order.createdAt).getMonth();
+            if (monthIndex >= 0 && monthIndex < 12) {
+                revenueByMonth[monthIndex] += Number(order.total);
+            }
+        }
         for (let i = 0; i < 12; i++) {
-            const targetMonthStart = new Date();
-            targetMonthStart.setMonth(i, 1);
-            targetMonthStart.setHours(0, 0, 0, 0);
-            const targetMonthEnd = new Date(targetMonthStart);
-            targetMonthEnd.setMonth(i + 1, 0);
-            targetMonthEnd.setHours(23, 59, 59, 999);
-            const orders = await this.prisma.order.findMany({
-                where: {
-                    createdAt: { gte: targetMonthStart, lte: targetMonthEnd },
-                    status: { notIn: ['PENDING_PAYMENT', 'CANCELLED'] },
-                },
-            });
-            const rev = orders.reduce((sum, o) => sum + Number(o.total), 0);
+            const rev = revenueByMonth[i];
             monthlySales.push({
                 month: months[i],
                 revenue: Math.round(rev / 1000),

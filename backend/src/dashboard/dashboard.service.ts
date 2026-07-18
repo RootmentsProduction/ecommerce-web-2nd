@@ -14,75 +14,110 @@ export class DashboardService {
     startOfMonth.setDate(1);
     startOfMonth.setHours(0, 0, 0, 0);
 
-    // Todays Revenue (orders not pending or cancelled)
-    const todaysOrdersList = await this.prisma.order.findMany({
-      where: {
-        createdAt: { gte: startOfToday },
-        status: { notIn: ['PENDING_PAYMENT', 'CANCELLED'] },
-      },
-    });
-    const todaysRevenue = todaysOrdersList.reduce(
-      (sum, o) => sum + Number(o.total),
-      0,
-    );
+    const startOfYear = new Date();
+    startOfYear.setMonth(0, 1);
+    startOfYear.setHours(0, 0, 0, 0);
 
-    // This Month's Revenue
-    const monthlyOrdersList = await this.prisma.order.findMany({
-      where: {
-        createdAt: { gte: startOfMonth },
-        status: { notIn: ['PENDING_PAYMENT', 'CANCELLED'] },
-      },
-    });
-    const monthlyRevenue = monthlyOrdersList.reduce(
-      (sum, o) => sum + Number(o.total),
-      0,
-    );
+    const endOfYear = new Date();
+    endOfYear.setMonth(11, 31);
+    endOfYear.setHours(23, 59, 59, 999);
 
-    // Today's Orders Count
-    const todaysOrdersCount = await this.prisma.order.count({
-      where: {
-        createdAt: { gte: startOfToday },
-      },
-    });
-
-    // New Customers Count
-    const newCustomersCount = await this.prisma.user.count({
-      where: {
-        role: UserRole.CUSTOMER,
-        createdAt: { gte: startOfToday },
-      },
-    });
-
-    // Products Sold Today
-    const orderItemsToday = await this.prisma.orderItem.findMany({
-      where: {
-        order: {
+    // Run queries in parallel to drastically improve loading speed
+    const [
+      todaysRevenueResult,
+      monthlyRevenueResult,
+      todaysOrdersCount,
+      newCustomersCount,
+      orderItemsTodayResult,
+      lowStockResult,
+      totalProducts,
+      totalCategories,
+      yearOrders,
+    ] = await Promise.all([
+      // 1. Today's Revenue (orders not pending or cancelled) - uses aggregate sum
+      this.prisma.order.aggregate({
+        where: {
           createdAt: { gte: startOfToday },
           status: { notIn: ['PENDING_PAYMENT', 'CANCELLED'] },
         },
-      },
-    });
-    const productsSoldToday = orderItemsToday.reduce(
-      (sum, item) => sum + item.quantity,
-      0,
-    );
+        _sum: {
+          total: true,
+        },
+      }),
 
-    // Low Stock Count
-    const lowStockResult = await this.prisma.$queryRaw<{ count: number }[]>(
-      Prisma.sql`SELECT COUNT(*)::int as count FROM "Inventory" WHERE "currentStock" <= "minimumRequired"`,
-    );
+      // 2. This Month's Revenue - uses aggregate sum
+      this.prisma.order.aggregate({
+        where: {
+          createdAt: { gte: startOfMonth },
+          status: { notIn: ['PENDING_PAYMENT', 'CANCELLED'] },
+        },
+        _sum: {
+          total: true,
+        },
+      }),
+
+      // 3. Today's Orders Count
+      this.prisma.order.count({
+        where: {
+          createdAt: { gte: startOfToday },
+        },
+      }),
+
+      // 4. New Customers Count
+      this.prisma.user.count({
+        where: {
+          role: UserRole.CUSTOMER,
+          createdAt: { gte: startOfToday },
+        },
+      }),
+
+      // 5. Products Sold Today - uses aggregate sum
+      this.prisma.orderItem.aggregate({
+        where: {
+          order: {
+            createdAt: { gte: startOfToday },
+            status: { notIn: ['PENDING_PAYMENT', 'CANCELLED'] },
+          },
+        },
+        _sum: {
+          quantity: true,
+        },
+      }),
+
+      // 6. Low Stock Count
+      this.prisma.$queryRaw<{ count: number }[]>(
+        Prisma.sql`SELECT COUNT(*)::int as count FROM "Inventory" WHERE "currentStock" <= "minimumRequired"`,
+      ),
+
+      // 7. Total Products
+      this.prisma.product.count({
+        where: { status: 'ACTIVE' },
+      }),
+
+      // 8. Total Categories
+      this.prisma.category.count({
+        where: { isActive: true },
+      }),
+
+      // 9. Monthly Sales data for charts (fetch entire year in one query instead of 12)
+      this.prisma.order.findMany({
+        where: {
+          createdAt: { gte: startOfYear, lte: endOfYear },
+          status: { notIn: ['PENDING_PAYMENT', 'CANCELLED'] },
+        },
+        select: {
+          total: true,
+          createdAt: true,
+        },
+      }),
+    ]);
+
+    const todaysRevenue = Number(todaysRevenueResult._sum?.total ?? 0);
+    const monthlyRevenue = Number(monthlyRevenueResult._sum?.total ?? 0);
+    const productsSoldToday = orderItemsTodayResult._sum?.quantity ?? 0;
     const lowStockCount = lowStockResult[0]?.count ?? 0;
 
-    // Category and Product counts
-    const totalProducts = await this.prisma.product.count({
-      where: { status: 'ACTIVE' },
-    });
-    const totalCategories = await this.prisma.category.count({
-      where: { isActive: true },
-    });
-
     // Simple Monthly Sales data for charts
-    // Let's generate a list of monthly sales for the last 12 months based on Postgres orders
     const monthlySales = [];
     const months = [
       'Jan',
@@ -99,23 +134,17 @@ export class DashboardService {
       'Dec',
     ];
 
+    // Compute monthly sums in JS
+    const revenueByMonth = new Array(12).fill(0);
+    for (const order of yearOrders) {
+      const monthIndex = new Date(order.createdAt).getMonth();
+      if (monthIndex >= 0 && monthIndex < 12) {
+        revenueByMonth[monthIndex] += Number(order.total);
+      }
+    }
+
     for (let i = 0; i < 12; i++) {
-      const targetMonthStart = new Date();
-      targetMonthStart.setMonth(i, 1);
-      targetMonthStart.setHours(0, 0, 0, 0);
-
-      const targetMonthEnd = new Date(targetMonthStart);
-      targetMonthEnd.setMonth(i + 1, 0);
-      targetMonthEnd.setHours(23, 59, 59, 999);
-
-      const orders = await this.prisma.order.findMany({
-        where: {
-          createdAt: { gte: targetMonthStart, lte: targetMonthEnd },
-          status: { notIn: ['PENDING_PAYMENT', 'CANCELLED'] },
-        },
-      });
-
-      const rev = orders.reduce((sum, o) => sum + Number(o.total), 0);
+      const rev = revenueByMonth[i];
       monthlySales.push({
         month: months[i],
         revenue: Math.round(rev / 1000), // represented in thousands
