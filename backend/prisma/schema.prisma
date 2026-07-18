@@ -60,8 +60,8 @@ model Product {
   showOnHomepage    Boolean            @default(false)
   occasion          String             @default("Everyday")
   gender            String             @default("Unisex")
-  categoryId        String
-  category          Category           @relation(fields: [categoryId], references: [id])
+  categoryId        String?
+  category          Category?          @relation(fields: [categoryId], references: [id])
   images            ProductImage[]
   variants          ProductVariant[]
   inventory         Inventory?

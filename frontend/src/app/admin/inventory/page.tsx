@@ -7,10 +7,13 @@ import AdminTabs from "@/components/admin/shared/AdminTabs";
 import StatusBadge from "@/components/admin/shared/StatusBadge";
 import AdminStatCard from "@/components/admin/shared/AdminStatCard";
 import { getInventoryItems } from "@/services/inventory.service";
+import { getPurchaseOrders } from "@/services/purchase-orders.service";
 import { AdminInventoryItem, StatusType } from "@/types/admin";
+import { PurchaseOrder } from "@/types/purchase-order";
 
 export default function AdminInventoryPage() {
   const [inventoryList, setInventoryList] = useState<AdminInventoryItem[]>([]);
+  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
   const [activeTab, setActiveTab] = useState("All Inventories");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -19,8 +22,25 @@ export default function AdminInventoryPage() {
   const tabs = ["All Inventories", "Low Stock", "Out Of Stock"];
 
   React.useEffect(() => {
-    getInventoryItems().then(setInventoryList);
+    Promise.all([getInventoryItems(), getPurchaseOrders()]).then(
+      ([invItems, pos]) => {
+        setInventoryList(invItems);
+        setPurchaseOrders(pos);
+      }
+    );
   }, []);
+
+  // Calculate incoming stock: sum of (ordered - received) for open POs
+  const incomingCount = purchaseOrders
+    .filter((po) => po.status === "Sent" || po.status === "Partially_Received" || po.status === "Partially Received")
+    .reduce((total, po) => {
+      const poIncoming = (po.items || []).reduce((sum, item) => {
+        const received = item.receivedQuantity ?? 0;
+        const pending = item.quantity - received;
+        return sum + (pending > 0 ? pending : 0);
+      }, 0);
+      return total + poIncoming;
+    }, 0);
 
   // Mock stats based on current inventory list
   const totalProductsCount = inventoryList.length;
@@ -71,8 +91,8 @@ export default function AdminInventoryPage() {
     },
     {
       title: "INCOMING",
-      value: "15",
-      subNote: "On purchase orders",
+      value: incomingCount.toString(),
+      subNote: "On open purchase orders",
       icon: (
         <svg className="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125a1.125 1.125 0 001.125-1.125V9.75M8.25 18.75h6m-6 0H3.375m11.25 0V7.5H9.75v11.25M3.375 14.25h11.25m0 0V7.5M14.625 14.25h3.75m-3.75 0V9.75h3.75m-3.75-2.25h3.75" />
@@ -128,8 +148,8 @@ export default function AdminInventoryPage() {
             <Link href="/admin/inventory/transactions" className="flex items-center space-x-2 px-4 py-2 border border-neutral-200 rounded-full bg-white text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition-colors cursor-pointer">
               <span>View Transactions</span>
             </Link>
-            <Link href="/admin/inventory/SKU-001/adjust" className="flex items-center space-x-2 px-5 py-2.5 bg-neutral-950 hover:bg-neutral-850 text-white rounded-full text-xs font-semibold tracking-wide transition-colors cursor-pointer">
-              <span className="text-[#C99213] font-bold text-sm leading-none">+</span>
+            <Link href="/admin/inventory" className="flex items-center space-x-2 px-5 py-2.5 bg-neutral-950 hover:bg-neutral-850 text-white rounded-full text-xs font-semibold tracking-wide transition-colors cursor-pointer">
+              <span className="text-[#C99213] font-bold text-sm leading-none">↕</span>
               <span>Adjust Stock</span>
             </Link>
           </div>

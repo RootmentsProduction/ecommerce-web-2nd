@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma } from '../generated/prisma/client.js';
+import { Prisma, ProductStatus } from '../generated/prisma/client.js';
 
 export interface CreateCategoryDto {
   name: string;
@@ -155,7 +155,7 @@ export class CategoriesService {
     const activeProductsCount = await this.prisma.product.count({
       where: {
         categoryId: id,
-        status: { not: 'ARCHIVED' },
+        status: { not: ProductStatus.ARCHIVED },
       },
     });
 
@@ -164,6 +164,16 @@ export class CategoriesService {
         `Cannot delete category. There are ${activeProductsCount} active products assigned to this category.`,
       );
     }
+
+    // Unlink any remaining archived products from this category so the
+    // foreign-key constraint does not block the delete.
+    await this.prisma.product.updateMany({
+      where: {
+        categoryId: id,
+        status: ProductStatus.ARCHIVED,
+      },
+      data: { categoryId: null },
+    });
 
     return this.prisma.category.delete({ where: { id } });
   }

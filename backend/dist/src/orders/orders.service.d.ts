@@ -30,26 +30,26 @@ export declare class OrdersService {
             productId: string;
             variantId: string | null;
             quantity: number;
+            orderId: string;
             variantName: string | null;
             price: import("@prisma/client-runtime-utils").Decimal;
-            orderId: string;
         }[];
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
         status: string;
-        total: import("@prisma/client-runtime-utils").Decimal;
-        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
-        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         subtotal: import("@prisma/client-runtime-utils").Decimal;
         discountAmount: import("@prisma/client-runtime-utils").Decimal;
         taxTotal: import("@prisma/client-runtime-utils").Decimal;
+        total: import("@prisma/client-runtime-utils").Decimal;
         notes: string | null;
         orderNumber: string;
         customerId: string;
         paymentStatus: string;
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
+        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
     }>;
     findMyOrders(customerId: string): Promise<({
         items: {
@@ -59,28 +59,28 @@ export declare class OrdersService {
             productId: string;
             variantId: string | null;
             quantity: number;
+            orderId: string;
             variantName: string | null;
             price: import("@prisma/client-runtime-utils").Decimal;
-            orderId: string;
         }[];
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
         status: string;
-        total: import("@prisma/client-runtime-utils").Decimal;
-        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
-        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         subtotal: import("@prisma/client-runtime-utils").Decimal;
         discountAmount: import("@prisma/client-runtime-utils").Decimal;
         taxTotal: import("@prisma/client-runtime-utils").Decimal;
+        total: import("@prisma/client-runtime-utils").Decimal;
         notes: string | null;
         orderNumber: string;
         customerId: string;
         paymentStatus: string;
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
+        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
     })[]>;
-    findOne(id: string, user: {
+    findOne(idOrNumber: string, user: {
         id: string;
         role: string;
     }): Promise<{
@@ -115,7 +115,7 @@ export declare class OrdersService {
                 showOnHomepage: boolean;
                 occasion: string;
                 gender: string;
-                categoryId: string;
+                categoryId: string | null;
             };
         } & {
             id: string;
@@ -124,9 +124,9 @@ export declare class OrdersService {
             productId: string;
             variantId: string | null;
             quantity: number;
+            orderId: string;
             variantName: string | null;
             price: import("@prisma/client-runtime-utils").Decimal;
-            orderId: string;
         })[];
         customer: {
             id: string;
@@ -144,17 +144,17 @@ export declare class OrdersService {
         createdAt: Date;
         updatedAt: Date;
         status: string;
-        total: import("@prisma/client-runtime-utils").Decimal;
-        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
-        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         subtotal: import("@prisma/client-runtime-utils").Decimal;
         discountAmount: import("@prisma/client-runtime-utils").Decimal;
         taxTotal: import("@prisma/client-runtime-utils").Decimal;
+        total: import("@prisma/client-runtime-utils").Decimal;
         notes: string | null;
         orderNumber: string;
         customerId: string;
         paymentStatus: string;
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
+        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
     }>;
     findAll(): Promise<({
         items: {
@@ -164,9 +164,9 @@ export declare class OrdersService {
             productId: string;
             variantId: string | null;
             quantity: number;
+            orderId: string;
             variantName: string | null;
             price: import("@prisma/client-runtime-utils").Decimal;
-            orderId: string;
         }[];
         customer: {
             id: string;
@@ -184,17 +184,17 @@ export declare class OrdersService {
         createdAt: Date;
         updatedAt: Date;
         status: string;
-        total: import("@prisma/client-runtime-utils").Decimal;
-        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
-        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         subtotal: import("@prisma/client-runtime-utils").Decimal;
         discountAmount: import("@prisma/client-runtime-utils").Decimal;
         taxTotal: import("@prisma/client-runtime-utils").Decimal;
+        total: import("@prisma/client-runtime-utils").Decimal;
         notes: string | null;
         orderNumber: string;
         customerId: string;
         paymentStatus: string;
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
+        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
     })[]>;
     updateStatus(id: string, status: string, adminEmail: string): Promise<{
         items: {
@@ -204,25 +204,25 @@ export declare class OrdersService {
             productId: string;
             variantId: string | null;
             quantity: number;
+            orderId: string;
             variantName: string | null;
             price: import("@prisma/client-runtime-utils").Decimal;
-            orderId: string;
         }[];
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
         status: string;
-        total: import("@prisma/client-runtime-utils").Decimal;
-        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
-        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         subtotal: import("@prisma/client-runtime-utils").Decimal;
         discountAmount: import("@prisma/client-runtime-utils").Decimal;
         taxTotal: import("@prisma/client-runtime-utils").Decimal;
+        total: import("@prisma/client-runtime-utils").Decimal;
         notes: string | null;
         orderNumber: string;
         customerId: string;
         paymentStatus: string;
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
+        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
     }>;
 }

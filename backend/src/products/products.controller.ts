@@ -42,10 +42,12 @@ export class ProductsController {
   async getAdminProducts(
     @Query('category') category?: string,
     @Query('search') search?: string,
+    @Query('status') status?: string,
   ) {
     return this.productsService.findAll({
       category,
       search,
+      status,
       isAdmin: true,
     });
   }
@@ -86,5 +88,13 @@ export class ProductsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async archiveProduct(@Param('id') id: string) {
     await this.productsService.remove(id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+  @Delete(':id/permanent')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async permanentDeleteProduct(@Param('id') id: string) {
+    await this.productsService.permanentDelete(id);
   }
 }

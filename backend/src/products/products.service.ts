@@ -42,12 +42,32 @@ export class ProductsService {
     bestSeller?: boolean;
     featured?: boolean;
     isAdmin?: boolean;
+    status?: string;
   }) {
     const where: Prisma.ProductWhereInput = {};
 
     if (!query.isAdmin) {
+      // Public storefront: only active products
       where.status = ProductStatus.ACTIVE;
+    } else if (query.status) {
+      // Admin filtered by a specific status tab
+      const statusMap: Record<string, ProductStatus> = {
+        Active: ProductStatus.ACTIVE,
+        Draft: ProductStatus.DRAFT,
+        Archived: ProductStatus.ARCHIVED,
+        ACTIVE: ProductStatus.ACTIVE,
+        DRAFT: ProductStatus.DRAFT,
+        ARCHIVED: ProductStatus.ARCHIVED,
+      };
+      const mapped = statusMap[query.status];
+      if (mapped) {
+        where.status = mapped;
+      } else {
+        // 'All Products' tab: exclude Archived
+        where.status = { not: ProductStatus.ARCHIVED };
+      }
     } else {
+      // Admin default (All Products): exclude Archived
       where.status = { not: ProductStatus.ARCHIVED };
     }
 
@@ -663,5 +683,32 @@ export class ProductsService {
       where: { id },
       data: { status: ProductStatus.ARCHIVED },
     });
+  }
+
+  async permanentDelete(id: string) {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      include: {
+        _count: { select: { orderItems: true } },
+      },
+    });
+
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found.`);
+    }
+
+    if (product.status !== ProductStatus.ARCHIVED) {
+      throw new BadRequestException(
+        'Only archived products can be permanently deleted. Archive the product first.',
+      );
+    }
+
+    if (product._count.orderItems > 0) {
+      throw new BadRequestException(
+        `Cannot permanently delete this product — it appears in ${product._count.orderItems} order(s). Historical order records must remain intact.`,
+      );
+    }
+
+    return this.prisma.product.delete({ where: { id } });
   }
 }

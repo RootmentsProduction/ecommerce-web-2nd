@@ -90,9 +90,14 @@ export class OrdersService {
     });
   }
 
-  async findOne(id: string, user: { id: string; role: string }) {
-    const order = await this.prisma.order.findUnique({
-      where: { id },
+  async findOne(idOrNumber: string, user: { id: string; role: string }) {
+    const order = await this.prisma.order.findFirst({
+      where: {
+        OR: [
+          { id: idOrNumber },
+          { orderNumber: idOrNumber },
+        ],
+      },
       include: {
         items: {
           include: {
@@ -108,12 +113,12 @@ export class OrdersService {
     });
 
     if (!order) {
-      throw new NotFoundException(`Order with ID ${id} not found.`);
+      throw new NotFoundException(`Order ${idOrNumber} not found.`);
     }
 
     // Customer can only view their own orders
     if (user.role === 'CUSTOMER' && order.customerId !== user.id) {
-      throw new NotFoundException(`Order with ID ${id} not found.`);
+      throw new NotFoundException(`Order ${idOrNumber} not found.`);
     }
 
     return order;
@@ -150,8 +155,8 @@ export class OrdersService {
     }
 
     return this.prisma.$transaction(async (tx) => {
-      // Feature flag to control whether stock is deducted on confirmation. Set to false until payment engine is approved.
-      const ENABLE_STOCK_DEDUCTION_ON_ORDER_CONFIRMATION = false;
+      // Feature flag to control whether stock is deducted on confirmation. Set to true so inventory is updated when order confirms.
+      const ENABLE_STOCK_DEDUCTION_ON_ORDER_CONFIRMATION = true;
 
       const isConfirming =
         (previousStatus === 'PENDING_PAYMENT' ||

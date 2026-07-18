@@ -16,7 +16,7 @@ export declare class ProductsController {
             sortOrder: number;
             createdAt: Date;
             updatedAt: Date;
-        };
+        } | null;
         images: {
             url: string;
             id: string;
@@ -68,7 +68,7 @@ export declare class ProductsController {
         showOnHomepage: boolean;
         occasion: string;
         gender: string;
-        categoryId: string;
+        categoryId: string | null;
     })[] | {
         products: ({
             category: {
@@ -81,7 +81,7 @@ export declare class ProductsController {
                 sortOrder: number;
                 createdAt: Date;
                 updatedAt: Date;
-            };
+            } | null;
             images: {
                 url: string;
                 id: string;
@@ -133,14 +133,14 @@ export declare class ProductsController {
             showOnHomepage: boolean;
             occasion: string;
             gender: string;
-            categoryId: string;
+            categoryId: string | null;
         })[];
         total: number;
         page: number;
         limit: number;
         totalPages: number;
     }>;
-    getAdminProducts(category?: string, search?: string): Promise<({
+    getAdminProducts(category?: string, search?: string, status?: string): Promise<({
         category: {
             id: string;
             name: string;
@@ -151,7 +151,7 @@ export declare class ProductsController {
             sortOrder: number;
             createdAt: Date;
             updatedAt: Date;
-        };
+        } | null;
         images: {
             url: string;
             id: string;
@@ -203,7 +203,7 @@ export declare class ProductsController {
         showOnHomepage: boolean;
         occasion: string;
         gender: string;
-        categoryId: string;
+        categoryId: string | null;
     })[] | {
         products: ({
             category: {
@@ -216,7 +216,7 @@ export declare class ProductsController {
                 sortOrder: number;
                 createdAt: Date;
                 updatedAt: Date;
-            };
+            } | null;
             images: {
                 url: string;
                 id: string;
@@ -268,7 +268,7 @@ export declare class ProductsController {
             showOnHomepage: boolean;
             occasion: string;
             gender: string;
-            categoryId: string;
+            categoryId: string | null;
         })[];
         total: number;
         page: number;
@@ -318,7 +318,7 @@ export declare class ProductsController {
             sortOrder: number;
             createdAt: Date;
             updatedAt: Date;
-        };
+        } | null;
         images: {
             url: string;
             id: string;
@@ -383,7 +383,7 @@ export declare class ProductsController {
         showOnHomepage: boolean;
         occasion: string;
         gender: string;
-        categoryId: string;
+        categoryId: string | null;
     }>;
     createProduct(dto: CreateProductDto, admin: any): Promise<{
         id: string;
@@ -404,7 +404,7 @@ export declare class ProductsController {
         showOnHomepage: boolean;
         occasion: string;
         gender: string;
-        categoryId: string;
+        categoryId: string | null;
     }>;
     updateProduct(id: string, dto: UpdateProductDto): Promise<{
         id: string;
@@ -425,7 +425,8 @@ export declare class ProductsController {
         showOnHomepage: boolean;
         occasion: string;
         gender: string;
-        categoryId: string;
+        categoryId: string | null;
     }>;
     archiveProduct(id: string): Promise<void>;
+    permanentDeleteProduct(id: string): Promise<void>;
 }

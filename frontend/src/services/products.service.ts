@@ -318,10 +318,12 @@ export async function getProductBySlug(slug: string): Promise<Product | undefine
 export async function getAdminProducts(params?: {
   category?: string;
   search?: string;
+  status?: string;
 }): Promise<AdminProduct[]> {
   const query = new URLSearchParams();
   if (params?.category) query.set("category", params.category);
   if (params?.search) query.set("search", params.search);
+  if (params?.status) query.set("status", params.status);
 
   try {
     const data = await apiFetch<BackendProductResponse[]>(`/api/products/admin?${query.toString()}`);
@@ -359,6 +361,10 @@ export async function updateProduct(
 
 export async function archiveProduct(id: string): Promise<void> {
   await apiFetch<void>(`/api/products/${id}`, { method: "DELETE" });
+}
+
+export async function permanentDeleteProduct(id: string): Promise<void> {
+  await apiFetch<void>(`/api/products/${id}/permanent`, { method: "DELETE" });
 }
 
 // Backward-compat alias used by inventory pages

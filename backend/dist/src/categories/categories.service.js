@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoriesService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const client_js_1 = require("../generated/prisma/client.js");
 let CategoriesService = class CategoriesService {
     prisma;
     constructor(prisma) {
@@ -125,12 +126,19 @@ let CategoriesService = class CategoriesService {
         const activeProductsCount = await this.prisma.product.count({
             where: {
                 categoryId: id,
-                status: { not: 'ARCHIVED' },
+                status: { not: client_js_1.ProductStatus.ARCHIVED },
             },
         });
         if (activeProductsCount > 0) {
             throw new common_1.BadRequestException(`Cannot delete category. There are ${activeProductsCount} active products assigned to this category.`);
         }
+        await this.prisma.product.updateMany({
+            where: {
+                categoryId: id,
+                status: client_js_1.ProductStatus.ARCHIVED,
+            },
+            data: { categoryId: null },
+        });
         return this.prisma.category.delete({ where: { id } });
     }
 };

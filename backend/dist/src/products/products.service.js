@@ -33,6 +33,23 @@ let ProductsService = ProductsService_1 = class ProductsService {
         if (!query.isAdmin) {
             where.status = client_js_1.ProductStatus.ACTIVE;
         }
+        else if (query.status) {
+            const statusMap = {
+                Active: client_js_1.ProductStatus.ACTIVE,
+                Draft: client_js_1.ProductStatus.DRAFT,
+                Archived: client_js_1.ProductStatus.ARCHIVED,
+                ACTIVE: client_js_1.ProductStatus.ACTIVE,
+                DRAFT: client_js_1.ProductStatus.DRAFT,
+                ARCHIVED: client_js_1.ProductStatus.ARCHIVED,
+            };
+            const mapped = statusMap[query.status];
+            if (mapped) {
+                where.status = mapped;
+            }
+            else {
+                where.status = { not: client_js_1.ProductStatus.ARCHIVED };
+            }
+        }
         else {
             where.status = { not: client_js_1.ProductStatus.ARCHIVED };
         }
@@ -560,6 +577,24 @@ let ProductsService = ProductsService_1 = class ProductsService {
             where: { id },
             data: { status: client_js_1.ProductStatus.ARCHIVED },
         });
+    }
+    async permanentDelete(id) {
+        const product = await this.prisma.product.findUnique({
+            where: { id },
+            include: {
+                _count: { select: { orderItems: true } },
+            },
+        });
+        if (!product) {
+            throw new common_1.NotFoundException(`Product with ID ${id} not found.`);
+        }
+        if (product.status !== client_js_1.ProductStatus.ARCHIVED) {
+            throw new common_1.BadRequestException('Only archived products can be permanently deleted. Archive the product first.');
+        }
+        if (product._count.orderItems > 0) {
+            throw new common_1.BadRequestException(`Cannot permanently delete this product — it appears in ${product._count.orderItems} order(s). Historical order records must remain intact.`);
+        }
+        return this.prisma.product.delete({ where: { id } });
     }
 };
 exports.ProductsService = ProductsService;

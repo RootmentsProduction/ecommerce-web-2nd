@@ -35,10 +35,11 @@ let ProductsController = class ProductsController {
             isAdmin: false,
         });
     }
-    async getAdminProducts(category, search) {
+    async getAdminProducts(category, search, status) {
         return this.productsService.findAll({
             category,
             search,
+            status,
             isAdmin: true,
         });
     }
@@ -58,6 +59,9 @@ let ProductsController = class ProductsController {
     async archiveProduct(id) {
         await this.productsService.remove(id);
     }
+    async permanentDeleteProduct(id) {
+        await this.productsService.permanentDelete(id);
+    }
 };
 exports.ProductsController = ProductsController;
 __decorate([
@@ -74,8 +78,9 @@ __decorate([
     (0, common_1.Get)('admin'),
     __param(0, (0, common_1.Query)('category')),
     __param(1, (0, common_1.Query)('search')),
+    __param(2, (0, common_1.Query)('status')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getAdminProducts", null);
 __decorate([
@@ -123,6 +128,16 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "archiveProduct", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_js_1.UserRole.ADMIN, client_js_1.UserRole.SUPER_ADMIN),
+    (0, common_1.Delete)(':id/permanent'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "permanentDeleteProduct", null);
 exports.ProductsController = ProductsController = __decorate([
     (0, common_1.Controller)('products'),
     __metadata("design:paramtypes", [products_service_1.ProductsService])
