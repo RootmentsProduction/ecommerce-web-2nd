@@ -67,6 +67,8 @@ export declare const ProductScalarFieldEnum: {
     readonly newArrival: "newArrival";
     readonly bestSeller: "bestSeller";
     readonly showOnHomepage: "showOnHomepage";
+    readonly occasion: "occasion";
+    readonly gender: "gender";
     readonly categoryId: "categoryId";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
@@ -77,6 +79,7 @@ export declare const ProductImageScalarFieldEnum: {
     readonly url: "url";
     readonly altText: "altText";
     readonly isPrimary: "isPrimary";
+    readonly imageRole: "imageRole";
     readonly sortOrder: "sortOrder";
     readonly productId: "productId";
     readonly createdAt: "createdAt";

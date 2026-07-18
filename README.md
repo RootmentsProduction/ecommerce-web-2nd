@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# e-commerce_jewel
+
+A full-stack e-commerce platform for jewellery — Next.js frontend with a NestJS + Prisma backend.
+
+## Project Structure
+
+```
+e-commerce_jewel/
+├── frontend/    # Next.js 16 — customer storefront & admin panel
+├── backend/     # NestJS — REST API, Prisma ORM, PostgreSQL
+├── .gitignore
+└── README.md
+```
 
 ## Getting Started
 
-First, run the development server:
+### Frontend
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd frontend
+npm install
+npm run dev          # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Backend
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd backend
+npm install
+npm run start:dev    # http://localhost:7001
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Build
 
-## Learn More
+```bash
+# Frontend
+cd frontend
+npm run build
 
-To learn more about Next.js, take a look at the following resources:
+# Backend
+cd backend
+npm run build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment Files
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| File | Purpose |
+|---|---|
+| `frontend/.env.local` | Frontend env — `NEXT_PUBLIC_API_BASE_URL` |
+| `backend/.env` | Backend env — database, JWT, AWS, CloudFront |
 
-## Deploy on Vercel
+> **Never** commit real secrets. See `backend/.env.example` for the template.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Vercel (Frontend)
+
+Set **Root Directory** to `frontend` in the Vercel project settings.
+
+Build Command: `npm run build`  
+Output Directory: Next.js default (`.next`)
+
+### Backend
+
+The NestJS backend runs from `backend/`. Update your hosting provider's root directory to `backend/` if required.
+
+### Database
+
+```bash
+cd backend
+npx prisma migrate deploy    # run pending migrations
+npx prisma generate          # regenerate Prisma client
+```

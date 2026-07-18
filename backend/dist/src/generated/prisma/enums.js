@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OtpPurpose = exports.UserStatus = exports.UserRole = exports.StockTransactionType = exports.ProductStatus = void 0;
+exports.OtpPurpose = exports.UserStatus = exports.UserRole = exports.ProductImageRole = exports.StockTransactionType = exports.ProductStatus = void 0;
 exports.ProductStatus = {
     DRAFT: 'DRAFT',
     ACTIVE: 'ACTIVE',
@@ -15,6 +15,11 @@ exports.StockTransactionType = {
     DAMAGED: 'DAMAGED',
     MANUAL_CORRECTION: 'MANUAL_CORRECTION',
     PURCHASE_RECEIPT: 'PURCHASE_RECEIPT'
+};
+exports.ProductImageRole = {
+    PRIMARY: 'PRIMARY',
+    HOVER: 'HOVER',
+    GALLERY: 'GALLERY'
 };
 exports.UserRole = {
     CUSTOMER: 'CUSTOMER',

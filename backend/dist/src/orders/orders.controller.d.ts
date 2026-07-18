@@ -134,6 +134,7 @@ export declare class OrdersController {
                     createdAt: Date;
                     altText: string | null;
                     isPrimary: boolean;
+                    imageRole: import("../generated/prisma/enums").ProductImageRole;
                     productId: string;
                 }[];
             } & {
@@ -153,7 +154,9 @@ export declare class OrdersController {
                 newArrival: boolean;
                 bestSeller: boolean;
                 showOnHomepage: boolean;
-                categoryId: string;
+                occasion: string;
+                gender: string;
+                categoryId: string | null;
             };
         } & {
             id: string;

@@ -69,9 +69,14 @@ let OrdersService = class OrdersService {
             },
         });
     }
-    async findOne(id, user) {
-        const order = await this.prisma.order.findUnique({
-            where: { id },
+    async findOne(idOrNumber, user) {
+        const order = await this.prisma.order.findFirst({
+            where: {
+                OR: [
+                    { id: idOrNumber },
+                    { orderNumber: idOrNumber },
+                ],
+            },
             include: {
                 items: {
                     include: {
@@ -86,10 +91,10 @@ let OrdersService = class OrdersService {
             },
         });
         if (!order) {
-            throw new common_1.NotFoundException(`Order with ID ${id} not found.`);
+            throw new common_1.NotFoundException(`Order ${idOrNumber} not found.`);
         }
         if (user.role === 'CUSTOMER' && order.customerId !== user.id) {
-            throw new common_1.NotFoundException(`Order with ID ${id} not found.`);
+            throw new common_1.NotFoundException(`Order ${idOrNumber} not found.`);
         }
         return order;
     }
@@ -118,7 +123,7 @@ let OrdersService = class OrdersService {
             return order;
         }
         return this.prisma.$transaction(async (tx) => {
-            const ENABLE_STOCK_DEDUCTION_ON_ORDER_CONFIRMATION = false;
+            const ENABLE_STOCK_DEDUCTION_ON_ORDER_CONFIRMATION = true;
             const isConfirming = (previousStatus === 'PENDING_PAYMENT' ||
                 previousStatus === 'CANCELLED') &&
                 (targetStatus === 'CONFIRMED' ||

@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma } from '../generated/prisma/client.js';
+import { Prisma, ProductStatus } from '../generated/prisma/client.js';
 
 export interface CreateCategoryDto {
   name: string;
@@ -146,22 +146,34 @@ export class CategoriesService {
   async remove(id: string) {
     const category = await this.prisma.category.findUnique({
       where: { id },
-      include: {
-        _count: {
-          select: { products: true },
-        },
-      },
     });
 
     if (!category) {
       throw new NotFoundException(`Category with ID ${id} not found.`);
     }
 
-    if (category._count.products > 0) {
+    const activeProductsCount = await this.prisma.product.count({
+      where: {
+        categoryId: id,
+        status: { not: ProductStatus.ARCHIVED },
+      },
+    });
+
+    if (activeProductsCount > 0) {
       throw new BadRequestException(
-        `Cannot delete category. There are ${category._count.products} products assigned to this category.`,
+        `Cannot delete category. There are ${activeProductsCount} active products assigned to this category.`,
       );
     }
+
+    // Unlink any remaining archived products from this category so the
+    // foreign-key constraint does not block the delete.
+    await this.prisma.product.updateMany({
+      where: {
+        categoryId: id,
+        status: ProductStatus.ARCHIVED,
+      },
+      data: { categoryId: null },
+    });
 
     return this.prisma.category.delete({ where: { id } });
   }

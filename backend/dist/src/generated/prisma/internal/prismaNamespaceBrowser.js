@@ -98,6 +98,8 @@ exports.ProductScalarFieldEnum = {
     newArrival: 'newArrival',
     bestSeller: 'bestSeller',
     showOnHomepage: 'showOnHomepage',
+    occasion: 'occasion',
+    gender: 'gender',
     categoryId: 'categoryId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -107,6 +109,7 @@ exports.ProductImageScalarFieldEnum = {
     url: 'url',
     altText: 'altText',
     isPrimary: 'isPrimary',
+    imageRole: 'imageRole',
     sortOrder: 'sortOrder',
     productId: 'productId',
     createdAt: 'createdAt'

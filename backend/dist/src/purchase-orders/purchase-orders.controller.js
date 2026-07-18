@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdatePOStatusBodyDto = exports.PurchaseOrderStatus = exports.PurchaseOrdersController = exports.UpdatePOBodyDto = exports.ReceivePOBodyDto = exports.CreatePOBodyDto = void 0;
+exports.PurchaseOrdersController = exports.UpdatePOBodyDto = exports.ReceivePOBodyDto = exports.CreatePOBodyDto = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
 const roles_guard_1 = require("../auth/guards/roles.guard");
@@ -21,6 +21,7 @@ const client_js_1 = require("../generated/prisma/client.js");
 const purchase_orders_service_1 = require("./purchase-orders.service");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
+const update_po_status_dto_1 = require("./dto/update-po-status.dto");
 class CreatePOItemBodyDto {
     sku;
     name;
@@ -552,7 +553,7 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, UpdatePOStatusBodyDto]),
+    __metadata("design:paramtypes", [String, update_po_status_dto_1.UpdatePOStatusBodyDto]),
     __metadata("design:returntype", Promise)
 ], PurchaseOrdersController.prototype, "updateStatus", null);
 __decorate([
@@ -569,21 +570,4 @@ exports.PurchaseOrdersController = PurchaseOrdersController = __decorate([
     (0, common_1.Controller)('purchase-orders'),
     __metadata("design:paramtypes", [purchase_orders_service_1.PurchaseOrdersService])
 ], PurchaseOrdersController);
-var PurchaseOrderStatus;
-(function (PurchaseOrderStatus) {
-    PurchaseOrderStatus["DRAFT"] = "Draft";
-    PurchaseOrderStatus["SENT"] = "Sent";
-    PurchaseOrderStatus["PARTIALLY_RECEIVED"] = "Partially_Received";
-    PurchaseOrderStatus["RECEIVED"] = "Received";
-    PurchaseOrderStatus["CANCELLED"] = "Cancelled";
-})(PurchaseOrderStatus || (exports.PurchaseOrderStatus = PurchaseOrderStatus = {}));
-class UpdatePOStatusBodyDto {
-    status;
-}
-exports.UpdatePOStatusBodyDto = UpdatePOStatusBodyDto;
-__decorate([
-    (0, class_validator_1.IsEnum)(PurchaseOrderStatus),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], UpdatePOStatusBodyDto.prototype, "status", void 0);
 //# sourceMappingURL=purchase-orders.controller.js.map

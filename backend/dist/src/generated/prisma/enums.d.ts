@@ -15,6 +15,12 @@ export declare const StockTransactionType: {
     readonly PURCHASE_RECEIPT: "PURCHASE_RECEIPT";
 };
 export type StockTransactionType = (typeof StockTransactionType)[keyof typeof StockTransactionType];
+export declare const ProductImageRole: {
+    readonly PRIMARY: "PRIMARY";
+    readonly HOVER: "HOVER";
+    readonly GALLERY: "GALLERY";
+};
+export type ProductImageRole = (typeof ProductImageRole)[keyof typeof ProductImageRole];
 export declare const UserRole: {
     readonly CUSTOMER: "CUSTOMER";
     readonly ADMIN: "ADMIN";

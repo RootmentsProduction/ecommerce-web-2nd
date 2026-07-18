@@ -25,10 +25,10 @@ import {
   IsNumber,
   IsBoolean,
   IsArray,
-  IsEnum,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { UpdatePOStatusBodyDto } from './dto/update-po-status.dto';
 
 class CreatePOItemBodyDto implements CreatePOItemDto {
   @IsString()
@@ -383,18 +383,4 @@ export class PurchaseOrdersController {
   async receiveItems(@Param('id') id: string, @Body() dto: ReceivePOBodyDto) {
     return this.poService.receiveItems(id, dto);
   }
-}
-
-export enum PurchaseOrderStatus {
-  DRAFT = 'Draft',
-  SENT = 'Sent',
-  PARTIALLY_RECEIVED = 'Partially_Received',
-  RECEIVED = 'Received',
-  CANCELLED = 'Cancelled',
-}
-
-export class UpdatePOStatusBodyDto {
-  @IsEnum(PurchaseOrderStatus)
-  @IsNotEmpty()
-  status: PurchaseOrderStatus;
 }

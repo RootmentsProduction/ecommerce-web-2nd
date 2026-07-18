@@ -52,6 +52,7 @@ export declare class InventoryService {
         beforeStock: number;
         afterStock: number;
         reason: string;
+        reference: string | null;
         changedBy: string;
         productId: string;
         productName: string;

@@ -1,9 +1,42 @@
 import "dotenv/config";
-import { Pool } from "pg";
+import { Pool, PoolConfig } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, ProductStatus, StockTransactionType } from "../src/generated/prisma/client.js";
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+import * as fs from "fs";
+import * as path from "path";
+
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error("DATABASE_URL environment variable is missing.");
+}
+
+const url = new URL(connectionString);
+let sslConfig: any = {
+  rejectUnauthorized: false,
+};
+
+try {
+  const certPath = path.join(__dirname, "../src/prisma/global-bundle.pem");
+  if (fs.existsSync(certPath)) {
+    sslConfig = {
+      ca: fs.readFileSync(certPath),
+    };
+  }
+} catch (e) {
+  // Fallback
+}
+
+const poolConfig: PoolConfig = {
+  user: decodeURIComponent(url.username),
+  password: decodeURIComponent(url.password),
+  host: url.hostname,
+  port: url.port ? parseInt(url.port, 10) : 5432,
+  database: url.pathname.substring(1),
+  ssl: sslConfig,
+};
+
+const pool = new Pool(poolConfig);
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
@@ -12,6 +45,8 @@ async function main() {
 
   // 1. Clean existing records in dependency order to prevent constraint violations
   console.log("Cleaning up existing database records...");
+  await prisma.orderItem.deleteMany({});
+  await prisma.order.deleteMany({});
   await prisma.stockTransaction.deleteMany({});
   await prisma.inventory.deleteMany({});
   await prisma.productVariant.deleteMany({});
@@ -81,11 +116,13 @@ async function main() {
       newArrival: true,
       bestSeller: true,
       showOnHomepage: true,
+      occasion: "Bridal",
+      gender: "Women",
       categoryId: rings.id,
       images: {
         create: [
-          { url: "/product-main.png", altText: "Main Golden Chain Ring View", isPrimary: true, sortOrder: 1 },
-          { url: "/product-hover.jpg", altText: "Alternate Angle View", isPrimary: false, sortOrder: 2 },
+          { url: "/product-main.png", altText: "Main Golden Chain Ring View", isPrimary: true, imageRole: "PRIMARY", sortOrder: 1 },
+          { url: "/product-hover.jpg", altText: "Alternate Angle View", isPrimary: false, imageRole: "HOVER", sortOrder: 2 },
         ],
       },
       variants: {
@@ -154,10 +191,12 @@ async function main() {
       newArrival: false,
       bestSeller: true,
       showOnHomepage: true,
+      occasion: "Classic",
+      gender: "Unisex",
       categoryId: earrings.id,
       images: {
         create: [
-          { url: "/product-main.png", altText: "Solitaire studs front macro view", isPrimary: true, sortOrder: 1 },
+          { url: "/product-main.png", altText: "Solitaire studs front macro view", isPrimary: true, imageRole: "PRIMARY", sortOrder: 1 },
         ],
       },
       variants: {
@@ -224,10 +263,12 @@ async function main() {
       newArrival: true,
       bestSeller: false,
       showOnHomepage: false,
+      occasion: "Classic",
+      gender: "Women",
       categoryId: necklaces.id,
       images: {
         create: [
-          { url: "/product-main.png", altText: "Emerald Pendant overview", isPrimary: true, sortOrder: 1 },
+          { url: "/product-main.png", altText: "Emerald Pendant overview", isPrimary: true, imageRole: "PRIMARY", sortOrder: 1 },
         ],
       },
     },
@@ -273,10 +314,12 @@ async function main() {
       newArrival: true,
       bestSeller: true,
       showOnHomepage: true,
+      occasion: "Everyday",
+      gender: "Women",
       categoryId: rings.id,
       images: {
         create: [
-          { url: "/product-main.png", altText: "Pearl Crystal Ring View", isPrimary: true, sortOrder: 1 },
+          { url: "/product-main.png", altText: "Pearl Crystal Ring View", isPrimary: true, imageRole: "PRIMARY", sortOrder: 1 },
         ],
       },
     },
@@ -309,10 +352,12 @@ async function main() {
       newArrival: false,
       bestSeller: false,
       showOnHomepage: false,
+      occasion: "Bridal",
+      gender: "Men",
       categoryId: rings.id,
       images: {
         create: [
-          { url: "/product-main.png", altText: "Men's Platinum Band View", isPrimary: true, sortOrder: 1 },
+          { url: "/product-main.png", altText: "Men's Platinum Band View", isPrimary: true, imageRole: "PRIMARY", sortOrder: 1 },
         ],
       },
     },

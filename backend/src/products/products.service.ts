@@ -8,71 +8,11 @@ import { PrismaService } from '../prisma/prisma.service';
 import {
   ProductStatus,
   StockTransactionType,
+  ProductImageRole,
   Prisma,
 } from '../generated/prisma/client.js';
-
-export interface CreateProductDto {
-  name: string;
-  sku: string;
-  slug: string;
-  shortDescription?: string;
-  description?: string;
-  sellingPrice: number;
-  mrp: number;
-  costPrice?: number;
-  categoryId: string;
-  status: string; // 'Draft' | 'Active' | 'Archived' (will map to ProductStatus)
-  featured?: boolean;
-  newArrival?: boolean;
-  bestSeller?: boolean;
-  showOnHomepage?: boolean;
-  trackInventory?: boolean;
-  initialStock?: number;
-  minStock?: number;
-  images: {
-    url: string;
-    altText?: string;
-    isPrimary: boolean;
-    sortOrder: number;
-  }[];
-  variants: {
-    name: string;
-    sku: string;
-    sellingPrice?: number;
-    isActive: boolean;
-    initialStock?: number;
-  }[];
-}
-
-export interface UpdateProductDto {
-  name?: string;
-  sku?: string;
-  slug?: string;
-  shortDescription?: string;
-  description?: string;
-  sellingPrice?: number;
-  mrp?: number;
-  costPrice?: number;
-  categoryId?: string;
-  status?: string;
-  featured?: boolean;
-  newArrival?: boolean;
-  bestSeller?: boolean;
-  showOnHomepage?: boolean;
-  images?: {
-    url: string;
-    altText?: string;
-    isPrimary: boolean;
-    sortOrder: number;
-  }[];
-  variants?: {
-    id?: string;
-    name: string;
-    sku: string;
-    sellingPrice?: number;
-    isActive: boolean;
-  }[];
-}
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -89,24 +29,109 @@ export class ProductsService {
 
   async findAll(query: {
     category?: string;
-    featured?: boolean;
-    bestSeller?: boolean;
-    newArrival?: boolean;
+    minPrice?: number;
+    maxPrice?: number;
+    occasion?: string;
+    gender?: string;
+    inStock?: boolean;
     search?: string;
+    sort?: string;
+    page?: number;
+    limit?: number;
+    newArrival?: boolean;
+    bestSeller?: boolean;
+    featured?: boolean;
     isAdmin?: boolean;
+    status?: string;
   }) {
     const where: Prisma.ProductWhereInput = {};
 
     if (!query.isAdmin) {
+      // Public storefront: only active products
       where.status = ProductStatus.ACTIVE;
+    } else if (query.status) {
+      // Admin filtered by a specific status tab
+      const statusMap: Record<string, ProductStatus> = {
+        Active: ProductStatus.ACTIVE,
+        Draft: ProductStatus.DRAFT,
+        Archived: ProductStatus.ARCHIVED,
+        ACTIVE: ProductStatus.ACTIVE,
+        DRAFT: ProductStatus.DRAFT,
+        ARCHIVED: ProductStatus.ARCHIVED,
+      };
+      const mapped = statusMap[query.status];
+      if (mapped) {
+        where.status = mapped;
+      } else {
+        // 'All Products' tab: exclude Archived
+        where.status = { not: ProductStatus.ARCHIVED };
+      }
     } else {
-      where.status = { not: ProductStatus.ARCHIVED }; // Don't show archived in admin unless requested
+      // Admin default (All Products): exclude Archived
+      where.status = { not: ProductStatus.ARCHIVED };
     }
 
     if (query.category) {
       where.category = {
         slug: query.category,
       };
+    }
+
+    if (query.minPrice !== undefined || query.maxPrice !== undefined) {
+      const priceFilter: Prisma.DecimalFilter = {};
+      if (query.minPrice !== undefined) {
+        priceFilter.gte = query.minPrice;
+      }
+      if (query.maxPrice !== undefined) {
+        priceFilter.lte = query.maxPrice;
+      }
+      where.sellingPrice = priceFilter;
+    }
+
+    if (query.occasion) {
+      where.occasion = {
+        equals: query.occasion,
+        mode: 'insensitive',
+      };
+    }
+
+    if (query.gender) {
+      where.gender = {
+        equals: query.gender,
+        mode: 'insensitive',
+      };
+    }
+
+    if (query.inStock !== undefined) {
+      if (query.inStock) {
+        where.OR = [
+          {
+            inventory: {
+              currentStock: { gt: 0 },
+            },
+          },
+          {
+            variants: {
+              some: {
+                inventory: {
+                  currentStock: { gt: 0 },
+                },
+              },
+            },
+          },
+        ];
+      } else {
+        where.inventory = {
+          currentStock: { lte: 0 },
+        };
+        where.variants = {
+          every: {
+            inventory: {
+              currentStock: { lte: 0 },
+            },
+          },
+        };
+      }
     }
 
     if (query.featured !== undefined) {
@@ -122,27 +147,191 @@ export class ProductsService {
     }
 
     if (query.search) {
-      where.OR = [
+      const searchConditions: Prisma.ProductWhereInput[] = [
         { name: { contains: query.search, mode: 'insensitive' } },
         { sku: { contains: query.search, mode: 'insensitive' } },
         { description: { contains: query.search, mode: 'insensitive' } },
       ];
+      if (where.OR) {
+        where.AND = [{ OR: where.OR }, { OR: searchConditions }];
+        delete where.OR;
+      } else {
+        where.OR = searchConditions;
+      }
     }
 
-    return this.prisma.product.findMany({
-      where,
-      include: {
-        images: {
-          orderBy: { sortOrder: 'asc' },
+    let orderBy: Prisma.ProductOrderByWithRelationInput = { createdAt: 'desc' };
+    if (query.sort) {
+      switch (query.sort) {
+        case 'newest':
+          orderBy = { createdAt: 'desc' };
+          break;
+        case 'price_asc':
+          orderBy = { sellingPrice: 'asc' };
+          break;
+        case 'price_desc':
+          orderBy = { sellingPrice: 'desc' };
+          break;
+        case 'rating_desc':
+          orderBy = { showOnHomepage: 'desc' };
+          break;
+        case 'featured':
+        default:
+          orderBy = { showOnHomepage: 'desc' };
+          break;
+      }
+    }
+
+    const page = query.page && query.page > 0 ? query.page : 1;
+    const limit = query.limit && query.limit > 0 ? query.limit : 12;
+    const skip = (page - 1) * limit;
+
+    const [products, total] = await Promise.all([
+      this.prisma.product.findMany({
+        where,
+        include: {
+          images: {
+            orderBy: { sortOrder: 'asc' },
+          },
+          category: true,
+          variants: true,
+          inventory: true,
         },
-        category: true,
-        variants: true,
-        inventory: true,
+        orderBy,
+        skip: query.isAdmin ? undefined : skip,
+        take: query.isAdmin ? undefined : limit,
+      }),
+      this.prisma.product.count({ where }),
+    ]);
+
+    if (query.isAdmin) {
+      return products;
+    }
+
+    return {
+      products,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
+  async getFilterMetadata() {
+    const activeProducts = await this.prisma.product.findMany({
+      where: {
+        status: ProductStatus.ACTIVE,
       },
-      orderBy: {
-        createdAt: 'desc',
+      include: {
+        category: true,
+        inventory: true,
+        variants: {
+          include: {
+            inventory: true,
+          },
+        },
       },
     });
+
+    const categoryMap = new Map<
+      string,
+      { id: string; name: string; slug: string; count: number }
+    >();
+    for (const p of activeProducts) {
+      if (p.category) {
+        const cat = p.category;
+        const existing = categoryMap.get(cat.id);
+        if (existing) {
+          existing.count += 1;
+        } else {
+          categoryMap.set(cat.id, {
+            id: cat.id,
+            name: cat.name,
+            slug: cat.slug,
+            count: 1,
+          });
+        }
+      }
+    }
+    const categories = Array.from(categoryMap.values());
+
+    let minPrice = 0;
+    let maxPrice = 0;
+    if (activeProducts.length > 0) {
+      const prices = activeProducts.map((p) => Number(p.sellingPrice));
+      minPrice = Math.min(...prices);
+      maxPrice = Math.max(...prices);
+    }
+
+    const occasionMap = new Map<string, number>();
+    for (const p of activeProducts) {
+      if (p.occasion) {
+        const val = p.occasion.trim();
+        if (val) {
+          const normalized =
+            val.charAt(0).toUpperCase() + val.slice(1).toLowerCase();
+          occasionMap.set(normalized, (occasionMap.get(normalized) || 0) + 1);
+        }
+      }
+    }
+    const occasions = Array.from(occasionMap.entries()).map(
+      ([value, count]) => ({
+        value,
+        count,
+      }),
+    );
+
+    const genderMap = new Map<string, number>();
+    for (const p of activeProducts) {
+      if (p.gender) {
+        const val = p.gender.trim();
+        if (val) {
+          const normalized =
+            val.charAt(0).toUpperCase() + val.slice(1).toLowerCase();
+          genderMap.set(normalized, (genderMap.get(normalized) || 0) + 1);
+        }
+      }
+    }
+    const genders = Array.from(genderMap.entries()).map(([value, count]) => ({
+      value,
+      count,
+    }));
+
+    const purities: { value: string; count: number }[] = [];
+    const brands: { value: string; count: number }[] = [];
+
+    let inStock = 0;
+    let outOfStock = 0;
+    for (const p of activeProducts) {
+      const mainStock = p.inventory?.currentStock ?? 0;
+      const variantStock =
+        p.variants?.reduce(
+          (sum, v) => sum + (v.inventory?.currentStock ?? 0),
+          0,
+        ) ?? 0;
+      const totalStock = mainStock + variantStock;
+      if (totalStock > 0) {
+        inStock += 1;
+      } else {
+        outOfStock += 1;
+      }
+    }
+
+    return {
+      categories,
+      price: {
+        min: minPrice,
+        max: maxPrice,
+      },
+      occasions,
+      genders,
+      purities,
+      brands,
+      availability: {
+        inStock,
+        outOfStock,
+      },
+    };
   }
 
   async findOne(idOrSlug: string) {
@@ -171,6 +360,33 @@ export class ProductsService {
     return product;
   }
 
+  private validateImageRoles(
+    images?: { imageRole?: string; isPrimary?: boolean }[],
+  ) {
+    if (!images || images.length === 0) return;
+
+    let primaryCount = 0;
+    let hoverCount = 0;
+
+    for (const img of images) {
+      if (img.imageRole === 'PRIMARY' || img.isPrimary) {
+        primaryCount++;
+      }
+      if (img.imageRole === 'HOVER') {
+        hoverCount++;
+      }
+    }
+
+    if (primaryCount > 1) {
+      throw new BadRequestException(
+        'A product can only have one PRIMARY image.',
+      );
+    }
+    if (hoverCount > 1) {
+      throw new BadRequestException('A product can only have one HOVER image.');
+    }
+  }
+
   async create(dto: CreateProductDto, adminEmail: string) {
     const slug = dto.slug.toLowerCase().trim();
 
@@ -191,6 +407,8 @@ export class ProductsService {
 
     const status = this.mapStatus(dto.status);
 
+    this.validateImageRoles(dto.images);
+
     return this.prisma.$transaction(async (tx) => {
       // 1. Create the base product
       const product = await tx.product.create({
@@ -205,12 +423,20 @@ export class ProductsService {
           costPrice: dto.costPrice,
           status,
           featured: dto.featured ?? false,
-          newArrival: dto.newArrival ?? true,
+          newArrival: dto.newArrival ?? false,
           bestSeller: dto.bestSeller ?? false,
           showOnHomepage: dto.showOnHomepage ?? false,
+          occasion: dto.occasion || 'Everyday',
+          gender: dto.gender || 'Unisex',
           categoryId: dto.categoryId,
           images: {
-            create: dto.images,
+            create: (dto.images || []).map((img) => ({
+              url: img.url,
+              altText: img.altText,
+              isPrimary: img.imageRole === 'PRIMARY',
+              imageRole: img.imageRole || ProductImageRole.GALLERY,
+              sortOrder: img.sortOrder,
+            })),
           },
         },
       });
@@ -299,6 +525,8 @@ export class ProductsService {
       throw new NotFoundException(`Product with ID ${id} not found.`);
     }
 
+    this.validateImageRoles(dto.images);
+
     // Verify slug uniqueness if changing
     if (dto.slug) {
       const slug = dto.slug.toLowerCase().trim();
@@ -318,15 +546,53 @@ export class ProductsService {
     const status = dto.status ? this.mapStatus(dto.status) : undefined;
 
     return this.prisma.$transaction(async (tx) => {
-      // 1. Update images if provided (delete old ones first)
+      // 1. Update images if provided (safe merge)
       if (dto.images) {
-        await tx.productImage.deleteMany({ where: { productId: id } });
-        await tx.productImage.createMany({
-          data: dto.images.map((img) => ({
-            ...img,
-            productId: id,
-          })),
-        });
+        const incomingUrls = dto.images.map((img) => img.url);
+
+        // Identify images to delete
+        const imagesToDelete = product.images.filter(
+          (ext) => !incomingUrls.includes(ext.url),
+        );
+        if (imagesToDelete.length > 0) {
+          await tx.productImage.deleteMany({
+            where: {
+              id: { in: imagesToDelete.map((d) => d.id) },
+            },
+          });
+        }
+
+        // Create or update images
+        for (const imgDto of dto.images) {
+          const matchingExisting = product.images.find(
+            (ext) => ext.url === imgDto.url,
+          );
+          const isPrimaryValue = imgDto.imageRole === 'PRIMARY';
+          const imageRoleValue = imgDto.imageRole || ProductImageRole.GALLERY;
+
+          if (matchingExisting) {
+            await tx.productImage.update({
+              where: { id: matchingExisting.id },
+              data: {
+                altText: imgDto.altText,
+                isPrimary: isPrimaryValue,
+                imageRole: imageRoleValue,
+                sortOrder: imgDto.sortOrder,
+              },
+            });
+          } else {
+            await tx.productImage.create({
+              data: {
+                productId: id,
+                url: imgDto.url,
+                altText: imgDto.altText,
+                isPrimary: isPrimaryValue,
+                imageRole: imageRoleValue,
+                sortOrder: imgDto.sortOrder,
+              },
+            });
+          }
+        }
       }
 
       // 2. Update variants if provided
@@ -399,6 +665,8 @@ export class ProductsService {
           newArrival: dto.newArrival,
           bestSeller: dto.bestSeller,
           showOnHomepage: dto.showOnHomepage,
+          occasion: dto.occasion,
+          gender: dto.gender,
         },
       });
     });
@@ -415,5 +683,32 @@ export class ProductsService {
       where: { id },
       data: { status: ProductStatus.ARCHIVED },
     });
+  }
+
+  async permanentDelete(id: string) {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      include: {
+        _count: { select: { orderItems: true } },
+      },
+    });
+
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found.`);
+    }
+
+    if (product.status !== ProductStatus.ARCHIVED) {
+      throw new BadRequestException(
+        'Only archived products can be permanently deleted. Archive the product first.',
+      );
+    }
+
+    if (product._count.orderItems > 0) {
+      throw new BadRequestException(
+        `Cannot permanently delete this product — it appears in ${product._count.orderItems} order(s). Historical order records must remain intact.`,
+      );
+    }
+
+    return this.prisma.product.delete({ where: { id } });
   }
 }

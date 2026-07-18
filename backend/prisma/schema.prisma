@@ -58,8 +58,10 @@ model Product {
   newArrival        Boolean            @default(false)
   bestSeller        Boolean            @default(false)
   showOnHomepage    Boolean            @default(false)
-  categoryId        String
-  category          Category           @relation(fields: [categoryId], references: [id])
+  occasion          String             @default("Everyday")
+  gender            String             @default("Unisex")
+  categoryId        String?
+  category          Category?          @relation(fields: [categoryId], references: [id])
   images            ProductImage[]
   variants          ProductVariant[]
   inventory         Inventory?
@@ -72,15 +74,22 @@ model Product {
   @@index([status])
 }
 
+enum ProductImageRole {
+  PRIMARY
+  HOVER
+  GALLERY
+}
+
 model ProductImage {
-  id        String   @id @default(uuid())
+  id        String           @id @default(uuid())
   url       String
   altText   String?
-  isPrimary Boolean  @default(false)
-  sortOrder Int      @default(0)
+  isPrimary Boolean          @default(false)
+  imageRole ProductImageRole @default(GALLERY)
+  sortOrder Int              @default(0)
   productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
+  product   Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
 
   @@index([productId])
 }

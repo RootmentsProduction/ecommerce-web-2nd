@@ -80,7 +80,7 @@ export declare class OrdersService {
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
     })[]>;
-    findOne(id: string, user: {
+    findOne(idOrNumber: string, user: {
         id: string;
         role: string;
     }): Promise<{
@@ -93,6 +93,7 @@ export declare class OrdersService {
                     createdAt: Date;
                     altText: string | null;
                     isPrimary: boolean;
+                    imageRole: import("../generated/prisma/enums").ProductImageRole;
                     productId: string;
                 }[];
             } & {
@@ -112,7 +113,9 @@ export declare class OrdersService {
                 newArrival: boolean;
                 bestSeller: boolean;
                 showOnHomepage: boolean;
-                categoryId: string;
+                occasion: string;
+                gender: string;
+                categoryId: string | null;
             };
         } & {
             id: string;
