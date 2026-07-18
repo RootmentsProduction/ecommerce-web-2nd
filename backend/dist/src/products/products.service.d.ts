@@ -1,66 +1,7 @@
 import { PrismaService } from '../prisma/prisma.service';
-import { ProductStatus } from '../generated/prisma/client.js';
-export interface CreateProductDto {
-    name: string;
-    sku: string;
-    slug: string;
-    shortDescription?: string;
-    description?: string;
-    sellingPrice: number;
-    mrp: number;
-    costPrice?: number;
-    categoryId: string;
-    status: string;
-    featured?: boolean;
-    newArrival?: boolean;
-    bestSeller?: boolean;
-    showOnHomepage?: boolean;
-    trackInventory?: boolean;
-    initialStock?: number;
-    minStock?: number;
-    images: {
-        url: string;
-        altText?: string;
-        isPrimary: boolean;
-        sortOrder: number;
-    }[];
-    variants: {
-        name: string;
-        sku: string;
-        sellingPrice?: number;
-        isActive: boolean;
-        initialStock?: number;
-    }[];
-}
-export interface UpdateProductDto {
-    name?: string;
-    sku?: string;
-    slug?: string;
-    shortDescription?: string;
-    description?: string;
-    sellingPrice?: number;
-    mrp?: number;
-    costPrice?: number;
-    categoryId?: string;
-    status?: string;
-    featured?: boolean;
-    newArrival?: boolean;
-    bestSeller?: boolean;
-    showOnHomepage?: boolean;
-    images?: {
-        url: string;
-        altText?: string;
-        isPrimary: boolean;
-        sortOrder: number;
-    }[];
-    variants?: {
-        id?: string;
-        name: string;
-        sku: string;
-        sellingPrice?: number;
-        isActive: boolean;
-    }[];
-}
+import { ProductStatus, ProductImageRole } from '../generated/prisma/client.js';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 export declare class ProductsService {
     private readonly prisma;
     private readonly logger;
@@ -68,10 +9,18 @@ export declare class ProductsService {
     private mapStatus;
     findAll(query: {
         category?: string;
-        featured?: boolean;
-        bestSeller?: boolean;
-        newArrival?: boolean;
+        minPrice?: number;
+        maxPrice?: number;
+        occasion?: string;
+        gender?: string;
+        inStock?: boolean;
         search?: string;
+        sort?: string;
+        page?: number;
+        limit?: number;
+        newArrival?: boolean;
+        bestSeller?: boolean;
+        featured?: boolean;
         isAdmin?: boolean;
     }): Promise<({
         category: {
@@ -92,6 +41,7 @@ export declare class ProductsService {
             createdAt: Date;
             altText: string | null;
             isPrimary: boolean;
+            imageRole: ProductImageRole;
             productId: string;
         }[];
         variants: {
@@ -133,8 +83,112 @@ export declare class ProductsService {
         newArrival: boolean;
         bestSeller: boolean;
         showOnHomepage: boolean;
+        occasion: string;
+        gender: string;
         categoryId: string;
-    })[]>;
+    })[] | {
+        products: ({
+            category: {
+                id: string;
+                name: string;
+                slug: string;
+                description: string | null;
+                image: string | null;
+                isActive: boolean;
+                sortOrder: number;
+                createdAt: Date;
+                updatedAt: Date;
+            };
+            images: {
+                url: string;
+                id: string;
+                sortOrder: number;
+                createdAt: Date;
+                altText: string | null;
+                isPrimary: boolean;
+                imageRole: ProductImageRole;
+                productId: string;
+            }[];
+            variants: {
+                id: string;
+                name: string;
+                isActive: boolean;
+                createdAt: Date;
+                updatedAt: Date;
+                sku: string;
+                sellingPrice: import("@prisma/client-runtime-utils").Decimal | null;
+                productId: string;
+            }[];
+            inventory: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                productId: string | null;
+                currentStock: number;
+                reservedStock: number;
+                incomingStock: number;
+                minimumRequired: number;
+                reorderPoint: number;
+                variantId: string | null;
+            } | null;
+        } & {
+            id: string;
+            name: string;
+            slug: string;
+            description: string | null;
+            createdAt: Date;
+            updatedAt: Date;
+            sku: string;
+            shortDescription: string | null;
+            sellingPrice: import("@prisma/client-runtime-utils").Decimal;
+            mrp: import("@prisma/client-runtime-utils").Decimal | null;
+            costPrice: import("@prisma/client-runtime-utils").Decimal | null;
+            status: ProductStatus;
+            featured: boolean;
+            newArrival: boolean;
+            bestSeller: boolean;
+            showOnHomepage: boolean;
+            occasion: string;
+            gender: string;
+            categoryId: string;
+        })[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    }>;
+    getFilterMetadata(): Promise<{
+        categories: {
+            id: string;
+            name: string;
+            slug: string;
+            count: number;
+        }[];
+        price: {
+            min: number;
+            max: number;
+        };
+        occasions: {
+            value: string;
+            count: number;
+        }[];
+        genders: {
+            value: string;
+            count: number;
+        }[];
+        purities: {
+            value: string;
+            count: number;
+        }[];
+        brands: {
+            value: string;
+            count: number;
+        }[];
+        availability: {
+            inStock: number;
+            outOfStock: number;
+        };
+    }>;
     findOne(idOrSlug: string): Promise<{
         category: {
             id: string;
@@ -154,6 +208,7 @@ export declare class ProductsService {
             createdAt: Date;
             altText: string | null;
             isPrimary: boolean;
+            imageRole: ProductImageRole;
             productId: string;
         }[];
         variants: ({
@@ -208,8 +263,11 @@ export declare class ProductsService {
         newArrival: boolean;
         bestSeller: boolean;
         showOnHomepage: boolean;
+        occasion: string;
+        gender: string;
         categoryId: string;
     }>;
+    private validateImageRoles;
     create(dto: CreateProductDto, adminEmail: string): Promise<{
         id: string;
         name: string;
@@ -227,6 +285,8 @@ export declare class ProductsService {
         newArrival: boolean;
         bestSeller: boolean;
         showOnHomepage: boolean;
+        occasion: string;
+        gender: string;
         categoryId: string;
     }>;
     update(id: string, dto: UpdateProductDto): Promise<{
@@ -246,6 +306,8 @@ export declare class ProductsService {
         newArrival: boolean;
         bestSeller: boolean;
         showOnHomepage: boolean;
+        occasion: string;
+        gender: string;
         categoryId: string;
     }>;
     remove(id: string): Promise<{
@@ -265,6 +327,8 @@ export declare class ProductsService {
         newArrival: boolean;
         bestSeller: boolean;
         showOnHomepage: boolean;
+        occasion: string;
+        gender: string;
         categoryId: string;
     }>;
 }

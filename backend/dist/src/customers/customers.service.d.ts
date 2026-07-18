@@ -28,17 +28,17 @@ export declare class CustomersService {
             createdAt: Date;
             updatedAt: Date;
             status: string;
+            total: import("@prisma/client-runtime-utils").Decimal;
+            billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+            shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
             subtotal: import("@prisma/client-runtime-utils").Decimal;
             discountAmount: import("@prisma/client-runtime-utils").Decimal;
             taxTotal: import("@prisma/client-runtime-utils").Decimal;
-            total: import("@prisma/client-runtime-utils").Decimal;
             notes: string | null;
             orderNumber: string;
             customerId: string;
             paymentStatus: string;
             shippingCharge: import("@prisma/client-runtime-utils").Decimal;
-            shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
-            billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         }[];
         addresses: {
             id: string;

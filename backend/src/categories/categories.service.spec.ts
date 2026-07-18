@@ -17,6 +17,9 @@ describe('CategoriesService', () => {
         update: jest.fn(),
         delete: jest.fn(),
       },
+      product: {
+        count: jest.fn(),
+      },
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -99,6 +102,42 @@ describe('CategoriesService', () => {
         slug: 'bracelets',
       });
       expect(result.name).toBe('Bracelets');
+    });
+  });
+
+  describe('remove', () => {
+    it('should throw NotFoundException if category does not exist', async () => {
+      prismaMock.category.findUnique.mockResolvedValue(null);
+      await expect(service.remove('invalid-id')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should throw BadRequestException if active (non-archived) products remain', async () => {
+      prismaMock.category.findUnique.mockResolvedValue({ id: 'cat-1' });
+      prismaMock.product.count.mockResolvedValue(2);
+
+      await expect(service.remove('cat-1')).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(prismaMock.product.count).toHaveBeenCalledWith({
+        where: {
+          categoryId: 'cat-1',
+          status: { not: 'ARCHIVED' },
+        },
+      });
+    });
+
+    it('should delete category successfully if only archived products remain', async () => {
+      prismaMock.category.findUnique.mockResolvedValue({ id: 'cat-1' });
+      prismaMock.product.count.mockResolvedValue(0);
+      prismaMock.category.delete.mockResolvedValue({ id: 'cat-1' });
+
+      const result = await service.remove('cat-1');
+      expect(result).toEqual({ id: 'cat-1' });
+      expect(prismaMock.category.delete).toHaveBeenCalledWith({
+        where: { id: 'cat-1' },
+      });
     });
   });
 });

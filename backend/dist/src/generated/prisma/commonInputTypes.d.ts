@@ -191,6 +191,21 @@ export type EnumProductStatusWithAggregatesFilter<$PrismaModel = never> = {
     _min?: Prisma.NestedEnumProductStatusFilter<$PrismaModel>;
     _max?: Prisma.NestedEnumProductStatusFilter<$PrismaModel>;
 };
+export type EnumProductImageRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductImageRole | Prisma.EnumProductImageRoleFieldRefInput<$PrismaModel>;
+    in?: $Enums.ProductImageRole[] | Prisma.ListEnumProductImageRoleFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.ProductImageRole[] | Prisma.ListEnumProductImageRoleFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumProductImageRoleFilter<$PrismaModel> | $Enums.ProductImageRole;
+};
+export type EnumProductImageRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductImageRole | Prisma.EnumProductImageRoleFieldRefInput<$PrismaModel>;
+    in?: $Enums.ProductImageRole[] | Prisma.ListEnumProductImageRoleFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.ProductImageRole[] | Prisma.ListEnumProductImageRoleFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumProductImageRoleWithAggregatesFilter<$PrismaModel> | $Enums.ProductImageRole;
+    _count?: Prisma.NestedIntFilter<$PrismaModel>;
+    _min?: Prisma.NestedEnumProductImageRoleFilter<$PrismaModel>;
+    _max?: Prisma.NestedEnumProductImageRoleFilter<$PrismaModel>;
+};
 export type EnumStockTransactionTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.StockTransactionType | Prisma.EnumStockTransactionTypeFieldRefInput<$PrismaModel>;
     in?: $Enums.StockTransactionType[] | Prisma.ListEnumStockTransactionTypeFieldRefInput<$PrismaModel>;
@@ -512,6 +527,21 @@ export type NestedEnumProductStatusWithAggregatesFilter<$PrismaModel = never> = 
     _count?: Prisma.NestedIntFilter<$PrismaModel>;
     _min?: Prisma.NestedEnumProductStatusFilter<$PrismaModel>;
     _max?: Prisma.NestedEnumProductStatusFilter<$PrismaModel>;
+};
+export type NestedEnumProductImageRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductImageRole | Prisma.EnumProductImageRoleFieldRefInput<$PrismaModel>;
+    in?: $Enums.ProductImageRole[] | Prisma.ListEnumProductImageRoleFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.ProductImageRole[] | Prisma.ListEnumProductImageRoleFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumProductImageRoleFilter<$PrismaModel> | $Enums.ProductImageRole;
+};
+export type NestedEnumProductImageRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductImageRole | Prisma.EnumProductImageRoleFieldRefInput<$PrismaModel>;
+    in?: $Enums.ProductImageRole[] | Prisma.ListEnumProductImageRoleFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.ProductImageRole[] | Prisma.ListEnumProductImageRoleFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumProductImageRoleWithAggregatesFilter<$PrismaModel> | $Enums.ProductImageRole;
+    _count?: Prisma.NestedIntFilter<$PrismaModel>;
+    _min?: Prisma.NestedEnumProductImageRoleFilter<$PrismaModel>;
+    _max?: Prisma.NestedEnumProductImageRoleFilter<$PrismaModel>;
 };
 export type NestedEnumStockTransactionTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.StockTransactionType | Prisma.EnumStockTransactionTypeFieldRefInput<$PrismaModel>;

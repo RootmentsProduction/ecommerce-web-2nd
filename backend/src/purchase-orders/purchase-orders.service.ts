@@ -397,21 +397,31 @@ export class PurchaseOrdersService {
 
     // Cancelled and Received statuses are final states
     if (current === 'Cancelled') {
-      throw new BadRequestException('Cannot modify status of a cancelled purchase order.');
+      throw new BadRequestException(
+        'Cannot modify status of a cancelled purchase order.',
+      );
     }
     if (current === 'Received') {
-      throw new BadRequestException('Cannot modify status of a fully received purchase order.');
+      throw new BadRequestException(
+        'Cannot modify status of a fully received purchase order.',
+      );
     }
 
     // Specific invalid transitions
     if (current === 'Sent' && target === 'Draft') {
-      throw new BadRequestException('Cannot transition status from Sent back to Draft.');
+      throw new BadRequestException(
+        'Cannot transition status from Sent back to Draft.',
+      );
     }
     if (current === 'Partially_Received' && target === 'Draft') {
-      throw new BadRequestException('Cannot transition status from Partially Received back to Draft.');
+      throw new BadRequestException(
+        'Cannot transition status from Partially Received back to Draft.',
+      );
     }
     if (current === 'Partially_Received' && target === 'Sent') {
-      throw new BadRequestException('Cannot transition status from Partially Received back to Sent.');
+      throw new BadRequestException(
+        'Cannot transition status from Partially Received back to Sent.',
+      );
     }
 
     return this.prisma.purchaseOrder.update({

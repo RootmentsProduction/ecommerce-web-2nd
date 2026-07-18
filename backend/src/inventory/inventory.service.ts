@@ -197,6 +197,7 @@ export class InventoryService {
       beforeStock: t.beforeStock,
       afterStock: t.afterStock,
       reason: t.reason,
+      reference: t.reference || null,
       changedBy: t.changedBy,
       productId: t.productId,
       productName: t.product.name,

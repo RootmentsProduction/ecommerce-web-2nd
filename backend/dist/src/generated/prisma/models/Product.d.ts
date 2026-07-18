@@ -34,6 +34,8 @@ export type ProductMinAggregateOutputType = {
     newArrival: boolean | null;
     bestSeller: boolean | null;
     showOnHomepage: boolean | null;
+    occasion: string | null;
+    gender: string | null;
     categoryId: string | null;
     createdAt: Date | null;
     updatedAt: Date | null;
@@ -53,6 +55,8 @@ export type ProductMaxAggregateOutputType = {
     newArrival: boolean | null;
     bestSeller: boolean | null;
     showOnHomepage: boolean | null;
+    occasion: string | null;
+    gender: string | null;
     categoryId: string | null;
     createdAt: Date | null;
     updatedAt: Date | null;
@@ -72,6 +76,8 @@ export type ProductCountAggregateOutputType = {
     newArrival: number;
     bestSeller: number;
     showOnHomepage: number;
+    occasion: number;
+    gender: number;
     categoryId: number;
     createdAt: number;
     updatedAt: number;
@@ -102,6 +108,8 @@ export type ProductMinAggregateInputType = {
     newArrival?: true;
     bestSeller?: true;
     showOnHomepage?: true;
+    occasion?: true;
+    gender?: true;
     categoryId?: true;
     createdAt?: true;
     updatedAt?: true;
@@ -121,6 +129,8 @@ export type ProductMaxAggregateInputType = {
     newArrival?: true;
     bestSeller?: true;
     showOnHomepage?: true;
+    occasion?: true;
+    gender?: true;
     categoryId?: true;
     createdAt?: true;
     updatedAt?: true;
@@ -140,6 +150,8 @@ export type ProductCountAggregateInputType = {
     newArrival?: true;
     bestSeller?: true;
     showOnHomepage?: true;
+    occasion?: true;
+    gender?: true;
     categoryId?: true;
     createdAt?: true;
     updatedAt?: true;
@@ -188,6 +200,8 @@ export type ProductGroupByOutputType = {
     newArrival: boolean;
     bestSeller: boolean;
     showOnHomepage: boolean;
+    occasion: string;
+    gender: string;
     categoryId: string;
     createdAt: Date;
     updatedAt: Date;
@@ -218,6 +232,8 @@ export type ProductWhereInput = {
     newArrival?: Prisma.BoolFilter<"Product"> | boolean;
     bestSeller?: Prisma.BoolFilter<"Product"> | boolean;
     showOnHomepage?: Prisma.BoolFilter<"Product"> | boolean;
+    occasion?: Prisma.StringFilter<"Product"> | string;
+    gender?: Prisma.StringFilter<"Product"> | string;
     categoryId?: Prisma.StringFilter<"Product"> | string;
     createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Product"> | Date | string;
@@ -243,6 +259,8 @@ export type ProductOrderByWithRelationInput = {
     newArrival?: Prisma.SortOrder;
     bestSeller?: Prisma.SortOrder;
     showOnHomepage?: Prisma.SortOrder;
+    occasion?: Prisma.SortOrder;
+    gender?: Prisma.SortOrder;
     categoryId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
@@ -271,6 +289,8 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
     newArrival?: Prisma.BoolFilter<"Product"> | boolean;
     bestSeller?: Prisma.BoolFilter<"Product"> | boolean;
     showOnHomepage?: Prisma.BoolFilter<"Product"> | boolean;
+    occasion?: Prisma.StringFilter<"Product"> | string;
+    gender?: Prisma.StringFilter<"Product"> | string;
     categoryId?: Prisma.StringFilter<"Product"> | string;
     createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Product"> | Date | string;
@@ -296,6 +316,8 @@ export type ProductOrderByWithAggregationInput = {
     newArrival?: Prisma.SortOrder;
     bestSeller?: Prisma.SortOrder;
     showOnHomepage?: Prisma.SortOrder;
+    occasion?: Prisma.SortOrder;
+    gender?: Prisma.SortOrder;
     categoryId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
@@ -323,6 +345,8 @@ export type ProductScalarWhereWithAggregatesInput = {
     newArrival?: Prisma.BoolWithAggregatesFilter<"Product"> | boolean;
     bestSeller?: Prisma.BoolWithAggregatesFilter<"Product"> | boolean;
     showOnHomepage?: Prisma.BoolWithAggregatesFilter<"Product"> | boolean;
+    occasion?: Prisma.StringWithAggregatesFilter<"Product"> | string;
+    gender?: Prisma.StringWithAggregatesFilter<"Product"> | string;
     categoryId?: Prisma.StringWithAggregatesFilter<"Product"> | string;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"Product"> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Product"> | Date | string;
@@ -342,6 +366,8 @@ export type ProductCreateInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     category: Prisma.CategoryCreateNestedOneWithoutProductsInput;
@@ -366,6 +392,8 @@ export type ProductUncheckedCreateInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     categoryId: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
@@ -390,6 +418,8 @@ export type ProductUpdateInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput;
@@ -414,6 +444,8 @@ export type ProductUncheckedUpdateInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     categoryId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -438,6 +470,8 @@ export type ProductCreateManyInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     categoryId: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
@@ -457,6 +491,8 @@ export type ProductUpdateManyMutationInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -475,6 +511,8 @@ export type ProductUncheckedUpdateManyInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     categoryId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -502,6 +540,8 @@ export type ProductCountOrderByAggregateInput = {
     newArrival?: Prisma.SortOrder;
     bestSeller?: Prisma.SortOrder;
     showOnHomepage?: Prisma.SortOrder;
+    occasion?: Prisma.SortOrder;
+    gender?: Prisma.SortOrder;
     categoryId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
@@ -526,6 +566,8 @@ export type ProductMaxOrderByAggregateInput = {
     newArrival?: Prisma.SortOrder;
     bestSeller?: Prisma.SortOrder;
     showOnHomepage?: Prisma.SortOrder;
+    occasion?: Prisma.SortOrder;
+    gender?: Prisma.SortOrder;
     categoryId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
@@ -545,6 +587,8 @@ export type ProductMinOrderByAggregateInput = {
     newArrival?: Prisma.SortOrder;
     bestSeller?: Prisma.SortOrder;
     showOnHomepage?: Prisma.SortOrder;
+    occasion?: Prisma.SortOrder;
+    gender?: Prisma.SortOrder;
     categoryId?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
@@ -694,6 +738,8 @@ export type ProductCreateWithoutCategoryInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     images?: Prisma.ProductImageCreateNestedManyWithoutProductInput;
@@ -717,6 +763,8 @@ export type ProductUncheckedCreateWithoutCategoryInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput;
@@ -764,6 +812,8 @@ export type ProductScalarWhereInput = {
     newArrival?: Prisma.BoolFilter<"Product"> | boolean;
     bestSeller?: Prisma.BoolFilter<"Product"> | boolean;
     showOnHomepage?: Prisma.BoolFilter<"Product"> | boolean;
+    occasion?: Prisma.StringFilter<"Product"> | string;
+    gender?: Prisma.StringFilter<"Product"> | string;
     categoryId?: Prisma.StringFilter<"Product"> | string;
     createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Product"> | Date | string;
@@ -783,6 +833,8 @@ export type ProductCreateWithoutImagesInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     category: Prisma.CategoryCreateNestedOneWithoutProductsInput;
@@ -806,6 +858,8 @@ export type ProductUncheckedCreateWithoutImagesInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     categoryId: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
@@ -842,6 +896,8 @@ export type ProductUpdateWithoutImagesInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput;
@@ -865,6 +921,8 @@ export type ProductUncheckedUpdateWithoutImagesInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     categoryId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -888,6 +946,8 @@ export type ProductCreateWithoutVariantsInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     category: Prisma.CategoryCreateNestedOneWithoutProductsInput;
@@ -911,6 +971,8 @@ export type ProductUncheckedCreateWithoutVariantsInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     categoryId: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
@@ -947,6 +1009,8 @@ export type ProductUpdateWithoutVariantsInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput;
@@ -970,6 +1034,8 @@ export type ProductUncheckedUpdateWithoutVariantsInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     categoryId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -993,6 +1059,8 @@ export type ProductCreateWithoutInventoryInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     category: Prisma.CategoryCreateNestedOneWithoutProductsInput;
@@ -1016,6 +1084,8 @@ export type ProductUncheckedCreateWithoutInventoryInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     categoryId: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
@@ -1052,6 +1122,8 @@ export type ProductUpdateWithoutInventoryInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput;
@@ -1075,6 +1147,8 @@ export type ProductUncheckedUpdateWithoutInventoryInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     categoryId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1098,6 +1172,8 @@ export type ProductCreateWithoutStockTransactionsInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     category: Prisma.CategoryCreateNestedOneWithoutProductsInput;
@@ -1121,6 +1197,8 @@ export type ProductUncheckedCreateWithoutStockTransactionsInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     categoryId: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
@@ -1157,6 +1235,8 @@ export type ProductUpdateWithoutStockTransactionsInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput;
@@ -1180,6 +1260,8 @@ export type ProductUncheckedUpdateWithoutStockTransactionsInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     categoryId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1203,6 +1285,8 @@ export type ProductCreateWithoutOrderItemsInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     category: Prisma.CategoryCreateNestedOneWithoutProductsInput;
@@ -1226,6 +1310,8 @@ export type ProductUncheckedCreateWithoutOrderItemsInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     categoryId: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
@@ -1262,6 +1348,8 @@ export type ProductUpdateWithoutOrderItemsInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput;
@@ -1285,6 +1373,8 @@ export type ProductUncheckedUpdateWithoutOrderItemsInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     categoryId?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1308,6 +1398,8 @@ export type ProductCreateManyCategoryInput = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: string;
+    gender?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -1326,6 +1418,8 @@ export type ProductUpdateWithoutCategoryInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput;
@@ -1349,6 +1443,8 @@ export type ProductUncheckedUpdateWithoutCategoryInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput;
@@ -1372,6 +1468,8 @@ export type ProductUncheckedUpdateManyWithoutCategoryInput = {
     newArrival?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     bestSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     showOnHomepage?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    occasion?: Prisma.StringFieldUpdateOperationsInput | string;
+    gender?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -1417,6 +1515,8 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: boolean;
+    gender?: boolean;
     categoryId?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
@@ -1443,6 +1543,8 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: boolean;
+    gender?: boolean;
     categoryId?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
@@ -1463,6 +1565,8 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: boolean;
+    gender?: boolean;
     categoryId?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
@@ -1483,11 +1587,13 @@ export type ProductSelectScalar = {
     newArrival?: boolean;
     bestSeller?: boolean;
     showOnHomepage?: boolean;
+    occasion?: boolean;
+    gender?: boolean;
     categoryId?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 };
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "sku" | "shortDescription" | "description" | "sellingPrice" | "mrp" | "costPrice" | "status" | "featured" | "newArrival" | "bestSeller" | "showOnHomepage" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>;
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "sku" | "shortDescription" | "description" | "sellingPrice" | "mrp" | "costPrice" | "status" | "featured" | "newArrival" | "bestSeller" | "showOnHomepage" | "occasion" | "gender" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>;
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>;
     images?: boolean | Prisma.Product$imagesArgs<ExtArgs>;
@@ -1528,6 +1634,8 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
         newArrival: boolean;
         bestSeller: boolean;
         showOnHomepage: boolean;
+        occasion: string;
+        gender: string;
         categoryId: string;
         createdAt: Date;
         updatedAt: Date;
@@ -1608,6 +1716,8 @@ export interface ProductFieldRefs {
     readonly newArrival: Prisma.FieldRef<"Product", 'Boolean'>;
     readonly bestSeller: Prisma.FieldRef<"Product", 'Boolean'>;
     readonly showOnHomepage: Prisma.FieldRef<"Product", 'Boolean'>;
+    readonly occasion: Prisma.FieldRef<"Product", 'String'>;
+    readonly gender: Prisma.FieldRef<"Product", 'String'>;
     readonly categoryId: Prisma.FieldRef<"Product", 'String'>;
     readonly createdAt: Prisma.FieldRef<"Product", 'DateTime'>;
     readonly updatedAt: Prisma.FieldRef<"Product", 'DateTime'>;

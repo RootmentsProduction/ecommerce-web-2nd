@@ -146,20 +146,22 @@ export class CategoriesService {
   async remove(id: string) {
     const category = await this.prisma.category.findUnique({
       where: { id },
-      include: {
-        _count: {
-          select: { products: true },
-        },
-      },
     });
 
     if (!category) {
       throw new NotFoundException(`Category with ID ${id} not found.`);
     }
 
-    if (category._count.products > 0) {
+    const activeProductsCount = await this.prisma.product.count({
+      where: {
+        categoryId: id,
+        status: { not: 'ARCHIVED' },
+      },
+    });
+
+    if (activeProductsCount > 0) {
       throw new BadRequestException(
-        `Cannot delete category. There are ${category._count.products} products assigned to this category.`,
+        `Cannot delete category. There are ${activeProductsCount} active products assigned to this category.`,
       );
     }
 

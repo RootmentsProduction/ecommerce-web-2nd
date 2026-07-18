@@ -1,0 +1,297 @@
+import React, { useRef } from "react";
+import { AdminProductMedia } from "@/types/admin";
+
+interface ProductMediaProps {
+  media: AdminProductMedia[];
+  onChange: (media: AdminProductMedia[]) => void;
+}
+
+export default function ProductMediaSection({ media, onChange }: ProductMediaProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      const newMedia: AdminProductMedia[] = [...media];
+
+      // Limit to 5 images max
+      const capacity = 5 - newMedia.length;
+      const filesToProcess = filesArray.slice(0, capacity);
+
+      filesToProcess.forEach((file, idx) => {
+        const localUrl = URL.createObjectURL(file);
+        const isFirst = newMedia.length === 0;
+        newMedia.push({
+          id: `media-upload-${Date.now()}-${idx}`,
+          url: localUrl,
+          isPrimary: isFirst,
+          imageRole: isFirst ? "PRIMARY" : "GALLERY",
+          altText: "",
+          file,
+        });
+      });
+
+      onChange(newMedia);
+    }
+  };
+
+  const removeImage = (id: string) => {
+    const isRemovingPrimary = media.find((m) => m.id === id)?.imageRole === "PRIMARY" || media.find((m) => m.id === id)?.isPrimary;
+    let newMedia = media.filter((item) => item.id !== id);
+
+    // If we removed the primary image, make the first remaining image primary
+    if (isRemovingPrimary && newMedia.length > 0) {
+      newMedia = newMedia.map((m, idx) => ({
+        ...m,
+        isPrimary: idx === 0,
+        imageRole: idx === 0 ? "PRIMARY" : m.imageRole === "PRIMARY" ? "GALLERY" : m.imageRole,
+      }));
+    }
+
+    onChange(newMedia);
+  };
+
+  const handleRoleChange = (id: string, newRole: 'PRIMARY' | 'HOVER' | 'GALLERY') => {
+    const updatedMedia = media.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          imageRole: newRole,
+          isPrimary: newRole === "PRIMARY",
+        };
+      }
+      
+      // Enforce unique PRIMARY
+      if (newRole === "PRIMARY" && (item.imageRole === "PRIMARY" || item.isPrimary)) {
+        return {
+          ...item,
+          imageRole: "GALLERY" as const,
+          isPrimary: false,
+        };
+      }
+      
+      // Enforce unique HOVER
+      if (newRole === "HOVER" && item.imageRole === "HOVER") {
+        return {
+          ...item,
+          imageRole: "GALLERY" as const,
+        };
+      }
+      
+      return item;
+    });
+    
+    onChange(updatedMedia);
+  };
+
+  const moveImage = (index: number, direction: "left" | "right") => {
+    if (direction === "left" && index === 0) return;
+    if (direction === "right" && index === media.length - 1) return;
+
+    const newMedia = [...media];
+    const targetIdx = direction === "left" ? index - 1 : index + 1;
+    const temp = newMedia[index];
+    newMedia[index] = newMedia[targetIdx];
+    newMedia[targetIdx] = temp;
+
+    onChange(newMedia);
+  };
+
+  return (
+    <div className="bg-white border border-[#E5E5E5] rounded-[12px] p-6 shadow-sm space-y-5">
+      <div className="border-b border-neutral-100 pb-3 flex justify-between items-center">
+        <div>
+          <h2 className="text-sm font-bold tracking-wide text-neutral-800 uppercase font-sans">
+            Product Images / Media
+          </h2>
+          <p className="text-[10px] text-neutral-400 mt-0.5">
+            Add up to 5 premium media files. Mark one as primary. (Previews are local only)
+          </p>
+        </div>
+        <span className="text-[11px] font-bold text-neutral-400">
+          {media.length} / 5
+        </span>
+      </div>
+
+      {/* Grid of images */}
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+        {media.map((item, idx) => (
+          <div
+            key={item.id}
+            className={`group relative aspect-square rounded-lg overflow-hidden border flex flex-col items-center justify-center bg-neutral-50 transition-all ${
+              item.imageRole === "PRIMARY" || item.isPrimary
+                ? "border-[#C99213] ring-1 ring-[#C99213]/30"
+                : "border-neutral-200 hover:border-neutral-400"
+            }`}
+          >
+            {/* Image display */}
+            {/* Native img is used intentionally for dynamic blob object URL previews */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={item.url}
+              alt={item.altText || "Product preview"}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                // If local URL fails, fallback to gold ring SVG placeholder
+                e.currentTarget.style.display = "none";
+              }}
+            />
+
+            {/* Gradient Overlay for Actions */}
+            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col justify-between p-2 transition-opacity">
+              <div className="flex justify-between items-center">
+                {/* Primary indicator toggle */}
+                <button
+                  type="button"
+                  onClick={() => handleRoleChange(item.id, "PRIMARY")}
+                  className={`text-[9px] font-bold px-2 py-0.5 rounded cursor-pointer ${
+                    item.imageRole === "PRIMARY" || item.isPrimary
+                      ? "bg-[#C99213] text-white"
+                      : "bg-white/80 text-neutral-800 hover:bg-white"
+                  }`}
+                >
+                  {item.imageRole === "PRIMARY" || item.isPrimary ? "Primary" : "Set Main"}
+                </button>
+
+                {/* Remove button */}
+                <button
+                  type="button"
+                  onClick={() => removeImage(item.id)}
+                  className="bg-red-600 hover:bg-red-700 text-white rounded-full p-1 cursor-pointer"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Reordering indicators */}
+              <div className="flex justify-center space-x-2">
+                <button
+                  type="button"
+                  onClick={() => moveImage(idx, "left")}
+                  disabled={idx === 0}
+                  className="bg-black/80 hover:bg-neutral-800 text-white p-1 rounded disabled:opacity-30 cursor-pointer"
+                >
+                  &larr;
+                </button>
+                <button
+                  type="button"
+                  onClick={() => moveImage(idx, "right")}
+                  disabled={idx === media.length - 1}
+                  className="bg-black/80 hover:bg-neutral-800 text-white p-1 rounded disabled:opacity-30 cursor-pointer"
+                >
+                  &rarr;
+                </button>
+              </div>
+            </div>
+
+            {/* Badges visible outside hover */}
+            {(item.imageRole === "PRIMARY" || item.isPrimary) && (
+              <span className="absolute top-1.5 left-1.5 bg-[#C99213] text-white text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shadow-sm animate-fade-in">
+                Primary
+              </span>
+            )}
+            {item.imageRole === "HOVER" && (
+              <span className="absolute top-1.5 left-1.5 bg-blue-600 text-white text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shadow-sm animate-fade-in">
+                Hover
+              </span>
+            )}
+          </div>
+        ))}
+
+        {/* Upload box if capacity allows */}
+        {media.length < 5 && (
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="aspect-square rounded-lg border-2 border-dashed border-neutral-200 hover:border-[#C99213] flex flex-col items-center justify-center space-y-1.5 transition-colors cursor-pointer bg-[#FCFCFC]"
+          >
+            <svg className="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
+              Upload Image
+            </span>
+          </button>
+        )}
+      </div>
+
+      {/* Invisible file input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept="image/*"
+        multiple
+        className="hidden"
+      />
+
+      {/* Accessibility / Alt Text Fields */}
+      {media.length > 0 && (
+        <div className="space-y-3 pt-3 border-t border-neutral-100">
+          <h3 className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">
+            Image Accessibility (Alt Text)
+          </h3>
+          <div className="grid grid-cols-1 gap-2.5">
+            {media.map((item, idx) => (
+              <div key={item.id} className="flex items-center space-x-3 text-xs bg-neutral-50 p-2 rounded-lg border border-neutral-200/50">
+                <div className="w-10 h-10 rounded overflow-hidden border border-neutral-200 flex-shrink-0">
+                  {/* Native img is used intentionally for dynamic blob object URL previews */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={item.url} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1 flex flex-col space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wide">
+                      Image #{idx + 1}
+                    </span>
+                    <div className="flex items-center space-x-1">
+                      <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wide">Role:</span>
+                      <select
+                        value={item.imageRole || "GALLERY"}
+                        onChange={(e) => {
+                          const newRole = e.target.value as 'PRIMARY' | 'HOVER' | 'GALLERY';
+                          handleRoleChange(item.id, newRole);
+                        }}
+                        className="px-1.5 py-0.5 border border-neutral-200 rounded text-[10px] bg-white outline-none focus:border-[#C99213] text-neutral-850"
+                      >
+                        <option value="PRIMARY">Primary</option>
+                        <option value="HOVER">Hover</option>
+                        <option value="GALLERY">Gallery</option>
+                      </select>
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Enter descriptive alt text..."
+                    value={item.altText || ""}
+                    onChange={(e) => {
+                      const updated = media.map((m) =>
+                        m.id === item.id ? { ...m, altText: e.target.value } : m
+                      );
+                      onChange(updated);
+                    }}
+                    className="w-full px-2.5 py-1 border border-neutral-200 rounded text-xs outline-none focus:border-[#C99213] bg-white text-neutral-850"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Optional video field */}
+      <div className="flex flex-col space-y-1.5 pt-2 border-t border-neutral-100">
+        <label className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
+          Video Link / Embed Placeholder
+        </label>
+        <input
+          type="text"
+          placeholder="e.g. https://youtube.com/watch?v=... or local video path"
+          className="px-3 py-2 border border-neutral-200 rounded text-xs outline-none focus:border-[#C99213] transition-all text-neutral-850 placeholder-neutral-400"
+        />
+      </div>
+    </div>
+  );
+}

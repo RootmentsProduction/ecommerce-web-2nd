@@ -1731,6 +1731,8 @@ export declare const ProductScalarFieldEnum: {
     readonly newArrival: "newArrival";
     readonly bestSeller: "bestSeller";
     readonly showOnHomepage: "showOnHomepage";
+    readonly occasion: "occasion";
+    readonly gender: "gender";
     readonly categoryId: "categoryId";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
@@ -1741,6 +1743,7 @@ export declare const ProductImageScalarFieldEnum: {
     readonly url: "url";
     readonly altText: "altText";
     readonly isPrimary: "isPrimary";
+    readonly imageRole: "imageRole";
     readonly sortOrder: "sortOrder";
     readonly productId: "productId";
     readonly createdAt: "createdAt";
@@ -2028,6 +2031,8 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>;
 export type EnumProductStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductStatus'>;
 export type ListEnumProductStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductStatus[]'>;
+export type EnumProductImageRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductImageRole'>;
+export type ListEnumProductImageRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductImageRole[]'>;
 export type EnumStockTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StockTransactionType'>;
 export type ListEnumStockTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StockTransactionType[]'>;
 export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>;
