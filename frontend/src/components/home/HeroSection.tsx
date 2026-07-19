@@ -1,15 +1,19 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getSystemSettings } from '@/services/system-settings.service';
 
-export default function HeroSection() {
+export default async function HeroSection() {
+  const settings = await getSystemSettings();
+  const heroImage = settings.hero_image || "/hero-bg-v2.jpg";
+
   return (
     <section className="sticky top-0 w-full h-screen min-h-[700px] flex items-center overflow-hidden bg-neutral-900 z-10">
 
       {/* Background Image (Aligned down slightly to match reference screenshot) */}
       <div className="absolute inset-0 w-full h-full">
         <Image
-          src="/hero-bg-v2.jpg"
+          src={heroImage}
           alt="Luxury Jewellery Model Hero"
           fill
           priority

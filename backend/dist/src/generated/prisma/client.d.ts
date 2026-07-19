@@ -26,3 +26,4 @@ export type PurchaseReceiptItem = Prisma.PurchaseReceiptItemModel;
 export type CustomerAddress = Prisma.CustomerAddressModel;
 export type Order = Prisma.OrderModel;
 export type OrderItem = Prisma.OrderItemModel;
+export type SystemSetting = Prisma.SystemSettingModel;

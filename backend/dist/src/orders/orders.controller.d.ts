@@ -17,6 +17,7 @@ export declare class CreateOrderBodyDto implements CreateOrderDto {
     total: number;
     shippingAddress: any;
     billingAddress: any;
+    customerId?: string;
     notes?: string;
     items: CreateOrderItemBodyDto[];
 }

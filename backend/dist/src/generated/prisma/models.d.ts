@@ -18,4 +18,5 @@ export type * from './models/PurchaseReceiptItem.js';
 export type * from './models/CustomerAddress.js';
 export type * from './models/Order.js';
 export type * from './models/OrderItem.js';
+export type * from './models/SystemSetting.js';
 export type * from './commonInputTypes.js';

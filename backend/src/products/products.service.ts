@@ -709,6 +709,13 @@ export class ProductsService {
       );
     }
 
-    return this.prisma.product.delete({ where: { id } });
+    return this.prisma.$transaction(async (tx) => {
+      // Delete all stock transactions associated with this product
+      await tx.stockTransaction.deleteMany({
+        where: { productId: id },
+      });
+
+      return tx.product.delete({ where: { id } });
+    });
   }
 }

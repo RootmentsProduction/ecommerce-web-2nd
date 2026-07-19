@@ -72,6 +72,7 @@ class CreateOrderBodyDto {
     total;
     shippingAddress;
     billingAddress;
+    customerId;
     notes;
     items;
 }
@@ -110,6 +111,11 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
+], CreateOrderBodyDto.prototype, "customerId", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
 ], CreateOrderBodyDto.prototype, "notes", void 0);
 __decorate([
     (0, class_validator_1.IsArray)(),
@@ -132,7 +138,10 @@ let OrdersController = class OrdersController {
         this.ordersService = ordersService;
     }
     async createOrder(dto, user) {
-        const userId = user.id;
+        let userId = user.id;
+        if (dto.customerId && (user.role === client_js_1.UserRole.ADMIN || user.role === client_js_1.UserRole.SUPER_ADMIN)) {
+            userId = dto.customerId;
+        }
         return this.ordersService.create(userId, dto);
     }
     async getMyOrders(user) {

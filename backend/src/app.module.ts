@@ -16,6 +16,7 @@ import { PurchaseOrdersModule } from './purchase-orders/purchase-orders.module';
 import { CustomersModule } from './customers/customers.module';
 import { OrdersModule } from './orders/orders.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { SystemSettingsModule } from './system-settings/system-settings.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Module({
@@ -36,6 +37,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     CustomersModule,
     OrdersModule,
     DashboardModule,
+    SystemSettingsModule,
   ],
   controllers: [AppController],
   providers: [

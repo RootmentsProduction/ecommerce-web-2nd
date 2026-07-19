@@ -13,19 +13,22 @@ exports.OrdersService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
 const client_js_1 = require("../generated/prisma/client.js");
+const email_service_1 = require("../email/email.service");
 let OrdersService = class OrdersService {
     prisma;
-    constructor(prisma) {
+    emailService;
+    constructor(prisma, emailService) {
         this.prisma = prisma;
+        this.emailService = emailService;
     }
     async create(customerId, dto) {
         if (!dto.items || dto.items.length === 0) {
             throw new common_1.BadRequestException('Order must contain at least one item.');
         }
-        return this.prisma.$transaction(async (tx) => {
+        const order = await this.prisma.$transaction(async (tx) => {
             const orderCount = await tx.order.count();
             const orderNumber = `ORD-${Date.now()}-${String(orderCount + 1).padStart(4, '0')}`;
-            const order = await tx.order.create({
+            return tx.order.create({
                 data: {
                     orderNumber,
                     customerId,
@@ -55,8 +58,20 @@ let OrdersService = class OrdersService {
                     items: true,
                 },
             });
-            return order;
         });
+        try {
+            const customer = await this.prisma.user.findUnique({
+                where: { id: customerId },
+            });
+            if (customer) {
+                await this.emailService.sendOrderConfirmation(order, customer);
+                await this.emailService.sendAdminOrderNotification(order, customer);
+            }
+        }
+        catch (err) {
+            console.error('Failed to dispatch order notification emails:', err);
+        }
+        return order;
     }
     async findMyOrders(customerId) {
         return this.prisma.order.findMany({
@@ -122,7 +137,8 @@ let OrdersService = class OrdersService {
         if (previousStatus === targetStatus) {
             return order;
         }
-        return this.prisma.$transaction(async (tx) => {
+        const lowStockItems = [];
+        const updatedOrder = await this.prisma.$transaction(async (tx) => {
             const ENABLE_STOCK_DEDUCTION_ON_ORDER_CONFIRMATION = true;
             const isConfirming = (previousStatus === 'PENDING_PAYMENT' ||
                 previousStatus === 'CANCELLED') &&
@@ -159,6 +175,14 @@ let OrdersService = class OrdersService {
                             currentStock: afterStock,
                         },
                     });
+                    if (afterStock < 5) {
+                        lowStockItems.push({
+                            sku: item.sku,
+                            name: item.name,
+                            variantName: item.variantName || null,
+                            stock: afterStock,
+                        });
+                    }
                     await tx.stockTransaction.create({
                         data: {
                             productId: item.productId,
@@ -224,11 +248,23 @@ let OrdersService = class OrdersService {
             });
             return updatedOrder;
         });
+        if (lowStockItems.length > 0) {
+            for (const item of lowStockItems) {
+                try {
+                    await this.emailService.sendLowStockAlert(item.sku, item.name, item.variantName, item.stock);
+                }
+                catch (err) {
+                    console.error(`Failed to send low stock alert for SKU ${item.sku}:`, err);
+                }
+            }
+        }
+        return updatedOrder;
     }
 };
 exports.OrdersService = OrdersService;
 exports.OrdersService = OrdersService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        email_service_1.EmailService])
 ], OrdersService);
 //# sourceMappingURL=orders.service.js.map

@@ -1,5 +1,6 @@
 import { PrismaService } from '../prisma/prisma.service';
 import { StockTransactionType } from '../generated/prisma/client.js';
+import { EmailService } from '../email/email.service';
 export interface AdjustStockDto {
     productId?: string;
     variantId?: string;
@@ -9,7 +10,8 @@ export interface AdjustStockDto {
 }
 export declare class InventoryService {
     private readonly prisma;
-    constructor(prisma: PrismaService);
+    private readonly emailService;
+    constructor(prisma: PrismaService, emailService: EmailService);
     private mapTransactionType;
     getInventoryLevels(): Promise<{
         id: string;

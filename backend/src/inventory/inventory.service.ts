@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { StockTransactionType, Prisma } from '../generated/prisma/client.js';
+import { EmailService } from '../email/email.service';
 
 export interface AdjustStockDto {
   productId?: string;
@@ -16,7 +17,10 @@ export interface AdjustStockDto {
 
 @Injectable()
 export class InventoryService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly emailService: EmailService,
+  ) {}
 
   private mapTransactionType(type: string): StockTransactionType {
     const t = type.toUpperCase();
@@ -146,13 +150,27 @@ export class InventoryService {
         },
       });
 
-      // Get target details for the log
+      // Get target details for the log and email alert
       let productId = inventory.productId;
+      let productName = '';
+      let variantName: string | null = null;
+      let sku = '';
+
       if (inventory.variantId) {
         const variant = await tx.productVariant.findUnique({
           where: { id: inventory.variantId },
+          include: { product: true },
         });
         productId = variant!.productId;
+        productName = variant!.product.name;
+        variantName = variant!.name;
+        sku = variant!.sku;
+      } else {
+        const product = await tx.product.findUnique({
+          where: { id: inventory.productId! },
+        });
+        productName = product!.name;
+        sku = product!.sku;
       }
 
       // Create transaction log
@@ -168,6 +186,20 @@ export class InventoryService {
           changedBy: adminEmail,
         },
       });
+
+      // Fire low stock email alert after transaction if stock drops below 5
+      if (afterStock < 5 && afterStock < beforeStock) {
+        try {
+          await this.emailService.sendLowStockAlert(
+            sku,
+            productName,
+            variantName,
+            afterStock,
+          );
+        } catch (err) {
+          console.error(`Failed to send low stock alert for SKU ${sku}:`, err);
+        }
+      }
 
       return {
         inventoryId: inventory.id,

@@ -120,7 +120,7 @@ export default function PurchaseOrderDetailPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f5f7fb] admin-dashboard-root print:bg-white print:p-0">
+    <div className="flex flex-col min-h-screen bg-[#FAF9F6] admin-dashboard-root print:bg-white print:p-0">
       
       {/* Topbar - Hide when printing */}
       <div className="print:hidden">
@@ -134,7 +134,7 @@ export default function PurchaseOrderDetailPage() {
           <div className="flex items-center space-x-3">
             <Link
               href="/admin/purchase-orders"
-              className="p-2 bg-white border border-[#e1e5f5] rounded-xl hover:bg-neutral-50 transition-colors text-neutral-505 hover:text-neutral-800"
+              className="p-2 bg-white border border-[#E5E5E5] rounded-xl hover:bg-neutral-50 transition-colors text-neutral-505 hover:text-neutral-800"
             >
               <ArrowLeft className="w-4.5 h-4.5" />
             </Link>
@@ -167,11 +167,11 @@ export default function PurchaseOrderDetailPage() {
           <div className="flex flex-wrap items-center gap-2">
             
             {/* Status updates triggers */}
-            <div className="flex border border-[#e1e5f5] rounded-full overflow-hidden bg-white text-xs font-semibold">
+            <div className="flex border border-[#E5E5E5] rounded-full overflow-hidden bg-white text-xs font-semibold">
               {po.status === "Draft" && (
                 <button
                   onClick={() => handleUpdateStatus("Sent")}
-                  className="px-3.5 py-2 hover:bg-purple-50 text-purple-600 transition-colors border-r border-[#e1e5f5] cursor-pointer"
+                  className="px-3.5 py-2 hover:bg-purple-50 text-purple-600 transition-colors border-r border-[#E5E5E5] cursor-pointer"
                 >
                   Mark Sent
                 </button>
@@ -179,7 +179,7 @@ export default function PurchaseOrderDetailPage() {
               {po.status !== "Received" && po.status !== "Cancelled" && (
                 <button
                   onClick={() => setIsReceiveModalOpen(true)}
-                  className="px-3.5 py-2 hover:bg-emerald-50 text-emerald-600 transition-colors border-r border-[#e1e5f5] cursor-pointer"
+                  className="px-3.5 py-2 hover:bg-emerald-50 text-emerald-600 transition-colors border-r border-[#E5E5E5] cursor-pointer"
                 >
                   Receive Goods
                 </button>
@@ -197,7 +197,7 @@ export default function PurchaseOrderDetailPage() {
             {/* Print */}
             <button
               onClick={handlePrint}
-              className="p-2.5 bg-white border border-[#e1e5f5] text-neutral-600 hover:text-neutral-900 rounded-xl hover:bg-neutral-50 transition-colors cursor-pointer"
+              className="p-2.5 bg-white border border-[#E5E5E5] text-neutral-600 hover:text-neutral-900 rounded-xl hover:bg-neutral-50 transition-colors cursor-pointer"
               title="Print Order"
             >
               <Printer className="w-4 h-4" />
@@ -206,7 +206,7 @@ export default function PurchaseOrderDetailPage() {
             {/* Edit */}
             <Link
               href={`/admin/purchase-orders/${po.id}/edit`}
-              className="p-2.5 bg-white border border-[#e1e5f5] text-[#3762f9] hover:text-[#2748c9] rounded-xl hover:bg-neutral-50 transition-colors"
+              className="p-2.5 bg-white border border-[#E5E5E5] text-[#C99213] hover:text-[#a9831e] rounded-xl hover:bg-neutral-50 transition-colors"
               title="Edit Order"
             >
               <Edit className="w-4 h-4" />
@@ -215,7 +215,7 @@ export default function PurchaseOrderDetailPage() {
             {/* Delete */}
             <button
               onClick={handleDeletePO}
-              className="p-2.5 bg-white border border-[#e1e5f5] text-red-500 hover:text-red-700 rounded-xl hover:bg-red-50 transition-colors cursor-pointer"
+              className="p-2.5 bg-white border border-[#E5E5E5] text-red-500 hover:text-red-700 rounded-xl hover:bg-red-50 transition-colors cursor-pointer"
               title="Delete Order"
             >
               <Trash2 className="w-4 h-4" />
@@ -225,7 +225,7 @@ export default function PurchaseOrderDetailPage() {
         </div>
 
         {/* HIGH FIDELITY INVOICE STYLE PREVIEW BLOCK */}
-        <div className="bg-white border border-[#e1e5f5] rounded-3xl p-8 md:p-12 shadow-[0_30px_90px_-40px_rgba(15,23,42,0.15)] space-y-8 print:border-none print:shadow-none print:p-0">
+        <div className="bg-white border border-[#E5E5E5] rounded-3xl p-8 md:p-12 shadow-[0_30px_90px_-40px_rgba(15,23,42,0.15)] space-y-8 print:border-none print:shadow-none print:p-0">
           
           {/* Top Invoice Header */}
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 pb-6 border-b border-neutral-100">
@@ -251,7 +251,7 @@ export default function PurchaseOrderDetailPage() {
 
             {/* PO Info */}
             <div className="text-left md:text-right space-y-1 md:space-y-2">
-              <span className="text-[10px] font-bold text-[#3762f9] uppercase tracking-wider bg-[#3762f9]/10 px-3 py-1 rounded-full">
+              <span className="text-[10px] font-bold text-[#C99213] uppercase tracking-wider bg-[#C99213]/10 px-3 py-1 rounded-full">
                 Purchase Order
               </span>
               <h2 className="text-2xl font-bold text-neutral-900 font-mono tracking-tight pt-1">
@@ -299,10 +299,10 @@ export default function PurchaseOrderDetailPage() {
           </div>
 
           {/* Itemized Line Items Table */}
-          <div className="overflow-x-auto border border-[#e1e5f5] rounded-2xl">
+          <div className="overflow-x-auto border border-[#E5E5E5] rounded-2xl">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-[#f5f6ff] text-neutral-500 font-bold uppercase tracking-wider border-b border-[#e1e5f5]">
+                <tr className="bg-[#faf8f2] text-neutral-500 font-bold uppercase tracking-wider border-b border-[#E5E5E5]">
                   <th className="py-3 px-4 w-12 text-center">#</th>
                   <th className="py-3 px-4">Item & Description</th>
                   <th className="py-3 px-4 w-24 text-center">Size</th>
@@ -355,7 +355,7 @@ export default function PurchaseOrderDetailPage() {
                   <span className="text-[9px] font-bold uppercase tracking-wider text-neutral-400 block">Attached Agreement Files</span>
                   <div className="flex flex-wrap gap-1.5">
                     {po.attachments.map((f) => (
-                      <span key={f} className="inline-flex items-center space-x-1.5 bg-[#f5f7fb] border border-[#e1e5f5] px-2.5 py-0.5 rounded-lg text-[10px] font-semibold text-neutral-600">
+                      <span key={f} className="inline-flex items-center space-x-1.5 bg-[#FAF9F6] border border-[#E5E5E5] px-2.5 py-0.5 rounded-lg text-[10px] font-semibold text-neutral-600">
                         <FileText className="w-3 h-3 text-neutral-450" />
                         <span>{f}</span>
                       </span>
@@ -366,7 +366,7 @@ export default function PurchaseOrderDetailPage() {
             </div>
 
             {/* Calculations Breakdown */}
-            <div className="w-full lg:w-96 space-y-3 bg-[#fafbff] border border-[#e1e5f5] p-6 rounded-2xl">
+            <div className="w-full lg:w-96 space-y-3 bg-[#fafbff] border border-[#E5E5E5] p-6 rounded-2xl">
               
               {/* Subtotal */}
               <div className="flex justify-between items-center text-xs font-semibold">
@@ -432,7 +432,7 @@ export default function PurchaseOrderDetailPage() {
               {/* Final Total */}
               <div className="border-t border-neutral-200 pt-3 flex justify-between items-center">
                 <span className="text-sm font-bold text-neutral-900 uppercase tracking-wide">Final Total</span>
-                <span className="text-base font-black text-[#3762f9]">
+                <span className="text-base font-black text-[#C99213]">
                   ₹{po.total.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                 </span>
               </div>
@@ -456,7 +456,7 @@ export default function PurchaseOrderDetailPage() {
       {/* Goods Receipt Modal */}
       {isReceiveModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl border border-[#e1e5f5] max-w-2xl w-full p-8 shadow-2xl mx-4 space-y-6">
+          <div className="bg-white rounded-3xl border border-[#E5E5E5] max-w-2xl w-full p-8 shadow-2xl mx-4 space-y-6">
             <div>
               <h2 className="text-lg font-bold text-neutral-900 font-sans tracking-tight">Log Goods Receipt</h2>
               <p className="text-xs text-neutral-500 mt-1 font-medium">
@@ -474,7 +474,7 @@ export default function PurchaseOrderDetailPage() {
                     placeholder="Enter your name / email"
                     value={receivedBy}
                     onChange={(e) => setReceivedBy(e.target.value)}
-                    className="w-full border border-neutral-200 rounded-xl px-3.5 py-2 text-xs outline-none focus:border-[#3762f9] focus:ring-1 focus:ring-[#3762f9] transition-all text-neutral-850 font-semibold"
+                    className="w-full border border-neutral-200 rounded-xl px-3.5 py-2 text-xs outline-none focus:border-[#C99213] focus:ring-1 focus:ring-[#C99213] transition-all text-neutral-850 font-semibold"
                   />
                 </div>
                 <div className="space-y-1">
@@ -484,7 +484,7 @@ export default function PurchaseOrderDetailPage() {
                     placeholder="Optional details..."
                     value={receiveNotes}
                     onChange={(e) => setReceiveNotes(e.target.value)}
-                    className="w-full border border-neutral-200 rounded-xl px-3.5 py-2 text-xs outline-none focus:border-[#3762f9] focus:ring-1 focus:ring-[#3762f9] transition-all text-neutral-850 font-semibold"
+                    className="w-full border border-neutral-200 rounded-xl px-3.5 py-2 text-xs outline-none focus:border-[#C99213] focus:ring-1 focus:ring-[#C99213] transition-all text-neutral-850 font-semibold"
                   />
                 </div>
               </div>
@@ -521,7 +521,7 @@ export default function PurchaseOrderDetailPage() {
                                 const val = Math.min(remaining, Math.max(0, parseInt(e.target.value) || 0));
                                 setReceiveQuantities((prev) => ({ ...prev, [item.sku]: val }));
                               }}
-                              className="w-20 border border-neutral-200 rounded-lg px-2.5 py-1 text-center outline-none focus:border-[#3762f9] transition-all text-xs font-bold text-neutral-850 disabled:bg-neutral-100 disabled:text-neutral-400"
+                              className="w-20 border border-neutral-200 rounded-lg px-2.5 py-1 text-center outline-none focus:border-[#C99213] transition-all text-xs font-bold text-neutral-850 disabled:bg-neutral-100 disabled:text-neutral-400"
                             />
                           </td>
                         </tr>

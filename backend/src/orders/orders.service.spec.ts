@@ -3,28 +3,49 @@ import { OrdersService } from './orders.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 
+import { EmailService } from '../email/email.service';
+
 describe('OrdersService', () => {
   let service: OrdersService;
   let prismaMock: any;
+  let emailServiceMock: any;
 
   beforeEach(async () => {
     prismaMock = {
       order: {
         findMany: jest.fn(),
         findUnique: jest.fn(),
+        findFirst: jest.fn(),
         count: jest.fn(),
         create: jest.fn(),
         update: jest.fn(),
+      },
+      user: {
+        findUnique: jest.fn(),
+      },
+      inventory: {
+        findFirst: jest.fn(),
+        update: jest.fn(),
+      },
+      stockTransaction: {
+        create: jest.fn(),
       },
       $transaction: jest.fn().mockImplementation(async (callback) => {
         return callback(prismaMock);
       }),
     };
 
+    emailServiceMock = {
+      sendOrderConfirmation: jest.fn(),
+      sendAdminOrderNotification: jest.fn(),
+      sendLowStockAlert: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         OrdersService,
         { provide: PrismaService, useValue: prismaMock },
+        { provide: EmailService, useValue: emailServiceMock },
       ],
     }).compile();
 

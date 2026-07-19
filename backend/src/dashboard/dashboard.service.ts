@@ -164,4 +164,67 @@ export class DashboardService {
       monthlySales,
     };
   }
+
+  async getNotifications() {
+    // 1. Fetch inventories below 5 stock
+    const lowStockInventories = await this.prisma.inventory.findMany({
+      where: {
+        currentStock: { lt: 5 },
+      },
+      include: {
+        product: true,
+        variant: {
+          include: {
+            product: true,
+          },
+        },
+      },
+      take: 10,
+      orderBy: {
+        currentStock: 'asc',
+      },
+    });
+
+    const lowStock = lowStockInventories.map((inv) => {
+      const isVariant = !!inv.variantId;
+      const sku = isVariant ? inv.variant!.sku : inv.product!.sku;
+      const productName = isVariant
+        ? inv.variant!.product.name
+        : inv.product!.name;
+      const variantName = isVariant ? inv.variant!.name : null;
+      return {
+        sku,
+        productName,
+        variantName,
+        currentStock: inv.currentStock,
+      };
+    });
+
+    // 2. Fetch last 5 orders
+    const recentOrdersRaw = await this.prisma.order.findMany({
+      include: {
+        customer: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 5,
+    });
+
+    const recentOrders = recentOrdersRaw.map((o) => ({
+      id: o.id,
+      orderNumber: o.orderNumber,
+      total: Number(o.total),
+      customerName:
+        `${o.customer.firstName || ''} ${o.customer.lastName || ''}`.trim() ||
+        'Guest Customer',
+      createdAt: o.createdAt,
+      status: o.status,
+    }));
+
+    return {
+      lowStock,
+      recentOrders,
+    };
+  }
 }

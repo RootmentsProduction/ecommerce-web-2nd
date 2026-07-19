@@ -14,6 +14,7 @@ export default function AdminSidebar() {
       sectionTitle: "OVERVIEW",
       items: [
         { title: "Dashboard", href: "/admin/dashboard", iconName: "dashboard" },
+        { title: "Homepage Settings", href: "/admin/homepage", iconName: "homepage" },
       ],
     },
     {
@@ -39,6 +40,12 @@ export default function AdminSidebar() {
   const getIcon = (name: string, active: boolean) => {
     const color = active ? "#C99213" : "#9CA3AF";
     switch (name) {
+      case "homepage":
+        return (
+          <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+        );
       case "dashboard":
         return (
           <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">

@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.OrderItemScalarFieldEnum = exports.OrderScalarFieldEnum = exports.CustomerAddressScalarFieldEnum = exports.PurchaseReceiptItemScalarFieldEnum = exports.PurchaseReceiptScalarFieldEnum = exports.PurchaseOrderItemScalarFieldEnum = exports.PurchaseOrderScalarFieldEnum = exports.VendorBankAccountScalarFieldEnum = exports.VendorContactScalarFieldEnum = exports.VendorAddressScalarFieldEnum = exports.VendorScalarFieldEnum = exports.RefreshSessionScalarFieldEnum = exports.EmailOtpScalarFieldEnum = exports.UserScalarFieldEnum = exports.StockTransactionScalarFieldEnum = exports.InventoryScalarFieldEnum = exports.ProductVariantScalarFieldEnum = exports.ProductImageScalarFieldEnum = exports.ProductScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.SystemSettingScalarFieldEnum = exports.OrderItemScalarFieldEnum = exports.OrderScalarFieldEnum = exports.CustomerAddressScalarFieldEnum = exports.PurchaseReceiptItemScalarFieldEnum = exports.PurchaseReceiptScalarFieldEnum = exports.PurchaseOrderItemScalarFieldEnum = exports.PurchaseOrderScalarFieldEnum = exports.VendorBankAccountScalarFieldEnum = exports.VendorContactScalarFieldEnum = exports.VendorAddressScalarFieldEnum = exports.VendorScalarFieldEnum = exports.RefreshSessionScalarFieldEnum = exports.EmailOtpScalarFieldEnum = exports.UserScalarFieldEnum = exports.StockTransactionScalarFieldEnum = exports.InventoryScalarFieldEnum = exports.ProductVariantScalarFieldEnum = exports.ProductImageScalarFieldEnum = exports.ProductScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -64,7 +64,8 @@ exports.ModelName = {
     PurchaseReceiptItem: 'PurchaseReceiptItem',
     CustomerAddress: 'CustomerAddress',
     Order: 'Order',
-    OrderItem: 'OrderItem'
+    OrderItem: 'OrderItem',
+    SystemSetting: 'SystemSetting'
 };
 exports.TransactionIsolationLevel = runtime.makeStrictEnum({
     ReadUncommitted: 'ReadUncommitted',
@@ -341,6 +342,12 @@ exports.OrderItemScalarFieldEnum = {
     variantName: 'variantName',
     quantity: 'quantity',
     price: 'price'
+};
+exports.SystemSettingScalarFieldEnum = {
+    key: 'key',
+    value: 'value',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
 };
 exports.SortOrder = {
     asc: 'asc',

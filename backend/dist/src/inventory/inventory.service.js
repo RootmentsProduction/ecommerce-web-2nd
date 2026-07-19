@@ -13,10 +13,13 @@ exports.InventoryService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
 const client_js_1 = require("../generated/prisma/client.js");
+const email_service_1 = require("../email/email.service");
 let InventoryService = class InventoryService {
     prisma;
-    constructor(prisma) {
+    emailService;
+    constructor(prisma, emailService) {
         this.prisma = prisma;
+        this.emailService = emailService;
     }
     mapTransactionType(type) {
         const t = type.toUpperCase();
@@ -126,11 +129,25 @@ let InventoryService = class InventoryService {
                 },
             });
             let productId = inventory.productId;
+            let productName = '';
+            let variantName = null;
+            let sku = '';
             if (inventory.variantId) {
                 const variant = await tx.productVariant.findUnique({
                     where: { id: inventory.variantId },
+                    include: { product: true },
                 });
                 productId = variant.productId;
+                productName = variant.product.name;
+                variantName = variant.name;
+                sku = variant.sku;
+            }
+            else {
+                const product = await tx.product.findUnique({
+                    where: { id: inventory.productId },
+                });
+                productName = product.name;
+                sku = product.sku;
             }
             const transaction = await tx.stockTransaction.create({
                 data: {
@@ -144,6 +161,14 @@ let InventoryService = class InventoryService {
                     changedBy: adminEmail,
                 },
             });
+            if (afterStock < 5 && afterStock < beforeStock) {
+                try {
+                    await this.emailService.sendLowStockAlert(sku, productName, variantName, afterStock);
+                }
+                catch (err) {
+                    console.error(`Failed to send low stock alert for SKU ${sku}:`, err);
+                }
+            }
             return {
                 inventoryId: inventory.id,
                 beforeStock,
@@ -182,6 +207,7 @@ let InventoryService = class InventoryService {
 exports.InventoryService = InventoryService;
 exports.InventoryService = InventoryService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        email_service_1.EmailService])
 ], InventoryService);
 //# sourceMappingURL=inventory.service.js.map

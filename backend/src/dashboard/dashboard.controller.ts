@@ -15,4 +15,9 @@ export class DashboardController {
   async getStats() {
     return this.dashboardService.getStats();
   }
+
+  @Get('notifications')
+  async getNotifications() {
+    return this.dashboardService.getNotifications();
+  }
 }

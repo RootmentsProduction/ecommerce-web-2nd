@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Product } from '../../types/product';
 import { useCart } from '../../context/CartContext';
 import ProductImageGallery from './ProductImageGallery';
@@ -15,10 +16,12 @@ export default function ProductDetailsClient({
   product,
   relatedProducts,
 }: ProductDetailsClientProps) {
+  const router = useRouter();
   const { addToCart } = useCart();
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(product.stock > 0 ? 1 : 0);
 
   const handleAddToCart = () => {
+    if (product.stock <= 0 || quantity <= 0) return;
     const attributes = [];
     if (product.category === 'Rings') {
       attributes.push({ name: 'Ring Size', value: '7' });
@@ -26,10 +29,11 @@ export default function ProductDetailsClient({
       attributes.push({ name: 'Length', value: '18 inches' });
     }
     addToCart(product, quantity, attributes);
-    alert(`${quantity} x ${product.title} added to your shopping bag!`);
+    router.push('/cart');
   };
 
   const handleBuyNow = () => {
+    if (product.stock <= 0 || quantity <= 0) return;
     const attributes = [];
     if (product.category === 'Rings') {
       attributes.push({ name: 'Ring Size', value: '7' });
@@ -37,7 +41,7 @@ export default function ProductDetailsClient({
       attributes.push({ name: 'Length', value: '18 inches' });
     }
     addToCart(product, quantity, attributes);
-    window.location.href = '/cart';
+    router.push('/cart');
   };
 
   const hasDiscount = product.discount > 0;
@@ -55,7 +59,7 @@ export default function ProductDetailsClient({
           </div>
 
           {/* Right Column: Details (Col 6) */}
-          <div className="lg:col-span-6 flex flex-col justify-between space-y-6 lg:space-y-0 h-full">
+          <div className="lg:col-span-6 flex flex-col justify-start space-y-8">
             
             {/* Top Group */}
             <div className="space-y-6">
@@ -124,39 +128,53 @@ export default function ProductDetailsClient({
               </div>
 
               {/* Controls row: [ - 1 + ] [ BUY IT NOW ] [ ADD TO CART ] */}
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                {/* Quantity selector */}
-                <div className="flex items-center border border-neutral-300 h-12 w-28 justify-between">
+              <div className="space-y-3 pt-2">
+                <div className="flex flex-wrap items-center gap-3">
+                  {/* Quantity selector */}
+                  <div className="flex items-center border border-neutral-300 h-12 w-28 justify-between">
+                    <button
+                      onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                      disabled={product.stock <= 0 || quantity <= 1}
+                      className="w-8 h-full flex items-center justify-center text-neutral-500 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer font-questrial font-bold"
+                    >
+                      -
+                    </button>
+                    <span className="text-sm font-medium text-neutral-800 font-questrial">{quantity}</span>
+                    <button
+                      onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
+                      disabled={product.stock <= 0 || quantity >= product.stock}
+                      className="w-8 h-full flex items-center justify-center text-neutral-500 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer font-questrial font-bold"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* BUY IT NOW */}
                   <button
-                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                    className="w-8 h-full flex items-center justify-center text-neutral-500 hover:text-black cursor-pointer font-questrial"
+                    onClick={handleBuyNow}
+                    disabled={product.stock <= 0}
+                    className="h-12 bg-neutral-900 hover:bg-neutral-850 disabled:bg-neutral-200 disabled:text-neutral-400 text-white font-questrial text-[12px] uppercase tracking-widest px-8 transition-colors flex items-center justify-center cursor-pointer font-medium"
                   >
-                    -
+                    {product.stock > 0 ? "Buy It Now" : "Out of Stock"}
                   </button>
-                  <span className="text-sm font-medium text-neutral-800 font-questrial">{quantity}</span>
-                  <button
-                    onClick={() => setQuantity(q => q + 1)}
-                    className="w-8 h-full flex items-center justify-center text-neutral-500 hover:text-black cursor-pointer font-questrial"
-                  >
-                    +
-                  </button>
+
+                  {/* ADD TO CART */}
+                  {product.stock > 0 && (
+                    <button
+                      onClick={handleAddToCart}
+                      className="h-12 bg-white hover:bg-neutral-50 border border-neutral-300 text-neutral-900 font-questrial text-[12px] uppercase tracking-widest px-8 transition-colors flex items-center justify-center cursor-pointer font-medium"
+                    >
+                      Add To Cart
+                    </button>
+                  )}
                 </div>
 
-                {/* BUY IT NOW */}
-                <button
-                  onClick={handleBuyNow}
-                  className="h-12 bg-neutral-900 hover:bg-neutral-850 text-white font-questrial text-[12px] uppercase tracking-widest px-8 transition-colors flex items-center justify-center cursor-pointer font-medium"
-                >
-                  Buy It Now
-                </button>
-
-                {/* ADD TO CART */}
-                <button
-                  onClick={handleAddToCart}
-                  className="h-12 bg-white hover:bg-neutral-50 border border-neutral-300 text-neutral-900 font-questrial text-[12px] uppercase tracking-widest px-8 transition-colors flex items-center justify-center cursor-pointer font-medium"
-                >
-                  Add To Cart
-                </button>
+                {/* Low stock warning */}
+                {product.stock > 0 && product.stock <= 10 && (
+                  <p className="text-[11px] text-amber-600 font-semibold font-questrial tracking-wide">
+                    ⚠️ Only {product.stock} units left in stock - order soon!
+                  </p>
+                )}
               </div>
             </div>
 
