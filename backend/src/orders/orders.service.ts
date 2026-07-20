@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { StockTransactionType, Prisma } from '../generated/prisma/client.js';
+import { EmailService } from '../email/email.service';
 
 export interface CreateOrderItemDto {
   productId: string;
@@ -30,20 +31,23 @@ export interface CreateOrderDto {
 
 @Injectable()
 export class OrdersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly emailService: EmailService,
+  ) {}
 
   async create(customerId: string, dto: CreateOrderDto) {
     if (!dto.items || dto.items.length === 0) {
       throw new BadRequestException('Order must contain at least one item.');
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    const order = await this.prisma.$transaction(async (tx) => {
       // Generate a unique order number
       const orderCount = await tx.order.count();
       const orderNumber = `ORD-${Date.now()}-${String(orderCount + 1).padStart(4, '0')}`;
 
       // Create order with snapshotted prices, set to PENDING_PAYMENT
-      const order = await tx.order.create({
+      return tx.order.create({
         data: {
           orderNumber,
           customerId,
@@ -73,9 +77,25 @@ export class OrdersService {
           items: true,
         },
       });
-
-      return order;
     });
+
+    // Try sending booking emails out-of-transaction (async/non-blocking)
+    try {
+      const customer = await this.prisma.user.findUnique({
+        where: { id: customerId },
+      });
+      if (customer) {
+        // Send order confirmation to customer
+        await this.emailService.sendOrderConfirmation(order, customer);
+        // Send alert to administrator
+        await this.emailService.sendAdminOrderNotification(order, customer);
+      }
+    } catch (err) {
+      // Log notification error but do not disrupt order completion
+      console.error('Failed to dispatch order notification emails:', err);
+    }
+
+    return order;
   }
 
   async findMyOrders(customerId: string) {
@@ -154,7 +174,9 @@ export class OrdersService {
       return order;
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    const lowStockItems: { sku: string; name: string; variantName: string | null; stock: number }[] = [];
+
+    const updatedOrder = await this.prisma.$transaction(async (tx) => {
       // Feature flag to control whether stock is deducted on confirmation. Set to true so inventory is updated when order confirms.
       const ENABLE_STOCK_DEDUCTION_ON_ORDER_CONFIRMATION = true;
 
@@ -207,6 +229,15 @@ export class OrdersService {
               currentStock: afterStock,
             },
           });
+
+          if (afterStock < 5) {
+            lowStockItems.push({
+              sku: item.sku,
+              name: item.name,
+              variantName: item.variantName || null,
+              stock: afterStock,
+            });
+          }
 
           // Log SALE transaction
           await tx.stockTransaction.create({
@@ -282,5 +313,23 @@ export class OrdersService {
 
       return updatedOrder;
     });
+
+    // Send low-stock alert emails async after transaction commits successfully
+    if (lowStockItems.length > 0) {
+      for (const item of lowStockItems) {
+        try {
+          await this.emailService.sendLowStockAlert(
+            item.sku,
+            item.name,
+            item.variantName,
+            item.stock,
+          );
+        } catch (err) {
+          console.error(`Failed to send low stock alert for SKU ${item.sku}:`, err);
+        }
+      }
+    }
+
+    return updatedOrder;
   }
 }

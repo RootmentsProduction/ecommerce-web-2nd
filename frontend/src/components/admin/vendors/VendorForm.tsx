@@ -329,7 +329,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6">
       
       {/* Primary Contact Header */}
-      <div className="bg-white border border-[#e1e5f5] rounded-3xl p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.01)] space-y-6">
+      <div className="bg-white border border-[#E5E5E5] rounded-3xl p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.01)] space-y-6">
         <h2 className="text-sm font-bold uppercase tracking-wider text-neutral-400">
           Primary Vendor Contact
         </h2>
@@ -349,7 +349,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
               <select
                 value={salutation}
                 onChange={(e) => setSalutation(e.target.value)}
-                className="w-full px-3 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all"
+                className="w-full px-3 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all"
               >
                 <option>Mr.</option>
                 <option>Ms.</option>
@@ -366,7 +366,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                 placeholder="First Name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="w-full px-4 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all text-neutral-800 placeholder-neutral-400"
+                className="w-full px-4 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 placeholder-neutral-400"
               />
             </div>
 
@@ -377,7 +377,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                 placeholder="Last Name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className="w-full px-4 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all text-neutral-800 placeholder-neutral-400"
+                className="w-full px-4 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 placeholder-neutral-400"
               />
             </div>
           </div>
@@ -390,7 +390,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
               placeholder="e.g. Heritage Refiners Ltd."
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className="w-full px-4 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all text-neutral-800 placeholder-neutral-400"
+              className="w-full px-4 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 placeholder-neutral-400"
             />
           </div>
         </div>
@@ -405,7 +405,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="Select or enter display name"
-                className={`w-full px-4 py-2 bg-[#f5f7fb] border ${errors.displayName ? "border-red-400" : "border-[#d7dcf5]"} rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all text-neutral-800`}
+                className={`w-full px-4 py-2 bg-[#FAF9F6] border ${errors.displayName ? "border-red-400" : "border-[#E5E5E5]"} rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800`}
               />
               {getDisplayNameOptions().length > 0 && (
                 <div className="mt-1.5 flex flex-wrap gap-1">
@@ -416,8 +416,8 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       onClick={() => setDisplayName(opt)}
                       className={`text-[9px] px-2 py-0.5 rounded-full border transition-all cursor-pointer ${
                         displayName === opt
-                          ? "bg-[#3762f9] text-white border-[#3762f9]"
-                          : "bg-white text-neutral-500 border-[#d7dcf5] hover:bg-neutral-50"
+                          ? "bg-[#C99213] text-white border-[#C99213]"
+                          : "bg-white text-neutral-500 border-[#E5E5E5] hover:bg-neutral-50"
                       }`}
                     >
                       {opt}
@@ -436,7 +436,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
               placeholder="name@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all text-neutral-800 placeholder-neutral-400"
+              className="w-full px-4 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 placeholder-neutral-400"
             />
           </div>
 
@@ -449,7 +449,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                 placeholder="Landline"
                 value={workPhone}
                 onChange={(e) => setWorkPhone(e.target.value)}
-                className="w-full px-4 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all text-neutral-800 placeholder-neutral-400"
+                className="w-full px-4 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 placeholder-neutral-400"
               />
             </div>
             <div>
@@ -459,7 +459,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                 placeholder="Cell Phone"
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value)}
-                className="w-full px-4 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all text-neutral-800 placeholder-neutral-400"
+                className="w-full px-4 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 placeholder-neutral-400"
               />
             </div>
           </div>
@@ -472,7 +472,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="w-full px-3 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all"
+              className="w-full px-3 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all"
             >
               <option>English</option>
               <option>Hindi</option>
@@ -486,9 +486,9 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
       </div>
 
       {/* Tabbed Navigation System */}
-      <div className="bg-white border border-[#e1e5f5] rounded-3xl overflow-hidden shadow-[0_30px_90px_-40px_rgba(15,23,42,0.15)] flex flex-col">
+      <div className="bg-white border border-[#E5E5E5] rounded-3xl overflow-hidden shadow-[0_30px_90px_-40px_rgba(15,23,42,0.15)] flex flex-col">
         {/* Tab Headers */}
-        <div className="flex border-b border-[#e1e5f5] bg-[#f5f6ff] overflow-x-auto no-scrollbar">
+        <div className="flex border-b border-[#E5E5E5] bg-[#faf8f2] overflow-x-auto no-scrollbar">
           {tabs.map((tab) => (
             <button
               key={tab}
@@ -496,7 +496,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
               onClick={() => setActiveTab(tab)}
               className={`px-6 py-4 text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
                 activeTab === tab
-                  ? "border-b-2 border-[#3762f9] text-[#3762f9] bg-white font-bold"
+                  ? "border-b-2 border-[#C99213] text-[#C99213] bg-white font-bold"
                   : "text-neutral-500 hover:text-neutral-800"
               }`}
             >
@@ -524,7 +524,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       <button
                         type="button"
                         onClick={toggle}
-                        className="w-full flex items-center justify-between px-3 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all text-neutral-800 text-left cursor-pointer"
+                        className="w-full flex items-center justify-between px-3 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 text-left cursor-pointer"
                       >
                         <span>{gstTreatment}</span>
                         <ChevronDown className="w-4 h-4 text-neutral-400" />
@@ -541,7 +541,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                               close();
                             }}
                             className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                              gstTreatment === gst.value ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                              gstTreatment === gst.value ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                             }`}
                           >
                             {gst.value}
@@ -564,7 +564,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       <button
                         type="button"
                         onClick={toggle}
-                        className="w-full flex items-center justify-between px-3 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all text-neutral-800 text-left cursor-pointer"
+                        className="w-full flex items-center justify-between px-3 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 text-left cursor-pointer"
                       >
                         <span>{sourceOfSupply}</span>
                         <ChevronDown className="w-4 h-4 text-neutral-400" />
@@ -581,7 +581,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                               close();
                             }}
                             className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                              sourceOfSupply === st ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                              sourceOfSupply === st ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                             }`}
                           >
                             {st}
@@ -603,7 +603,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                     placeholder="e.g. 29AAAAA1111A1Z1"
                     value={gstin}
                     onChange={handleGstinChange}
-                    className="w-full px-4 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all uppercase placeholder-neutral-400"
+                    className="w-full px-4 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all uppercase placeholder-neutral-400"
                   />
                   <p className="text-[9px] text-neutral-450 mt-1 leading-normal">
                     Enter 15-character GSTIN. PAN will be extracted automatically.
@@ -619,7 +619,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                     placeholder="Auto-populated from GSTIN"
                     value={pan}
                     onChange={(e) => setPan(e.target.value.toUpperCase())}
-                    className="w-full px-4 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all uppercase placeholder-neutral-400"
+                    className="w-full px-4 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all uppercase placeholder-neutral-400"
                   />
                 </div>
 
@@ -632,7 +632,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       <button
                         type="button"
                         onClick={toggle}
-                        className="w-full flex items-center justify-between px-3 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all text-neutral-800 text-left cursor-pointer"
+                        className="w-full flex items-center justify-between px-3 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 text-left cursor-pointer"
                       >
                         <span>{currency}</span>
                         <ChevronDown className="w-4 h-4 text-neutral-400" />
@@ -649,7 +649,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                               close();
                             }}
                             className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                              currency === curr ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                              currency === curr ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                             }`}
                           >
                             {curr}
@@ -671,7 +671,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       <button
                         type="button"
                         onClick={toggle}
-                        className="w-full flex items-center justify-between px-3 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all text-neutral-800 text-left cursor-pointer"
+                        className="w-full flex items-center justify-between px-3 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 text-left cursor-pointer"
                       >
                         <span>{paymentTerms}</span>
                         <ChevronDown className="w-4 h-4 text-neutral-400" />
@@ -688,7 +688,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                               close();
                             }}
                             className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                              paymentTerms === term ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                              paymentTerms === term ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                             }`}
                           >
                             {term}
@@ -708,7 +708,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       <button
                         type="button"
                         onClick={toggle}
-                        className="w-full flex items-center justify-between px-3 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#4285f4] transition-all text-neutral-800 text-left cursor-pointer"
+                        className="w-full flex items-center justify-between px-3 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 text-left cursor-pointer"
                       >
                         <span>{tdsRate}</span>
                         <ChevronDown className="w-4 h-4 text-neutral-400" />
@@ -731,7 +731,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                               close();
                             }}
                             className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                              tdsRate === rate ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                              tdsRate === rate ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                             }`}
                           >
                             {rate}
@@ -751,7 +751,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
               
               {/* Billing Address */}
               <div className="space-y-4 pr-0 lg:pr-8">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-[#3762f9] mb-4">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[#C99213] mb-4">
                   Billing Address
                 </h3>
                 
@@ -763,7 +763,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       placeholder="e.g. Accounts Dept"
                       value={billingAddress.attention}
                       onChange={(e) => setBillingAddress({ ...billingAddress, attention: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4]"
+                      className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213]"
                     />
                   </div>
                   
@@ -773,7 +773,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       type="text"
                       value={billingAddress.countryRegion}
                       onChange={(e) => setBillingAddress({ ...billingAddress, countryRegion: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4]"
+                      className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213]"
                     />
                   </div>
 
@@ -784,7 +784,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       placeholder="Line 1"
                       value={billingAddress.street1}
                       onChange={(e) => setBillingAddress({ ...billingAddress, street1: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4]"
+                      className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213]"
                     />
                   </div>
 
@@ -795,7 +795,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       placeholder="Line 2"
                       value={billingAddress.street2}
                       onChange={(e) => setBillingAddress({ ...billingAddress, street2: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4]"
+                      className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213]"
                     />
                   </div>
 
@@ -806,7 +806,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       placeholder="City"
                       value={billingAddress.city}
                       onChange={(e) => setBillingAddress({ ...billingAddress, city: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4]"
+                      className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213]"
                     />
                   </div>
 
@@ -818,7 +818,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                         <button
                           type="button"
                           onClick={toggle}
-                          className="w-full flex items-center justify-between px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4] text-neutral-800 text-left cursor-pointer"
+                          className="w-full flex items-center justify-between px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213] text-neutral-800 text-left cursor-pointer"
                         >
                           <span>{billingAddress.state || "Select State"}</span>
                           <ChevronDown className="w-3.5 h-3.5 text-neutral-400" />
@@ -835,7 +835,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                                 close();
                               }}
                               className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                                billingAddress.state === s ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                                billingAddress.state === s ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                               }`}
                             >
                               {s}
@@ -853,7 +853,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       placeholder="Pin Code"
                       value={billingAddress.zipCode}
                       onChange={(e) => setBillingAddress({ ...billingAddress, zipCode: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4]"
+                      className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213]"
                     />
                   </div>
 
@@ -864,7 +864,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       placeholder="Phone"
                       value={billingAddress.phone}
                       onChange={(e) => setBillingAddress({ ...billingAddress, phone: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4]"
+                      className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213]"
                     />
                   </div>
                 </div>
@@ -873,7 +873,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
               {/* Shipping Address */}
               <div className="space-y-4 pt-6 lg:pt-0 pl-0 lg:pl-8">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#3762f9]">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#C99213]">
                     Shipping Address
                   </h3>
                   <button
@@ -893,7 +893,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       placeholder="e.g. Receiving Bay"
                       value={shippingAddress.attention}
                       onChange={(e) => setShippingAddress({ ...shippingAddress, attention: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4]"
+                      className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213]"
                     />
                   </div>
                   
@@ -903,7 +903,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       type="text"
                       value={shippingAddress.countryRegion}
                       onChange={(e) => setShippingAddress({ ...shippingAddress, countryRegion: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4]"
+                      className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213]"
                     />
                   </div>
 
@@ -914,7 +914,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       placeholder="Line 1"
                       value={shippingAddress.street1}
                       onChange={(e) => setShippingAddress({ ...shippingAddress, street1: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4]"
+                      className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213]"
                     />
                   </div>
 
@@ -925,7 +925,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       placeholder="Line 2"
                       value={shippingAddress.street2}
                       onChange={(e) => setShippingAddress({ ...shippingAddress, street2: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4]"
+                      className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213]"
                     />
                   </div>
 
@@ -936,7 +936,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       placeholder="City"
                       value={shippingAddress.city}
                       onChange={(e) => setShippingAddress({ ...shippingAddress, city: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4]"
+                      className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213]"
                     />
                   </div>
 
@@ -948,7 +948,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                         <button
                           type="button"
                           onClick={toggle}
-                          className="w-full flex items-center justify-between px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4] text-neutral-800 text-left cursor-pointer"
+                          className="w-full flex items-center justify-between px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213] text-neutral-800 text-left cursor-pointer"
                         >
                           <span>{shippingAddress.state || "Select State"}</span>
                           <ChevronDown className="w-3.5 h-3.5 text-neutral-400" />
@@ -965,7 +965,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                                 close();
                               }}
                               className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                                shippingAddress.state === s ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                                shippingAddress.state === s ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                               }`}
                             >
                               {s}
@@ -983,7 +983,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       placeholder="Pin Code"
                       value={shippingAddress.zipCode}
                       onChange={(e) => setShippingAddress({ ...shippingAddress, zipCode: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4]"
+                      className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213]"
                     />
                   </div>
 
@@ -994,7 +994,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                       placeholder="Phone"
                       value={shippingAddress.phone}
                       onChange={(e) => setShippingAddress({ ...shippingAddress, phone: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none focus:border-[#4285f4]"
+                      className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none focus:border-[#C99213]"
                     />
                   </div>
                 </div>
@@ -1010,7 +1010,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                 <button
                   type="button"
                   onClick={addContactPerson}
-                  className="flex items-center space-x-1.5 px-4 py-2 bg-[#3762f9]/10 text-[#3762f9] hover:bg-[#3762f9]/20 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
+                  className="flex items-center space-x-1.5 px-4 py-2 bg-[#C99213]/10 text-[#C99213] hover:bg-[#C99213]/20 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add Contact Person</span>
@@ -1022,14 +1022,14 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                   {contactPersons.map((contact, idx) => (
                     <div
                       key={idx}
-                      className="p-4 border border-[#e1e5f5] rounded-2xl bg-[#fafbff] relative flex flex-col md:flex-row md:items-center gap-4 pr-12"
+                      className="p-4 border border-[#E5E5E5] rounded-2xl bg-[#fafbff] relative flex flex-col md:flex-row md:items-center gap-4 pr-12"
                     >
                       <div className="w-24">
                         <label className="block text-[9px] font-bold text-neutral-450 uppercase mb-1">Salutation</label>
                         <select
                           value={contact.salutation}
                           onChange={(e) => handleContactPersonChange(idx, "salutation", e.target.value)}
-                          className="w-full px-2 py-1.5 bg-white border border-[#d7dcf5] rounded-lg text-xs outline-none"
+                          className="w-full px-2 py-1.5 bg-white border border-[#E5E5E5] rounded-lg text-xs outline-none"
                         >
                           <option>Mr.</option>
                           <option>Ms.</option>
@@ -1043,7 +1043,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                           type="text"
                           value={contact.firstName}
                           onChange={(e) => handleContactPersonChange(idx, "firstName", e.target.value)}
-                          className="w-full px-3 py-1.5 bg-white border border-[#d7dcf5] rounded-lg text-xs outline-none"
+                          className="w-full px-3 py-1.5 bg-white border border-[#E5E5E5] rounded-lg text-xs outline-none"
                           required
                         />
                       </div>
@@ -1054,7 +1054,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                           type="text"
                           value={contact.lastName}
                           onChange={(e) => handleContactPersonChange(idx, "lastName", e.target.value)}
-                          className="w-full px-3 py-1.5 bg-white border border-[#d7dcf5] rounded-lg text-xs outline-none"
+                          className="w-full px-3 py-1.5 bg-white border border-[#E5E5E5] rounded-lg text-xs outline-none"
                         />
                       </div>
 
@@ -1064,7 +1064,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                           type="email"
                           value={contact.email}
                           onChange={(e) => handleContactPersonChange(idx, "email", e.target.value)}
-                          className="w-full px-3 py-1.5 bg-white border border-[#d7dcf5] rounded-lg text-xs outline-none"
+                          className="w-full px-3 py-1.5 bg-white border border-[#E5E5E5] rounded-lg text-xs outline-none"
                           required
                         />
                       </div>
@@ -1075,7 +1075,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                           type="text"
                           value={contact.workPhone}
                           onChange={(e) => handleContactPersonChange(idx, "workPhone", e.target.value)}
-                          className="w-full px-3 py-1.5 bg-white border border-[#d7dcf5] rounded-lg text-xs outline-none"
+                          className="w-full px-3 py-1.5 bg-white border border-[#E5E5E5] rounded-lg text-xs outline-none"
                         />
                       </div>
 
@@ -1085,7 +1085,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                           type="text"
                           value={contact.mobile}
                           onChange={(e) => handleContactPersonChange(idx, "mobile", e.target.value)}
-                          className="w-full px-3 py-1.5 bg-white border border-[#d7dcf5] rounded-lg text-xs outline-none"
+                          className="w-full px-3 py-1.5 bg-white border border-[#E5E5E5] rounded-lg text-xs outline-none"
                         />
                       </div>
 
@@ -1100,7 +1100,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                   ))}
                 </div>
               ) : (
-                <div className="py-12 border-2 border-dashed border-[#e1e5f5] rounded-2xl text-center text-xs text-neutral-400">
+                <div className="py-12 border-2 border-dashed border-[#E5E5E5] rounded-2xl text-center text-xs text-neutral-400">
                   No contact persons added yet. Click &quot;+ Add Contact Person&quot; to add.
                 </div>
               )}
@@ -1115,7 +1115,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                 <button
                   type="button"
                   onClick={addBankAccount}
-                  className="flex items-center space-x-1.5 px-4 py-2 bg-[#3762f9]/10 text-[#3762f9] hover:bg-[#3762f9]/20 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
+                  className="flex items-center space-x-1.5 px-4 py-2 bg-[#C99213]/10 text-[#C99213] hover:bg-[#C99213]/20 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add Bank Account</span>
@@ -1127,7 +1127,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                   {bankAccounts.map((acct, idx) => (
                     <div
                       key={idx}
-                      className="p-5 border border-[#e1e5f5] rounded-2xl bg-[#fafbff] relative space-y-4"
+                      className="p-5 border border-[#E5E5E5] rounded-2xl bg-[#fafbff] relative space-y-4"
                     >
                       <div className="absolute right-4 top-4">
                         <button
@@ -1150,7 +1150,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                             type="text"
                             value={acct.accountHolderName}
                             onChange={(e) => handleBankAccountChange(idx, "accountHolderName", e.target.value)}
-                            className="w-full px-3 py-1.5 bg-white border border-[#d7dcf5] rounded-lg text-xs outline-none"
+                            className="w-full px-3 py-1.5 bg-white border border-[#E5E5E5] rounded-lg text-xs outline-none"
                             required
                           />
                         </div>
@@ -1162,7 +1162,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                             placeholder="e.g. HDFC Bank"
                             value={acct.bankName}
                             onChange={(e) => handleBankAccountChange(idx, "bankName", e.target.value)}
-                            className="w-full px-3 py-1.5 bg-white border border-[#d7dcf5] rounded-lg text-xs outline-none"
+                            className="w-full px-3 py-1.5 bg-white border border-[#E5E5E5] rounded-lg text-xs outline-none"
                             required
                           />
                         </div>
@@ -1174,7 +1174,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                             placeholder="11-character code"
                             value={acct.ifscCode}
                             onChange={(e) => handleBankAccountChange(idx, "ifscCode", e.target.value.toUpperCase())}
-                            className="w-full px-3 py-1.5 bg-white border border-[#d7dcf5] rounded-lg text-xs outline-none uppercase"
+                            className="w-full px-3 py-1.5 bg-white border border-[#E5E5E5] rounded-lg text-xs outline-none uppercase"
                             required
                           />
                         </div>
@@ -1187,7 +1187,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                             type="password"
                             value={acct.accountNumber}
                             onChange={(e) => handleBankAccountChange(idx, "accountNumber", e.target.value)}
-                            className="w-full px-3 py-1.5 bg-white border border-[#d7dcf5] rounded-lg text-xs outline-none"
+                            className="w-full px-3 py-1.5 bg-white border border-[#E5E5E5] rounded-lg text-xs outline-none"
                             required
                           />
                         </div>
@@ -1201,7 +1201,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                             className={`w-full px-3 py-1.5 bg-white border ${
                               errors[`bank_${idx}`] || (acct.reAccountNumber && acct.accountNumber !== acct.reAccountNumber)
                                 ? "border-red-400"
-                                : "border-[#d7dcf5]"
+                                : "border-[#E5E5E5]"
                             } rounded-lg text-xs outline-none`}
                             required
                           />
@@ -1216,7 +1216,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                   ))}
                 </div>
               ) : (
-                <div className="py-12 border-2 border-dashed border-[#e1e5f5] rounded-2xl text-center text-xs text-neutral-400">
+                <div className="py-12 border-2 border-dashed border-[#E5E5E5] rounded-2xl text-center text-xs text-neutral-400">
                   No bank accounts registered yet. Click &quot;+ Add Bank Account&quot; to add.
                 </div>
               )}
@@ -1233,7 +1233,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                   placeholder="Keep internal notes regarding prices, service or supply lead times here..."
                   value={remarks}
                   onChange={(e) => setRemarks(e.target.value)}
-                  className="w-full px-4 py-3 bg-[#f5f7fb] border border-[#d7dcf5] rounded-2xl text-xs outline-none focus:border-[#4285f4] transition-all text-neutral-800"
+                  className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E5E5E5] rounded-2xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800"
                 />
               </div>
 
@@ -1250,7 +1250,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
                     />
                     <button
                       type="button"
-                      className="px-4 py-2 border border-[#e1e5f5] rounded-xl bg-white text-neutral-700 hover:bg-neutral-50 text-xs font-semibold cursor-pointer"
+                      className="px-4 py-2 border border-[#E5E5E5] rounded-xl bg-white text-neutral-700 hover:bg-neutral-50 text-xs font-semibold cursor-pointer"
                     >
                       Choose Files
                     </button>
@@ -1299,11 +1299,11 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
           <span>{errors.submit}</span>
         </div>
       )}
-      <div className="flex items-center gap-3 justify-end pt-4 border-t border-[#e1e5f5]">
+      <div className="flex items-center gap-3 justify-end pt-4 border-t border-[#E5E5E5]">
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-6 py-2.5 border border-[#e1e5f5] rounded-full bg-white text-neutral-700 hover:bg-neutral-55 text-xs font-semibold tracking-wide transition-colors cursor-pointer"
+          className="px-6 py-2.5 border border-[#E5E5E5] rounded-full bg-white text-neutral-700 hover:bg-neutral-55 text-xs font-semibold tracking-wide transition-colors cursor-pointer"
         >
           Cancel
         </button>
@@ -1311,7 +1311,7 @@ export default function VendorForm({ initialVendorId }: VendorFormProps) {
         <button
           type="submit"
           disabled={isSubmitting || uploadingDoc}
-          className="flex items-center space-x-2 px-8 py-3 bg-[#3762f9] hover:bg-[#2748c9] disabled:opacity-60 disabled:cursor-not-allowed text-white rounded-full text-xs font-bold tracking-wide transition-all shadow-[0_4px_12px_rgba(55,98,249,0.2)] cursor-pointer"
+          className="flex items-center space-x-2 px-8 py-3 bg-[#C99213] hover:bg-[#a9831e] disabled:opacity-60 disabled:cursor-not-allowed text-white rounded-full text-xs font-bold tracking-wide transition-all shadow-[0_4px_12px_rgba(201,146,19,0.25)] cursor-pointer"
         >
           {isSubmitting ? (
             <>

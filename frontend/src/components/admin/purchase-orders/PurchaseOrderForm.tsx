@@ -436,7 +436,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
       <form onSubmit={handleSubmit} className="space-y-6">
         
         {/* PO Basic Information Block */}
-        <div className="bg-white border border-[#e1e5f5] rounded-3xl p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.01)] space-y-6">
+        <div className="bg-white border border-[#E5E5E5] rounded-3xl p-6 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.01)] space-y-6">
           <h2 className="text-sm font-bold uppercase tracking-wider text-neutral-400">
             Purchase Order Information
           </h2>
@@ -459,7 +459,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                       <button
                         type="button"
                         onClick={toggle}
-                        className="w-full flex items-center justify-between px-3 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#3762f9] transition-all text-neutral-800 text-left cursor-pointer"
+                        className="w-full flex items-center justify-between px-3 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 text-left cursor-pointer"
                       >
                         <span>
                           {selectedVendor
@@ -490,7 +490,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                               close();
                             }}
                             className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                              selectedVendorId === v.id ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                              selectedVendorId === v.id ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                             }`}
                           >
                             {v.displayName} [{v.gstTreatment}]
@@ -503,7 +503,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                 <button
                   type="button"
                   onClick={() => setIsVendorModalOpen(true)}
-                  className="px-4 py-2 border border-[#d7dcf5] hover:border-[#3762f9] rounded-xl bg-white hover:bg-neutral-50 text-neutral-700 text-xs font-semibold tracking-wide transition-all cursor-pointer whitespace-nowrap"
+                  className="px-4 py-2 border border-[#E5E5E5] hover:border-[#C99213] rounded-xl bg-white hover:bg-neutral-50 text-neutral-700 text-xs font-semibold tracking-wide transition-all cursor-pointer whitespace-nowrap"
                 >
                   + New Vendor
                 </button>
@@ -525,7 +525,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                   <button
                     type="button"
                     onClick={toggle}
-                    className="w-full flex items-center justify-between px-3 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#3762f9] transition-all text-neutral-800 text-left cursor-pointer"
+                    className="w-full flex items-center justify-between px-3 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 text-left cursor-pointer"
                   >
                     <span>{selectedWarehouse.name} [{selectedWarehouse.state}]</span>
                     <ChevronDown className="w-4 h-4 text-neutral-400" />
@@ -542,7 +542,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                           close();
                         }}
                         className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                          selectedWarehouseIdx === idx ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                          selectedWarehouseIdx === idx ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                         }`}
                       >
                         {w.name} [{w.state}]
@@ -565,7 +565,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                 type="text"
                 value={poNumber}
                 onChange={(e) => setPoNumber(e.target.value)}
-                className="w-full px-4 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#3762f9] transition-all text-neutral-800 font-mono font-bold"
+                className="w-full px-4 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 font-mono font-bold"
                 required
               />
             </div>
@@ -578,7 +578,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                 placeholder="e.g. REF-1234"
                 value={referenceNumber}
                 onChange={(e) => setReferenceNumber(e.target.value)}
-                className="w-full px-4 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#3762f9] transition-all text-neutral-800"
+                className="w-full px-4 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800"
               />
             </div>
 
@@ -589,7 +589,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full px-3 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#3762f9] transition-all text-neutral-800"
+                className="w-full px-3 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800"
                 required
               />
             </div>
@@ -601,7 +601,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                 type="date"
                 value={deliveryDate}
                 onChange={(e) => setDeliveryDate(e.target.value)}
-                className="w-full px-3 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#3762f9] transition-all text-neutral-800"
+                className="w-full px-3 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800"
               />
             </div>
           </div>
@@ -616,7 +616,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                   <button
                     type="button"
                     onClick={toggle}
-                    className="w-full flex items-center justify-between px-3 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#3762f9] transition-all text-neutral-800 text-left cursor-pointer"
+                    className="w-full flex items-center justify-between px-3 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800 text-left cursor-pointer"
                   >
                     <span>{paymentTerms}</span>
                     <ChevronDown className="w-4 h-4 text-neutral-400" />
@@ -633,7 +633,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                           close();
                         }}
                         className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                          paymentTerms === term ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                          paymentTerms === term ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                         }`}
                       >
                         {term}
@@ -652,16 +652,16 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                 placeholder="e.g. Insured Air Cargo, Vault Delivery"
                 value={shipmentPreference}
                 onChange={(e) => setShipmentPreference(e.target.value)}
-                className="w-full px-4 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#3762f9] transition-all text-neutral-800"
+                className="w-full px-4 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800"
               />
             </div>
           </div>
         </div>
 
         {/* Dynamic Line Items Table Block */}
-        <div className="bg-white border border-[#e1e5f5] rounded-3xl overflow-hidden shadow-[0_30px_90px_-40px_rgba(15,23,42,0.15)] flex flex-col">
+        <div className="bg-white border border-[#E5E5E5] rounded-3xl overflow-hidden shadow-[0_30px_90px_-40px_rgba(15,23,42,0.15)] flex flex-col">
           
-          <div className="p-5 border-b border-[#e1e5f5] bg-[#f5f6ff] flex justify-between items-center">
+          <div className="p-5 border-b border-[#E5E5E5] bg-[#faf8f2] flex justify-between items-center">
             <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-700">Line Items</h3>
             {errors.items && <span className="text-xs text-red-650 font-semibold">{errors.items}</span>}
           </div>
@@ -669,7 +669,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-[#e1e5f5] text-[10px] font-bold uppercase tracking-wider text-neutral-450 bg-neutral-50/50">
+                <tr className="border-b border-[#E5E5E5] text-[10px] font-bold uppercase tracking-wider text-neutral-450 bg-neutral-50/50">
                   <th className="py-3 px-4 w-12 text-center">#</th>
                   <th className="py-3 px-4">Item details</th>
                   <th className="py-3 px-4 w-28">Size</th>
@@ -680,7 +680,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                   <th className="py-3 px-4 w-12"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#e1e5f5]">
+              <tbody className="divide-y divide-[#E5E5E5]">
                 {items.map((item, idx) => (
                   <tr key={idx} className="hover:bg-neutral-50/30">
                     {/* Index */}
@@ -696,7 +696,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                           <button
                             type="button"
                             onClick={toggle}
-                            className="w-full flex items-center justify-between px-2.5 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#3762f9] text-neutral-800 text-left cursor-pointer"
+                            className="w-full flex items-center justify-between px-2.5 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] text-neutral-800 text-left cursor-pointer"
                           >
                             <span className="truncate">
                               {item.sku
@@ -727,7 +727,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                                   close();
                                 }}
                                 className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                                  item.sku === p.sku ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                                  item.sku === p.sku ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                                 }`}
                               >
                                 <div className="font-semibold truncate text-left">{p.name}</div>
@@ -753,7 +753,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                         value={item.size}
                         onChange={(e) => handleRowSizeChange(idx, e.target.value)}
                         placeholder="Size"
-                        className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none text-center"
+                        className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none text-center"
                       />
                     </td>
 
@@ -765,7 +765,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                         step={0.01}
                         value={item.quantity}
                         onChange={(e) => handleRowQtyChange(idx, Number(e.target.value))}
-                        className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none text-right font-medium"
+                        className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none text-right font-medium"
                         required
                       />
                     </td>
@@ -778,7 +778,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                         step={0.01}
                         value={item.rate}
                         onChange={(e) => handleRowRateChange(idx, Number(e.target.value))}
-                        className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none text-right font-medium"
+                        className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none text-right font-medium"
                         required
                       />
                     </td>
@@ -791,7 +791,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                           <button
                             type="button"
                             onClick={toggle}
-                            className="w-full flex items-center justify-between px-2 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#3762f9] text-neutral-800 text-left cursor-pointer"
+                            className="w-full flex items-center justify-between px-2 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] text-neutral-800 text-left cursor-pointer"
                           >
                             <span>{TAX_RATES.find((t) => t.value === item.taxRate)?.label || `${item.taxRate}%`}</span>
                             <ChevronDown className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0 ml-1" />
@@ -808,7 +808,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                                   close();
                                 }}
                                 className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                                  item.taxRate === t.value ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                                  item.taxRate === t.value ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                                 }`}
                               >
                                 {t.label}
@@ -844,11 +844,11 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
             </table>
           </div>
 
-          <div className="p-4 bg-neutral-50/50 border-t border-[#e1e5f5]">
+          <div className="p-4 bg-neutral-50/50 border-t border-[#E5E5E5]">
             <button
               type="button"
               onClick={addRow}
-              className="flex items-center space-x-1.5 px-4 py-2 bg-[#3762f9]/10 text-[#3762f9] hover:bg-[#3762f9]/20 rounded-xl text-xs font-semibold cursor-pointer transition-colors"
+              className="flex items-center space-x-1.5 px-4 py-2 bg-[#C99213]/10 text-[#C99213] hover:bg-[#C99213]/20 rounded-xl text-xs font-semibold cursor-pointer transition-colors"
             >
               <Plus className="w-4 h-4" />
               <span>Add Row</span>
@@ -861,14 +861,14 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
           
           {/* Notes and Terms area */}
-          <div className="bg-white border border-[#e1e5f5] rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.01)] space-y-5">
+          <div className="bg-white border border-[#E5E5E5] rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.01)] space-y-5">
             <div>
               <label className="block text-[11px] font-semibold text-neutral-500 uppercase tracking-wider mb-2">Customer Notes</label>
               <textarea
                 rows={3}
                 value={customerNotes}
                 onChange={(e) => setCustomerNotes(e.target.value)}
-                className="w-full px-4 py-3 bg-[#f5f7fb] border border-[#d7dcf5] rounded-2xl text-xs outline-none text-neutral-800"
+                className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E5E5E5] rounded-2xl text-xs outline-none text-neutral-800"
               />
             </div>
             
@@ -878,7 +878,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                 rows={3}
                 value={termsAndConditions}
                 onChange={(e) => setTermsAndConditions(e.target.value)}
-                className="w-full px-4 py-3 bg-[#f5f7fb] border border-[#d7dcf5] rounded-2xl text-xs outline-none text-neutral-800"
+                className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E5E5E5] rounded-2xl text-xs outline-none text-neutral-800"
               />
             </div>
 
@@ -896,7 +896,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                   />
                   <button
                     type="button"
-                    className="px-4 py-2 border border-[#e1e5f5] rounded-xl bg-white text-neutral-700 text-xs font-semibold cursor-pointer"
+                    className="px-4 py-2 border border-[#E5E5E5] rounded-xl bg-white text-neutral-700 text-xs font-semibold cursor-pointer"
                   >
                     Choose Files
                   </button>
@@ -926,7 +926,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
           </div>
 
           {/* Core computations panel */}
-          <div className="bg-white border border-[#e1e5f5] rounded-3xl p-6 md:p-8 shadow-[0_30px_90px_-40px_rgba(15,23,42,0.15)] space-y-4">
+          <div className="bg-white border border-[#E5E5E5] rounded-3xl p-6 md:p-8 shadow-[0_30px_90px_-40px_rgba(15,23,42,0.15)] space-y-4">
             
             {/* 1. Subtotal */}
             <div className="flex justify-between items-center text-xs font-medium pb-2 border-b border-neutral-100">
@@ -944,14 +944,14 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                   <select
                     value={discountType}
                     onChange={(e) => setDiscountType(e.target.value as "line" | "transaction")}
-                    className="px-2 py-1 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-[10px] outline-none font-bold"
+                    className="px-2 py-1 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-[10px] outline-none font-bold"
                   >
                     <option value="line">Line Level</option>
                     <option value="transaction">Transaction Level</option>
                   </select>
                   
                   {discountType === "transaction" && (
-                    <div className="flex border border-[#d7dcf5] rounded-lg overflow-hidden bg-[#f5f7fb] text-[10px] font-bold">
+                    <div className="flex border border-[#E5E5E5] rounded-lg overflow-hidden bg-[#FAF9F6] text-[10px] font-bold">
                       <button
                         type="button"
                         onClick={() => setDiscountUnit("%")}
@@ -979,7 +979,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                     placeholder="Enter discount value"
                     value={discountValue}
                     onChange={(e) => setDiscountValue(Number(e.target.value))}
-                    className="w-28 px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none text-right font-medium"
+                    className="w-28 px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none text-right font-medium"
                   />
                   <div className="text-xs text-neutral-500 font-semibold flex items-center gap-2">
                     <span>Amount:</span>
@@ -1010,7 +1010,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
             <div className="py-2 border-b border-neutral-100 space-y-2">
               <div className="flex justify-between items-center text-xs font-semibold text-neutral-455">
                 <span>Tax Category Breakdowns</span>
-                <span className="text-[10px] bg-[#f5f6ff] text-[#3762f9] px-2 py-0.5 rounded uppercase tracking-wider font-bold">
+                <span className="text-[10px] bg-[#faf8f2] text-[#C99213] px-2 py-0.5 rounded uppercase tracking-wider font-bold">
                   {taxSplitType}
                 </span>
               </div>
@@ -1064,7 +1064,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                             }
                           }
                         }}
-                        className="text-[#3762f9] focus:ring-[#3762f9]"
+                        className="text-[#C99213] focus:ring-[#C99213]"
                       />
                       <span className="text-xs text-neutral-700">{type}</span>
                     </label>
@@ -1080,7 +1080,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                       <button
                         type="button"
                         onClick={toggle}
-                        className="flex items-center justify-between px-2.5 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none text-neutral-800 text-left cursor-pointer min-w-[180px]"
+                        className="flex items-center justify-between px-2.5 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none text-neutral-800 text-left cursor-pointer min-w-[180px]"
                       >
                         <span>{tdsTcsName}</span>
                         <ChevronDown className="w-3.5 h-3.5 text-neutral-400 ml-2" />
@@ -1098,7 +1098,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                               close();
                             }}
                             className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                              tdsTcsName === opt.label ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                              tdsTcsName === opt.label ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                             }`}
                           >
                             {opt.label}
@@ -1125,14 +1125,14 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
                 type="number"
                 value={adjustment}
                 onChange={(e) => setAdjustment(Number(e.target.value))}
-                className="w-24 px-3 py-1 bg-[#f5f7fb] border border-[#d7dcf5] rounded-lg text-xs outline-none text-right font-medium"
+                className="w-24 px-3 py-1 bg-[#FAF9F6] border border-[#E5E5E5] rounded-lg text-xs outline-none text-right font-medium"
               />
             </div>
 
             {/* 6. Grand Total */}
             <div className="flex justify-between items-center pt-4">
               <span className="text-sm font-bold text-neutral-900 uppercase tracking-wide">Final Total (INR)</span>
-              <span className="text-lg font-bold text-[#3762f9]">
+              <span className="text-lg font-bold text-[#C99213]">
                 ₹{finalTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
               </span>
             </div>
@@ -1142,18 +1142,18 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
         </div>
 
         {/* Footer actions */}
-        <div className="flex items-center gap-3 justify-end pt-4 border-t border-[#e1e5f5]">
+        <div className="flex items-center gap-3 justify-end pt-4 border-t border-[#E5E5E5]">
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-6 py-2.5 border border-[#e1e5f5] rounded-full bg-white text-neutral-700 hover:bg-neutral-50 text-xs font-semibold tracking-wide transition-colors cursor-pointer"
+            className="px-6 py-2.5 border border-[#E5E5E5] rounded-full bg-white text-neutral-700 hover:bg-neutral-50 text-xs font-semibold tracking-wide transition-colors cursor-pointer"
           >
             Cancel
           </button>
 
           <button
             type="submit"
-            className="flex items-center space-x-2 px-8 py-3 bg-[#3762f9] hover:bg-[#2748c9] text-white rounded-full text-xs font-bold tracking-wide transition-all shadow-[0_4px_12px_rgba(55,98,249,0.2)] cursor-pointer"
+            className="flex items-center space-x-2 px-8 py-3 bg-[#C99213] hover:bg-[#a9831e] text-white rounded-full text-xs font-bold tracking-wide transition-all shadow-[0_4px_12px_rgba(201,146,19,0.25)] cursor-pointer"
           >
             <span>Save Purchase Order</span>
             <ArrowRight className="w-4 h-4" />
@@ -1167,7 +1167,7 @@ export default function PurchaseOrderForm({ initialPOId }: PurchaseOrderFormProp
         typeof window !== "undefined" &&
         createPortal(
           <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
-            <div className="bg-white border border-[#e1e5f5] rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+            <div className="bg-white border border-[#E5E5E5] rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
               
               {/* Close Button */}
               <button
@@ -1290,7 +1290,7 @@ function CustomOnTheFlyVendorForm({ onComplete, onCancel }: { onComplete: (v: Ve
             placeholder="e.g. Apex Jewelry Sourcing"
             value={companyName}
             onChange={(e) => setCompanyName(e.target.value)}
-            className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none"
+            className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none"
             required
           />
         </div>
@@ -1302,7 +1302,7 @@ function CustomOnTheFlyVendorForm({ onComplete, onCancel }: { onComplete: (v: Ve
             placeholder="vendor@company.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none"
+            className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none"
           />
         </div>
       </div>
@@ -1315,7 +1315,7 @@ function CustomOnTheFlyVendorForm({ onComplete, onCancel }: { onComplete: (v: Ve
             placeholder="First Name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none"
+            className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none"
           />
         </div>
 
@@ -1326,7 +1326,7 @@ function CustomOnTheFlyVendorForm({ onComplete, onCancel }: { onComplete: (v: Ve
             placeholder="Last Name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none"
+            className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none"
           />
         </div>
 
@@ -1337,7 +1337,7 @@ function CustomOnTheFlyVendorForm({ onComplete, onCancel }: { onComplete: (v: Ve
             placeholder="Enter Display Name"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none"
+            className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none"
             required
           />
         </div>
@@ -1352,7 +1352,7 @@ function CustomOnTheFlyVendorForm({ onComplete, onCancel }: { onComplete: (v: Ve
               <button
                 type="button"
                 onClick={toggle}
-                className="w-full flex items-center justify-between px-2.5 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none text-neutral-800 text-left cursor-pointer"
+                className="w-full flex items-center justify-between px-2.5 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none text-neutral-800 text-left cursor-pointer"
               >
                 <span>{gstTreatment}</span>
                 <ChevronDown className="w-3.5 h-3.5 text-neutral-400 ml-1" />
@@ -1374,7 +1374,7 @@ function CustomOnTheFlyVendorForm({ onComplete, onCancel }: { onComplete: (v: Ve
                       close();
                     }}
                     className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                      gstTreatment === treat ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                      gstTreatment === treat ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                     }`}
                   >
                     {treat}
@@ -1393,7 +1393,7 @@ function CustomOnTheFlyVendorForm({ onComplete, onCancel }: { onComplete: (v: Ve
               <button
                 type="button"
                 onClick={toggle}
-                className="w-full flex items-center justify-between px-2.5 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none text-neutral-800 text-left cursor-pointer"
+                className="w-full flex items-center justify-between px-2.5 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none text-neutral-800 text-left cursor-pointer"
               >
                 <span>{sourceOfSupply}</span>
                 <ChevronDown className="w-3.5 h-3.5 text-neutral-400 ml-1" />
@@ -1410,7 +1410,7 @@ function CustomOnTheFlyVendorForm({ onComplete, onCancel }: { onComplete: (v: Ve
                       close();
                     }}
                     className={`w-full text-left px-4 py-2 hover:bg-neutral-50 text-xs transition-colors ${
-                      sourceOfSupply === st ? "font-bold text-[#3762f9] bg-blue-50/50" : "text-neutral-700"
+                      sourceOfSupply === st ? "font-bold text-[#C99213] bg-[#C99213]/10" : "text-neutral-700"
                     }`}
                   >
                     {st}
@@ -1431,7 +1431,7 @@ function CustomOnTheFlyVendorForm({ onComplete, onCancel }: { onComplete: (v: Ve
             placeholder="e.g. 27BBBBB2222B2Z2"
             value={gstin}
             onChange={handleGstinChange}
-            className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none uppercase"
+            className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none uppercase"
           />
         </div>
 
@@ -1443,7 +1443,7 @@ function CustomOnTheFlyVendorForm({ onComplete, onCancel }: { onComplete: (v: Ve
             placeholder="Auto-extracted"
             value={pan}
             onChange={(e) => setPan(e.target.value)}
-            className="w-full px-3 py-1.5 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none uppercase"
+            className="w-full px-3 py-1.5 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none uppercase"
           />
         </div>
       </div>
@@ -1458,7 +1458,7 @@ function CustomOnTheFlyVendorForm({ onComplete, onCancel }: { onComplete: (v: Ve
         </button>
         <button
           type="submit"
-          className="px-6 py-2 bg-[#3762f9] hover:bg-[#2748c9] text-white rounded-xl text-xs font-bold cursor-pointer transition-colors"
+          className="px-6 py-2 bg-[#C99213] hover:bg-[#a9831e] text-white rounded-xl text-xs font-bold cursor-pointer transition-colors"
         >
           Add and Select Vendor
         </button>

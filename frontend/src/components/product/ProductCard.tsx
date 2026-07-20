@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Product } from '../../types/product';
 import { useCart } from '../../context/CartContext';
 
@@ -12,6 +13,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, centered = false }: ProductCardProps) {
+  const router = useRouter();
   const { addToCart } = useCart();
 
   const handleQuickAdd = (e: React.MouseEvent) => {
@@ -23,7 +25,7 @@ export default function ProductCard({ product, centered = false }: ProductCardPr
         ? [{ name: 'Length', value: '18 inches' }]
         : [];
     addToCart(product, 1, defaultAttributes);
-    alert(`${product.title} added to your shopping bag!`);
+    router.push('/cart');
   };
 
   return (

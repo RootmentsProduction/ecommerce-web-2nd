@@ -12,6 +12,17 @@ export declare class EmailService {
     private readonly senderEmail;
     constructor(configService: ConfigService);
     sendEmail(options: SendEmailOptions): Promise<void>;
+    sendOrderConfirmation(order: any, customer: {
+        firstName: string | null;
+        lastName: string | null;
+        email: string;
+    }): Promise<void>;
+    sendAdminOrderNotification(order: any, customer: {
+        firstName: string | null;
+        lastName: string | null;
+        email: string;
+    }): Promise<void>;
+    sendLowStockAlert(sku: string, productName: string, variantName: string | null, currentStock: number): Promise<void>;
     sendVerificationOtp(email: string, otp: string): Promise<void>;
     sendPasswordResetOtp(email: string, otp: string): Promise<void>;
     private getSignupOtpTemplate;

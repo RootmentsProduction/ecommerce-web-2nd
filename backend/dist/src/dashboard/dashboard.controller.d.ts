@@ -17,4 +17,20 @@ export declare class DashboardController {
             profit: number;
         }[];
     }>;
+    getNotifications(): Promise<{
+        lowStock: {
+            sku: string;
+            productName: string;
+            variantName: string | null;
+            currentStock: number;
+        }[];
+        recentOrders: {
+            id: string;
+            orderNumber: string;
+            total: number;
+            customerName: string;
+            createdAt: Date;
+            status: string;
+        }[];
+    }>;
 }

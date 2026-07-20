@@ -195,6 +195,7 @@ export async function getMyOrders(): Promise<AdminOrder[]> {
 }
 
 export async function placeOrder(payload: {
+  customerId?: string;
   subtotal: number;
   taxTotal: number;
   shippingCharge?: number;

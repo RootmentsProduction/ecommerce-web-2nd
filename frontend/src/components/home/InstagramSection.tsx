@@ -3,11 +3,13 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 import videoFiles from '../../data/videos.json';
+import { getSystemSettings } from '@/services/system-settings.service';
 
 export default function InstagramSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const [isInView, setIsInView] = useState(false);
+  const [reels, setReels] = useState<string[]>(videoFiles);
 
   useEffect(() => {
     const container = sectionRef.current;
@@ -27,9 +29,25 @@ export default function InstagramSection() {
     return () => observer.disconnect();
   }, []);
 
+  // Fetch dynamic videos from database
+  useEffect(() => {
+    getSystemSettings().then((settings) => {
+      if (settings.instagram_videos) {
+        try {
+          const list = JSON.parse(settings.instagram_videos);
+          if (Array.isArray(list) && list.length > 0) {
+            setReels(list);
+          }
+        } catch (e) {
+          console.error("Failed to parse instagram videos:", e);
+        }
+      }
+    });
+  }, []);
+
   useEffect(() => {
     const container = scrollRef.current;
-    if (!container || !videoFiles || videoFiles.length === 0) return;
+    if (!container || !reels || reels.length === 0) return;
 
     const isMobile = () => window.innerWidth < 640;
 
@@ -37,7 +55,7 @@ export default function InstagramSection() {
     let isInteracting = false;
     let interactionTimeout: NodeJS.Timeout;
     const scrollSpeed = 0.5; // Slow scroll speed for Reels (px/frame)
-    const originalCount = videoFiles.length;
+    const originalCount = reels.length;
     let scrollPos = container.scrollLeft;
 
     let expectedScrollLeft = container.scrollLeft;
@@ -104,18 +122,18 @@ export default function InstagramSection() {
       container.removeEventListener('mouseleave', handleInteractionEnd);
       container.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [reels]);
 
   // If no videos are found, do not render the section
-  if (!videoFiles || videoFiles.length === 0) {
+  if (!reels || reels.length === 0) {
     return null;
   }
 
   // Make sure we have at least 8 items in the base array before doubling,
   // so the scrolling marquee spans wider than any screen resolution.
-  let baseList = [...videoFiles];
+  let baseList = [...reels];
   while (baseList.length < 8) {
-    baseList = [...baseList, ...videoFiles];
+    baseList = [...baseList, ...reels];
   }
 
   return (
@@ -196,7 +214,9 @@ export default function InstagramSection() {
         <div className="animate-marquee gap-6 px-4">
           {/* Double the array elements to ensure seamless loop */}
           {[...baseList, ...baseList].map((filename, idx) => {
-            const videoSrc = `/videos/${encodeURIComponent(filename)}`;
+            const videoSrc = (filename.startsWith('http') || filename.startsWith('/'))
+              ? filename
+              : `/videos/${encodeURIComponent(filename)}`;
             return (
               <div
                 key={idx}
@@ -239,8 +259,10 @@ export default function InstagramSection() {
           ref={scrollRef}
           className="flex overflow-x-auto gap-6 pb-6 px-1 scrollbar-none"
         >
-          {[...videoFiles, ...videoFiles, ...videoFiles].map((filename, idx) => {
-            const videoSrc = `/videos/${encodeURIComponent(filename)}`;
+          {[...reels, ...reels, ...reels].map((filename, idx) => {
+            const videoSrc = (filename.startsWith('http') || filename.startsWith('/'))
+              ? filename
+              : `/videos/${encodeURIComponent(filename)}`;
             return (
               <div
                 key={idx}
@@ -264,6 +286,17 @@ export default function InstagramSection() {
           })}
         </div>
       </div>
+
+      {/* Tailwind scrollbar removal style */}
+      <style jsx global>{`
+        .scrollbar-none::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-none {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
 
     </section>
   );

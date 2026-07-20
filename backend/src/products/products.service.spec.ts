@@ -32,6 +32,7 @@ describe('ProductsService', () => {
       stockTransaction: {
         createMany: jest.fn(),
         create: jest.fn(),
+        deleteMany: jest.fn(),
       },
       $transaction: jest.fn().mockImplementation(async (callback) => {
         return callback(prismaMock);
@@ -442,6 +443,56 @@ describe('ProductsService', () => {
         data: { status: 'ARCHIVED' },
       });
       expect(prismaMock.product.delete).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('permanentDelete', () => {
+    it('should throw NotFoundException if product does not exist', async () => {
+      prismaMock.product.findUnique.mockResolvedValue(null);
+      await expect(service.permanentDelete('invalid-id')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should throw BadRequestException if product status is not ARCHIVED', async () => {
+      prismaMock.product.findUnique.mockResolvedValue({
+        id: 'p1',
+        status: 'ACTIVE',
+        _count: { orderItems: 0 },
+      });
+      await expect(service.permanentDelete('p1')).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
+    it('should throw BadRequestException if product has order items', async () => {
+      prismaMock.product.findUnique.mockResolvedValue({
+        id: 'p1',
+        status: 'ARCHIVED',
+        _count: { orderItems: 3 },
+      });
+      await expect(service.permanentDelete('p1')).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
+    it('should delete stock transactions and delete product if valid', async () => {
+      prismaMock.product.findUnique.mockResolvedValue({
+        id: 'p1',
+        status: 'ARCHIVED',
+        _count: { orderItems: 0 },
+      });
+      prismaMock.stockTransaction.deleteMany.mockResolvedValue({ count: 2 });
+      prismaMock.product.delete.mockResolvedValue({ id: 'p1' });
+
+      const result = await service.permanentDelete('p1');
+      expect(result).toEqual({ id: 'p1' });
+      expect(prismaMock.stockTransaction.deleteMany).toHaveBeenCalledWith({
+        where: { productId: 'p1' },
+      });
+      expect(prismaMock.product.delete).toHaveBeenCalledWith({
+        where: { id: 'p1' },
+      });
     });
   });
 });

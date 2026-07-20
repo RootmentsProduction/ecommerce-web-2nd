@@ -57,16 +57,33 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (existingItemIndex > -1) {
         // Item with same options already exists, increase quantity
         const newItems = [...prevItems];
-        newItems[existingItemIndex].quantity += quantity;
+        const currentQty = newItems[existingItemIndex].quantity;
+        const targetQty = currentQty + quantity;
+        
+        if (targetQty > product.stock) {
+          alert(`Only ${product.stock} units of "${product.title}" are available in stock. Your cart quantity has been set to the maximum available.`);
+          newItems[existingItemIndex].quantity = product.stock;
+        } else {
+          newItems[existingItemIndex].quantity = targetQty;
+        }
         return newItems;
       } else {
-        // Add new item
+        // Add new item, check stock
+        let addedQty = quantity;
+        if (quantity > product.stock) {
+          alert(`Only ${product.stock} units of "${product.title}" are available in stock. We have added the maximum available quantity to your cart.`);
+          addedQty = product.stock;
+        }
+        if (addedQty <= 0) {
+          alert(`"${product.title}" is currently out of stock.`);
+          return prevItems;
+        }
         return [
           ...prevItems,
           {
             id: itemId,
             product,
-            quantity,
+            quantity: addedQty,
             selectedAttributes,
           },
         ];
@@ -84,7 +101,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     setCartItems((prevItems) =>
-      prevItems.map((item) => (item.id === itemId ? { ...item, quantity } : item))
+      prevItems.map((item) => {
+        if (item.id === itemId) {
+          if (quantity > item.product.stock) {
+            alert(`Only ${item.product.stock} units of "${item.product.title}" are available in stock.`);
+            return { ...item, quantity: item.product.stock };
+          }
+          return { ...item, quantity };
+        }
+        return item;
+      })
     );
   };
 

@@ -4,9 +4,12 @@ import { PrismaService } from '../prisma/prisma.service';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { StockTransactionType } from '../generated/prisma/client.js';
 
+import { EmailService } from '../email/email.service';
+
 describe('InventoryService', () => {
   let service: InventoryService;
   let prismaMock: any;
+  let emailServiceMock: any;
 
   beforeEach(async () => {
     prismaMock = {
@@ -14,6 +17,12 @@ describe('InventoryService', () => {
         findMany: jest.fn(),
         findFirst: jest.fn(),
         update: jest.fn(),
+      },
+      productVariant: {
+        findUnique: jest.fn(),
+      },
+      product: {
+        findUnique: jest.fn(),
       },
       stockTransaction: {
         create: jest.fn(),
@@ -23,10 +32,17 @@ describe('InventoryService', () => {
       }),
     };
 
+    emailServiceMock = {
+      sendOrderConfirmation: jest.fn(),
+      sendAdminOrderNotification: jest.fn(),
+      sendLowStockAlert: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         InventoryService,
         { provide: PrismaService, useValue: prismaMock },
+        { provide: EmailService, useValue: emailServiceMock },
       ],
     }).compile();
 
@@ -68,6 +84,11 @@ describe('InventoryService', () => {
       prismaMock.inventory.update.mockResolvedValue({
         ...mockInventory,
         currentStock: 15,
+      });
+      prismaMock.product.findUnique.mockResolvedValue({
+        id: 'prod-123',
+        name: 'Test Product',
+        sku: 'SKU-123',
       });
 
       const result = await service.adjustStock(

@@ -1,4 +1,5 @@
 import { PrismaService } from '../prisma/prisma.service';
+import { EmailService } from '../email/email.service';
 export interface CreateOrderItemDto {
     productId: string;
     variantId?: string;
@@ -21,7 +22,8 @@ export interface CreateOrderDto {
 }
 export declare class OrdersService {
     private readonly prisma;
-    constructor(prisma: PrismaService);
+    private readonly emailService;
+    constructor(prisma: PrismaService, emailService: EmailService);
     create(customerId: string, dto: CreateOrderDto): Promise<{
         items: {
             id: string;

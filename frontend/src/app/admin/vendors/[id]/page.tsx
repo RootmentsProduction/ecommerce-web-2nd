@@ -129,7 +129,7 @@ export default function VendorDetailPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f5f7fb] admin-dashboard-root">
+    <div className="flex flex-col min-h-screen bg-[#FAF9F6] admin-dashboard-root">
       {/* Topbar */}
       <AdminTopbar breadcrumbItems={breadcrumbs} showSearch={false} />
 
@@ -140,7 +140,7 @@ export default function VendorDetailPage() {
           <div className="flex items-center space-x-3">
             <Link
               href="/admin/vendors"
-              className="p-2 bg-white border border-[#e1e5f5] rounded-xl hover:bg-neutral-55 transition-colors text-neutral-500 hover:text-neutral-800"
+              className="p-2 bg-white border border-[#E5E5E5] rounded-xl hover:bg-neutral-55 transition-colors text-neutral-500 hover:text-neutral-800"
             >
               <ArrowLeft className="w-4.5 h-4.5" />
             </Link>
@@ -169,7 +169,7 @@ export default function VendorDetailPage() {
               onClick={handleToggleStatus}
               className={`flex items-center space-x-1.5 px-4 py-2 border rounded-full text-xs font-semibold cursor-pointer transition-colors ${
                 vendor.status === "Active"
-                  ? "bg-white text-neutral-700 border-[#e1e5f5] hover:bg-neutral-50"
+                  ? "bg-white text-neutral-700 border-[#E5E5E5] hover:bg-neutral-50"
                   : "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600"
               }`}
             >
@@ -180,7 +180,7 @@ export default function VendorDetailPage() {
             {/* Edit Button */}
             <Link
               href={`/admin/vendors/${vendor.id}/edit`}
-              className="flex items-center space-x-1.5 px-4.5 py-2.5 bg-[#3762f9] hover:bg-[#2748c9] text-white rounded-full text-xs font-semibold cursor-pointer transition-colors shadow-sm"
+              className="flex items-center space-x-1.5 px-4.5 py-2.5 bg-[#C99213] hover:bg-[#a9831e] text-white rounded-full text-xs font-semibold cursor-pointer transition-colors shadow-sm"
             >
               <Edit className="w-3.5 h-3.5" />
               <span>Edit Profile</span>
@@ -189,7 +189,7 @@ export default function VendorDetailPage() {
             {/* Delete Button */}
             <button
               onClick={handleDeleteVendor}
-              className="p-2.5 bg-white border border-[#e1e5f5] text-red-500 hover:text-red-750 rounded-xl hover:bg-red-50 transition-colors cursor-pointer"
+              className="p-2.5 bg-white border border-[#E5E5E5] text-red-500 hover:text-red-750 rounded-xl hover:bg-red-50 transition-colors cursor-pointer"
               title="Delete Vendor"
             >
               <Trash2 className="w-4 h-4" />
@@ -204,13 +204,13 @@ export default function VendorDetailPage() {
           <div className="lg:col-span-1 space-y-6">
             
             {/* Overview Quick Stats */}
-            <div className="bg-white border border-[#e1e5f5] rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.02)] space-y-6">
+            <div className="bg-white border border-[#E5E5E5] rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.02)] space-y-6">
               <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400">
                 Accounts Balance
               </h2>
               
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#f5f7fb] rounded-2xl p-4 space-y-1">
+                <div className="bg-[#FAF9F6] rounded-2xl p-4 space-y-1">
                   <span className="text-[10px] text-neutral-455 font-bold uppercase tracking-wider">Payables</span>
                   <div className="text-base font-bold text-neutral-900">
                     ₹{vendor.payables.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
@@ -224,7 +224,7 @@ export default function VendorDetailPage() {
                 </div>
               </div>
 
-              <div className="border-t border-[#e1e5f5] pt-4 space-y-3">
+              <div className="border-t border-[#E5E5E5] pt-4 space-y-3">
                 <div className="flex justify-between text-xs font-medium">
                   <span className="text-neutral-450">GST Treatment:</span>
                   <span className="text-neutral-800 font-semibold">{vendor.gstTreatment}</span>
@@ -257,7 +257,7 @@ export default function VendorDetailPage() {
             </div>
 
             {/* Primary Contact Details Card */}
-            <div className="bg-white border border-[#e1e5f5] rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.02)] space-y-4">
+            <div className="bg-white border border-[#E5E5E5] rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.02)] space-y-4">
               <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400">
                 Primary Contact
               </h2>
@@ -278,7 +278,7 @@ export default function VendorDetailPage() {
                 {vendor.email && (
                   <div className="flex items-center space-x-3 text-xs">
                     <Mail className="w-4 h-4 text-neutral-400 shrink-0" />
-                    <a href={`mailto:${vendor.email}`} className="text-[#3762f9] hover:underline truncate">
+                    <a href={`mailto:${vendor.email}`} className="text-[#C99213] hover:underline truncate">
                       {vendor.email}
                     </a>
                   </div>
@@ -304,10 +304,10 @@ export default function VendorDetailPage() {
           <div className="lg:col-span-2 space-y-6">
             
             {/* Tab navigation card */}
-            <div className="bg-white border border-[#e1e5f5] rounded-3xl shadow-[0_30px_90px_-40px_rgba(15,23,42,0.1)] overflow-hidden flex flex-col min-h-[480px]">
+            <div className="bg-white border border-[#E5E5E5] rounded-3xl shadow-[0_30px_90px_-40px_rgba(15,23,42,0.1)] overflow-hidden flex flex-col min-h-[480px]">
               
               {/* Tab Header Buttons */}
-              <div className="flex border-b border-[#e1e5f5] bg-[#f5f6ff]">
+              <div className="flex border-b border-[#E5E5E5] bg-[#faf8f2]">
                 {([
                   { id: "Overview", icon: User },
                   { id: "Comments", icon: MessageSquare },
@@ -321,7 +321,7 @@ export default function VendorDetailPage() {
                       onClick={() => setActiveTab(tab.id)}
                       className={`flex-1 flex items-center justify-center space-x-2 py-4 text-xs font-semibold uppercase tracking-wider transition-all border-b-2 cursor-pointer ${
                         activeTab === tab.id
-                          ? "border-[#3762f9] text-[#3762f9] bg-white"
+                          ? "border-[#C99213] text-[#C99213] bg-white"
                           : "border-transparent text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50/50"
                       }`}
                     >
@@ -341,8 +341,8 @@ export default function VendorDetailPage() {
                     {/* Billing/Shipping Address Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {/* Billing Address Card */}
-                      <div className="border border-[#e1e5f5] rounded-2xl p-4 bg-[#fafbff] space-y-2">
-                        <div className="flex items-center space-x-2 text-[#3762f9] font-bold text-xs uppercase tracking-wider mb-2">
+                      <div className="border border-[#E5E5E5] rounded-2xl p-4 bg-[#fafbff] space-y-2">
+                        <div className="flex items-center space-x-2 text-[#C99213] font-bold text-xs uppercase tracking-wider mb-2">
                           <MapPin className="w-3.5 h-3.5" />
                           <span>Billing Address</span>
                         </div>
@@ -357,8 +357,8 @@ export default function VendorDetailPage() {
                       </div>
 
                       {/* Shipping Address Card */}
-                      <div className="border border-[#e1e5f5] rounded-2xl p-4 bg-[#fafbff] space-y-2">
-                        <div className="flex items-center space-x-2 text-[#3762f9] font-bold text-xs uppercase tracking-wider mb-2">
+                      <div className="border border-[#E5E5E5] rounded-2xl p-4 bg-[#fafbff] space-y-2">
+                        <div className="flex items-center space-x-2 text-[#C99213] font-bold text-xs uppercase tracking-wider mb-2">
                           <MapPin className="w-3.5 h-3.5" />
                           <span>Shipping Address</span>
                         </div>
@@ -381,7 +381,7 @@ export default function VendorDetailPage() {
                         </h3>
                         <div className="grid grid-cols-1 gap-3">
                           {(vendor.bankAccounts || []).map((acct: any, idx: number) => (
-                            <div key={idx} className="border border-[#e1e5f5] rounded-2xl p-4 bg-white space-y-2">
+                            <div key={idx} className="border border-[#E5E5E5] rounded-2xl p-4 bg-white space-y-2">
                               <div className="flex justify-between items-center text-xs font-bold text-neutral-800">
                                 <span>{acct.bankName}</span>
                                 <span className="text-[10px] uppercase font-semibold text-neutral-400">IFSC: {acct.ifscCode}</span>
@@ -424,11 +424,11 @@ export default function VendorDetailPage() {
                         placeholder="Type internal comment or note..."
                         value={newCommentText}
                         onChange={(e) => setNewCommentText(e.target.value)}
-                        className="flex-1 px-4 py-2 bg-[#f5f7fb] border border-[#d7dcf5] rounded-xl text-xs outline-none focus:border-[#3762f9] transition-all text-neutral-800"
+                        className="flex-1 px-4 py-2 bg-[#FAF9F6] border border-[#E5E5E5] rounded-xl text-xs outline-none focus:border-[#C99213] transition-all text-neutral-800"
                       />
                       <button
                         type="submit"
-                        className="p-2.5 bg-[#3762f9] hover:bg-[#2748c9] text-white rounded-xl cursor-pointer transition-colors"
+                        className="p-2.5 bg-[#C99213] hover:bg-[#a9831e] text-white rounded-xl cursor-pointer transition-colors"
                       >
                         <Send className="w-4 h-4" />
                       </button>
@@ -469,17 +469,17 @@ export default function VendorDetailPage() {
                       </h3>
                       <Link
                         href={`/admin/purchase-orders/new?vendorId=${vendor.id}`}
-                        className="text-[10px] font-bold uppercase tracking-wider bg-[#3762f9]/10 hover:bg-[#3762f9]/20 text-[#3762f9] px-3.5 py-1.5 rounded-full transition-colors cursor-pointer"
+                        className="text-[10px] font-bold uppercase tracking-wider bg-[#C99213]/10 hover:bg-[#C99213]/20 text-[#C99213] px-3.5 py-1.5 rounded-full transition-colors cursor-pointer"
                       >
                         Create Purchase Order
                       </Link>
                     </div>
 
                     {purchaseOrders.length > 0 ? (
-                      <div className="overflow-hidden border border-[#e1e5f5] rounded-2xl">
+                      <div className="overflow-hidden border border-[#E5E5E5] rounded-2xl">
                         <table className="w-full text-left border-collapse text-xs">
                           <thead>
-                            <tr className="bg-[#f5f6ff] text-neutral-500 font-bold uppercase tracking-wider border-b border-[#e1e5f5]">
+                            <tr className="bg-[#faf8f2] text-neutral-500 font-bold uppercase tracking-wider border-b border-[#E5E5E5]">
                               <th className="py-3 px-4 font-semibold">PO Number</th>
                               <th className="py-3 px-4 font-semibold">Date</th>
                               <th className="py-3 px-4 font-semibold">Status</th>
@@ -489,7 +489,7 @@ export default function VendorDetailPage() {
                           <tbody className="divide-y divide-neutral-100">
                             {purchaseOrders.map((po) => (
                               <tr key={po.id} className="hover:bg-neutral-50/50">
-                                <td className="py-3 px-4 font-bold text-[#3762f9] hover:underline cursor-pointer">
+                                <td className="py-3 px-4 font-bold text-[#C99213] hover:underline cursor-pointer">
                                   <Link href={`/admin/purchase-orders/${po.id}`}>
                                     {po.id}
                                   </Link>
@@ -517,7 +517,7 @@ export default function VendorDetailPage() {
                         </table>
                       </div>
                     ) : (
-                      <div className="py-12 text-center text-xs text-neutral-400 font-medium border border-dashed border-[#e1e5f5] rounded-2xl bg-[#fafbff]">
+                      <div className="py-12 text-center text-xs text-neutral-400 font-medium border border-dashed border-[#E5E5E5] rounded-2xl bg-[#fafbff]">
                         No purchase orders recorded for this vendor yet.
                       </div>
                     )}
@@ -533,7 +533,7 @@ export default function VendorDetailPage() {
                     <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1">
                       {historyLogs.map((log, idx) => (
                         <div key={idx} className="flex items-start space-x-3 text-xs leading-relaxed">
-                          <div className="w-1.5 h-1.5 rounded-full bg-[#3762f9] mt-1.5 shrink-0" />
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#C99213] mt-1.5 shrink-0" />
                           <span className="text-neutral-600 font-medium">{log}</span>
                         </div>
                       ))}

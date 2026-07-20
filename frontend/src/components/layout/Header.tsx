@@ -159,11 +159,12 @@ export default function Header() {
                 aria-label="Cart"
               >
                 <div className="relative">
-                  <svg width="32" height="27" viewBox="0 0 32 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0.482878" y="0.482878" width="31.0342" height="26.0342" rx="2.51712" stroke="currentColor" strokeWidth="0.965756" />
+                  <svg width="30" height="33" viewBox="0 0 26 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.5 8.5H20.5C21.6 8.5 22.5 9.4 22.5 10.5V24.5C22.5 25.6 21.6 26.5 20.5 26.5H5.5C4.4 26.5 3.5 25.6 3.5 24.5V10.5C3.5 9.4 4.4 8.5 5.5 8.5Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M17.5 8.5C17.5 5.73858 15.2614 3.5 12.5 3.5C9.73858 3.5 7.5 5.73858 7.5 8.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   {cartCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-[#B78924] text-white text-[9px] font-semibold w-4 h-4 flex items-center justify-center rounded-full">
+                    <span className="absolute -top-1.5 -right-2 bg-[#B78924] text-white text-[9px] font-semibold w-4 h-4 flex items-center justify-center rounded-full">
                       {cartCount}
                     </span>
                   )}

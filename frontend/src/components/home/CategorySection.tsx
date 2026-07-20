@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getCategories } from '@/services/categories.service';
+import { getSystemSettings } from '@/services/system-settings.service';
 
 // ---------------------------------------------------------------------------
 // Types – matches what the backend /api/categories endpoint returns.
@@ -111,7 +112,11 @@ function EmptyCategories() {
 // ---------------------------------------------------------------------------
 export default async function CategorySection() {
   // getCategories() already catches all errors and returns [] on failure.
-  const raw = await getCategories();
+  const [raw, settings] = await Promise.all([
+    getCategories(),
+    getSystemSettings()
+  ]);
+  const categoryImage = settings.category_image || "/cat_large.png";
 
   // Cast to the richer backend shape. The service may return objects where
   // `count` maps to productCount; both are optional here and we don't use them
@@ -220,7 +225,7 @@ export default async function CategorySection() {
           <div className="lg:col-span-7 h-full order-1 lg:order-2">
             <div className="relative aspect-[4/3.1] w-full overflow-hidden bg-neutral-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-500">
               <Image
-                src="/cat_large.png"
+                src={categoryImage}
                 alt="Layered Gold Necklaces Styling"
                 fill
                 sizes="(max-width: 1024px) 100vw, 55vw"

@@ -81,6 +81,10 @@ export class CreateOrderBodyDto implements CreateOrderDto {
 
   @IsString()
   @IsOptional()
+  customerId?: string;
+
+  @IsString()
+  @IsOptional()
   notes?: string;
 
   @IsArray()
@@ -102,7 +106,10 @@ export class OrdersController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async createOrder(@Body() dto: CreateOrderBodyDto, @CurrentUser() user: any) {
-    const userId = (user as { id: string }).id;
+    let userId = (user as { id: string }).id;
+    if (dto.customerId && (user.role === UserRole.ADMIN || user.role === UserRole.SUPER_ADMIN)) {
+      userId = dto.customerId;
+    }
     return this.ordersService.create(userId, dto);
   }
 

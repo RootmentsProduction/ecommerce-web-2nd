@@ -19,6 +19,7 @@ describe('CategoriesService', () => {
       },
       product: {
         count: jest.fn(),
+        updateMany: jest.fn(),
       },
     };
 

@@ -594,7 +594,12 @@ let ProductsService = ProductsService_1 = class ProductsService {
         if (product._count.orderItems > 0) {
             throw new common_1.BadRequestException(`Cannot permanently delete this product — it appears in ${product._count.orderItems} order(s). Historical order records must remain intact.`);
         }
-        return this.prisma.product.delete({ where: { id } });
+        return this.prisma.$transaction(async (tx) => {
+            await tx.stockTransaction.deleteMany({
+                where: { productId: id },
+            });
+            return tx.product.delete({ where: { id } });
+        });
     }
 };
 exports.ProductsService = ProductsService;

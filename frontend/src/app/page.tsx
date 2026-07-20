@@ -4,6 +4,7 @@ import CategorySection, { CategorySectionSkeleton } from "../components/home/Cat
 import NewArrivalsSection from "../components/home/NewArrivalsSection";
 import BestSellerSection from "../components/home/BestSellerSection";
 import InstagramSection from "../components/home/InstagramSection";
+import PromoPopup from "../components/home/PromoPopup";
 
 import { getProducts } from "@/services/products.service";
 
@@ -21,6 +22,9 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col w-full relative">
+      {/* Promo announcement modal */}
+      <PromoPopup />
+
       {/* Immersive Hero Section */}
       <HeroSection />
 
