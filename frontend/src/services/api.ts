@@ -26,13 +26,22 @@ export async function apiFetch<T = unknown>(path: string, options: RequestOption
     headers.set('Content-Type', 'application/json');
   }
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 3000);
+
   const mergedOptions: RequestInit = {
     ...options,
     headers,
+    signal: options.signal || controller.signal,
     credentials: 'include', // Send cookies
   };
 
-  let response = await fetch(url, mergedOptions);
+  let response: Response;
+  try {
+    response = await fetch(url, mergedOptions);
+  } finally {
+    clearTimeout(timeoutId);
+  }
 
   // If unauthorized and we haven't already skipped refresh, attempt token rotation
   if (response.status === 401 && !options.skipAuthRefresh) {

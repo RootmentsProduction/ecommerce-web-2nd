@@ -38,16 +38,36 @@ export default function OrderPaymentCard({
             <span className="font-bold text-neutral-800">{payment.method}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-neutral-400 font-semibold">Razorpay Order ID</span>
-            <span className="font-mono text-neutral-700">{payment.razorpayOrderId || "—"}</span>
+            <span className="text-neutral-400 font-semibold">Payment Provider</span>
+            <span className="font-bold text-neutral-800">{payment.provider || "PhonePe"}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-neutral-400 font-semibold">Razorpay Payment ID</span>
-            <span className="font-mono text-neutral-700">{payment.razorpayPaymentId || "—"}</span>
+            <span className="text-neutral-400 font-semibold">Merchant Transaction ID</span>
+            <span className="font-mono text-neutral-700">{payment.merchantTransactionId || "—"}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-neutral-400 font-semibold">PhonePe Transaction ID</span>
+            <span className="font-mono text-neutral-700">{payment.phonepeTransactionId || "—"}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-neutral-400 font-semibold">Payment Date</span>
+            <span className="text-neutral-700 font-semibold">{payment.paymentCompletedAt || "—"}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-neutral-400 font-semibold">Verification Status</span>
+            <span className={`font-bold px-2 py-0.5 rounded text-[10px] ${
+              payment.status === "PAID"
+                ? "bg-[#E8F5E9] text-[#2E7D32]"
+                : "bg-[#FFEBEE] text-[#C62828]"
+            }`}>
+              {payment.status === "PAID" ? "VERIFIED" : "UNVERIFIED"}
+            </span>
           </div>
           <div className="flex justify-between border-b border-neutral-50 pb-2 mb-2">
             <span className="text-neutral-400 font-semibold">Transaction Status</span>
-            <span className="font-bold text-[#2E7D32]">{payment.status}</span>
+            <span className={`font-bold ${
+              payment.status === "PAID" ? "text-[#2E7D32]" : "text-amber-600"
+            }`}>{payment.status}</span>
           </div>
 
           <div className="flex justify-between">
@@ -75,6 +95,15 @@ export default function OrderPaymentCard({
               {payment.grandTotal}
             </span>
           </div>
+
+          {payment.paymentResponse && (
+            <div className="pt-2 border-t border-neutral-100">
+              <span className="text-neutral-400 font-semibold block mb-1">Gateway Response</span>
+              <pre className="bg-neutral-50 p-2 rounded text-[10px] font-mono overflow-x-auto text-neutral-700 max-h-24 leading-normal">
+                {payment.paymentResponse}
+              </pre>
+            </div>
+          )}
         </div>
       </div>
 

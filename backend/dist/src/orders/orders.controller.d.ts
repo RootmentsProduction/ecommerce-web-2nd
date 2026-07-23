@@ -55,6 +55,13 @@ export declare class OrdersController {
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     }>;
     getMyOrders(user: any): Promise<({
         items: {
@@ -84,6 +91,13 @@ export declare class OrdersController {
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     })[]>;
     getAdminOrders(): Promise<({
         items: {
@@ -124,6 +138,13 @@ export declare class OrdersController {
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     })[]>;
     getOrderDetails(id: string, user: any): Promise<{
         items: ({
@@ -197,6 +218,13 @@ export declare class OrdersController {
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     }>;
     updateOrderStatus(id: string, dto: UpdateOrderStatusBodyDto, admin: any): Promise<{
         items: {
@@ -226,6 +254,13 @@ export declare class OrdersController {
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     }>;
 }
 export {};

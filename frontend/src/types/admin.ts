@@ -14,7 +14,10 @@ export type StatusType =
   | "Returned"
   | "Draft"
   | "Hidden"
-  | "Archived";
+  | "Archived"
+  | "Paid"
+  | "Failed"
+  | "Refunded";
 
 export interface AdminStat {
   id: string;
@@ -250,9 +253,13 @@ export interface AdminOrderItem {
 
 export interface PaymentDetails {
   method: string;
+  provider?: string;
   status: string;
-  razorpayOrderId?: string;
-  razorpayPaymentId?: string;
+  merchantTransactionId?: string;
+  phonepeTransactionId?: string;
+  paymentReference?: string;
+  paymentCompletedAt?: string;
+  paymentResponse?: string;
   subtotal: string;
   shipping: string;
   tax: string;

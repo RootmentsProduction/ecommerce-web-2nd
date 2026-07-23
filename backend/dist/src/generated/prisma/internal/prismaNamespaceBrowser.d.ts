@@ -317,6 +317,13 @@ export declare const OrderScalarFieldEnum: {
     readonly notes: "notes";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
+    readonly paymentMethod: "paymentMethod";
+    readonly paymentProvider: "paymentProvider";
+    readonly phonepeTransactionId: "phonepeTransactionId";
+    readonly merchantTransactionId: "merchantTransactionId";
+    readonly paymentReference: "paymentReference";
+    readonly paymentCompletedAt: "paymentCompletedAt";
+    readonly paymentResponse: "paymentResponse";
 };
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum];
 export declare const OrderItemScalarFieldEnum: {

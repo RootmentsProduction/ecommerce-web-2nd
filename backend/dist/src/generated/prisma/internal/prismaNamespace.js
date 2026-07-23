@@ -345,7 +345,14 @@ exports.OrderScalarFieldEnum = {
     billingAddress: 'billingAddress',
     notes: 'notes',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    paymentMethod: 'paymentMethod',
+    paymentProvider: 'paymentProvider',
+    phonepeTransactionId: 'phonepeTransactionId',
+    merchantTransactionId: 'merchantTransactionId',
+    paymentReference: 'paymentReference',
+    paymentCompletedAt: 'paymentCompletedAt',
+    paymentResponse: 'paymentResponse'
 };
 exports.OrderItemScalarFieldEnum = {
     id: 'id',

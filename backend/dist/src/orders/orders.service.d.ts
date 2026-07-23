@@ -52,6 +52,13 @@ export declare class OrdersService {
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     }>;
     findMyOrders(customerId: string): Promise<({
         items: {
@@ -81,6 +88,13 @@ export declare class OrdersService {
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     })[]>;
     findOne(idOrNumber: string, user: {
         id: string;
@@ -157,6 +171,13 @@ export declare class OrdersService {
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     }>;
     findAll(): Promise<({
         items: {
@@ -197,6 +218,13 @@ export declare class OrdersService {
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     })[]>;
     updateStatus(id: string, status: string, adminEmail: string): Promise<{
         items: {
@@ -226,5 +254,80 @@ export declare class OrdersService {
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
+    }>;
+    markOrderAsPaid(orderId: string, paymentDetails: {
+        paymentMethod: string;
+        paymentProvider: string;
+        phonepeTransactionId: string;
+        merchantTransactionId: string;
+        paymentReference?: string;
+        paymentResponse: string;
+        paymentCompletedAt: Date;
+    }): Promise<{
+        items: {
+            id: string;
+            name: string;
+            sku: string;
+            productId: string;
+            variantId: string | null;
+            quantity: number;
+            orderId: string;
+            variantName: string | null;
+            price: import("@prisma/client-runtime-utils").Decimal;
+        }[];
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
+        subtotal: import("@prisma/client-runtime-utils").Decimal;
+        discountAmount: import("@prisma/client-runtime-utils").Decimal;
+        taxTotal: import("@prisma/client-runtime-utils").Decimal;
+        total: import("@prisma/client-runtime-utils").Decimal;
+        notes: string | null;
+        orderNumber: string;
+        customerId: string;
+        paymentStatus: string;
+        shippingCharge: import("@prisma/client-runtime-utils").Decimal;
+        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
+    }>;
+    markOrderAsFailed(orderId: string, paymentResponse: string): Promise<{
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
+        subtotal: import("@prisma/client-runtime-utils").Decimal;
+        discountAmount: import("@prisma/client-runtime-utils").Decimal;
+        taxTotal: import("@prisma/client-runtime-utils").Decimal;
+        total: import("@prisma/client-runtime-utils").Decimal;
+        notes: string | null;
+        orderNumber: string;
+        customerId: string;
+        paymentStatus: string;
+        shippingCharge: import("@prisma/client-runtime-utils").Decimal;
+        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     }>;
 }

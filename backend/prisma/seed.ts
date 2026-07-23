@@ -12,19 +12,23 @@ if (!connectionString) {
 }
 
 const url = new URL(connectionString);
-let sslConfig: any = {
-  rejectUnauthorized: false,
-};
+let sslConfig: any = false;
 
-try {
-  const certPath = path.join(__dirname, "../src/prisma/global-bundle.pem");
-  if (fs.existsSync(certPath)) {
-    sslConfig = {
-      ca: fs.readFileSync(certPath),
-    };
+if (url.searchParams.get('sslmode') !== 'disable') {
+  sslConfig = {
+    rejectUnauthorized: false,
+  };
+
+  try {
+    const certPath = path.join(__dirname, "../src/prisma/global-bundle.pem");
+    if (fs.existsSync(certPath)) {
+      sslConfig = {
+        ca: fs.readFileSync(certPath),
+      };
+    }
+  } catch (e) {
+    // Fallback
   }
-} catch (e) {
-  // Fallback
 }
 
 const poolConfig: PoolConfig = {

@@ -332,4 +332,171 @@ export class OrdersService {
 
     return updatedOrder;
   }
+
+  async markOrderAsPaid(
+    orderId: string,
+    paymentDetails: {
+      paymentMethod: string;
+      paymentProvider: string;
+      phonepeTransactionId: string;
+      merchantTransactionId: string;
+      paymentReference?: string;
+      paymentResponse: string;
+      paymentCompletedAt: Date;
+    },
+  ) {
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+      include: { items: true },
+    });
+
+    if (!order) {
+      throw new NotFoundException(`Order with ID ${orderId} not found.`);
+    }
+
+    if (order.paymentStatus === 'PAID') {
+      return order; // Idempotent check
+    }
+
+    const lowStockItems: { sku: string; name: string; variantName: string | null; stock: number }[] = [];
+
+    const updatedOrder = await this.prisma.$transaction(async (tx) => {
+      // Re-fetch order in transaction to prevent race conditions
+      const currentOrder = await tx.order.findUnique({
+        where: { id: orderId },
+        include: { items: true },
+      });
+
+      if (!currentOrder) {
+        throw new NotFoundException(`Order with ID ${orderId} not found.`);
+      }
+
+      if (currentOrder.paymentStatus === 'PAID') {
+        return currentOrder;
+      }
+
+      // Deduct inventory
+      for (const item of currentOrder.items) {
+        const whereClause: Prisma.InventoryWhereInput = {};
+        if (item.variantId) {
+          whereClause.variantId = item.variantId;
+        } else {
+          whereClause.productId = item.productId;
+        }
+
+        const inventory = await tx.inventory.findFirst({
+          where: whereClause,
+        });
+
+        if (!inventory) {
+          throw new BadRequestException(
+            `Inventory record not found for item ${item.name} (SKU: ${item.sku})`,
+          );
+        }
+
+        const beforeStock = inventory.currentStock;
+        const afterStock = beforeStock - item.quantity;
+
+        if (afterStock < 0) {
+          throw new BadRequestException(
+            `Insufficient stock to confirm order. SKU ${item.sku} has only ${beforeStock} units available, but ${item.quantity} are requested.`,
+          );
+        }
+
+        // Deduct stock
+        await tx.inventory.update({
+          where: { id: inventory.id },
+          data: {
+            currentStock: afterStock,
+          },
+        });
+
+        if (afterStock < 5) {
+          lowStockItems.push({
+            sku: item.sku,
+            name: item.name,
+            variantName: item.variantName || null,
+            stock: afterStock,
+          });
+        }
+
+        // Log SALE transaction
+        await tx.stockTransaction.create({
+          data: {
+            productId: item.productId,
+            variantId: item.variantId,
+            type: StockTransactionType.SALE,
+            quantity: -item.quantity,
+            beforeStock,
+            afterStock,
+            reason: `PhonePe checkout deduction (Order: ${currentOrder.orderNumber})`,
+            changedBy: 'SYSTEM',
+            reference: currentOrder.id,
+          },
+        });
+      }
+
+      // Update order status to CONFIRMED and payment status to PAID
+      return tx.order.update({
+        where: { id: orderId },
+        data: {
+          status: 'CONFIRMED',
+          paymentStatus: 'PAID',
+          paymentMethod: paymentDetails.paymentMethod,
+          paymentProvider: paymentDetails.paymentProvider,
+          phonepeTransactionId: paymentDetails.phonepeTransactionId,
+          merchantTransactionId: paymentDetails.merchantTransactionId,
+          paymentReference: paymentDetails.paymentReference,
+          paymentCompletedAt: paymentDetails.paymentCompletedAt,
+          paymentResponse: paymentDetails.paymentResponse,
+        },
+        include: {
+          items: true,
+        },
+      });
+    });
+
+    // Send notifications out-of-transaction (async/non-blocking)
+    try {
+      const customer = await this.prisma.user.findUnique({
+        where: { id: order.customerId },
+      });
+      if (customer) {
+        // Send order confirmation to customer
+        await this.emailService.sendOrderConfirmation(updatedOrder, customer);
+        // Send alert to administrator
+        await this.emailService.sendAdminOrderNotification(updatedOrder, customer);
+      }
+    } catch (err) {
+      console.error('Failed to dispatch order notification emails after payment:', err);
+    }
+
+    // Send low-stock alert emails async
+    if (lowStockItems.length > 0) {
+      for (const item of lowStockItems) {
+        try {
+          await this.emailService.sendLowStockAlert(
+            item.sku,
+            item.name,
+            item.variantName,
+            item.stock,
+          );
+        } catch (err) {
+          console.error(`Failed to send low stock alert for SKU ${item.sku}:`, err);
+        }
+      }
+    }
+
+    return updatedOrder;
+  }
+
+  async markOrderAsFailed(orderId: string, paymentResponse: string) {
+    return this.prisma.order.update({
+      where: { id: orderId },
+      data: {
+        paymentStatus: 'FAILED',
+        paymentResponse,
+      },
+    });
+  }
 }

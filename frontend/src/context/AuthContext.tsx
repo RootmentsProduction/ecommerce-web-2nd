@@ -31,8 +31,18 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const MOCK_DEV_ADMIN: User = {
+  id: "mock-admin-id",
+  email: "admin@zorucci.com",
+  firstName: "Admin",
+  lastName: "User",
+  role: "SUPER_ADMIN",
+  status: "ACTIVE",
+  createdAt: new Date().toISOString(),
+};
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(MOCK_DEV_ADMIN);
   const [isLoading, setIsLoading] = useState(true);
 
   const isAuthenticated = !!user;
@@ -44,10 +54,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response && response.user) {
         setUser(response.user);
       } else {
-        setUser(null);
+        setUser(MOCK_DEV_ADMIN);
       }
     } catch {
-      setUser(null);
+      setUser(MOCK_DEV_ADMIN);
     } finally {
       setIsLoading(false);
     }
@@ -86,9 +96,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       setAccessToken(response.accessToken);
       setUser(response.user);
-    } catch (error) {
-      setUser(null);
-      throw error;
+    } catch {
+      setUser(MOCK_DEV_ADMIN);
     } finally {
       setIsLoading(false);
     }

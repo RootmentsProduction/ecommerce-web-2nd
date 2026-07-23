@@ -26,6 +26,7 @@ const customers_module_1 = require("./customers/customers.module");
 const orders_module_1 = require("./orders/orders.module");
 const dashboard_module_1 = require("./dashboard/dashboard.module");
 const system_settings_module_1 = require("./system-settings/system-settings.module");
+const phonepe_module_1 = require("./phonepe/phonepe.module");
 const jwt_auth_guard_1 = require("./auth/guards/jwt-auth.guard");
 let AppModule = class AppModule {
 };
@@ -50,6 +51,7 @@ exports.AppModule = AppModule = __decorate([
             orders_module_1.OrdersModule,
             dashboard_module_1.DashboardModule,
             system_settings_module_1.SystemSettingsModule,
+            phonepe_module_1.PhonepeModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [

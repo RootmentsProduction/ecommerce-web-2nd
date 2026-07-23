@@ -39,6 +39,13 @@ export declare class CustomersService {
             shippingCharge: import("@prisma/client-runtime-utils").Decimal;
             shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
             billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+            paymentMethod: string | null;
+            paymentProvider: string | null;
+            phonepeTransactionId: string | null;
+            merchantTransactionId: string | null;
+            paymentReference: string | null;
+            paymentCompletedAt: Date | null;
+            paymentResponse: string | null;
         }[];
         addresses: {
             id: string;
