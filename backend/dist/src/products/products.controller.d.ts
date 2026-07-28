@@ -17,6 +17,18 @@ export declare class ProductsController {
             createdAt: Date;
             updatedAt: Date;
         } | null;
+        inventory: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            productId: string | null;
+            currentStock: number;
+            reservedStock: number;
+            incomingStock: number;
+            minimumRequired: number;
+            reorderPoint: number;
+            variantId: string | null;
+        } | null;
         images: {
             url: string;
             id: string;
@@ -37,18 +49,6 @@ export declare class ProductsController {
             sellingPrice: import("@prisma/client-runtime-utils").Decimal | null;
             productId: string;
         }[];
-        inventory: {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            productId: string | null;
-            currentStock: number;
-            reservedStock: number;
-            incomingStock: number;
-            minimumRequired: number;
-            reorderPoint: number;
-            variantId: string | null;
-        } | null;
     } & {
         id: string;
         name: string;
@@ -82,6 +82,18 @@ export declare class ProductsController {
                 createdAt: Date;
                 updatedAt: Date;
             } | null;
+            inventory: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                productId: string | null;
+                currentStock: number;
+                reservedStock: number;
+                incomingStock: number;
+                minimumRequired: number;
+                reorderPoint: number;
+                variantId: string | null;
+            } | null;
             images: {
                 url: string;
                 id: string;
@@ -102,18 +114,6 @@ export declare class ProductsController {
                 sellingPrice: import("@prisma/client-runtime-utils").Decimal | null;
                 productId: string;
             }[];
-            inventory: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                productId: string | null;
-                currentStock: number;
-                reservedStock: number;
-                incomingStock: number;
-                minimumRequired: number;
-                reorderPoint: number;
-                variantId: string | null;
-            } | null;
         } & {
             id: string;
             name: string;
@@ -152,6 +152,18 @@ export declare class ProductsController {
             createdAt: Date;
             updatedAt: Date;
         } | null;
+        inventory: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            productId: string | null;
+            currentStock: number;
+            reservedStock: number;
+            incomingStock: number;
+            minimumRequired: number;
+            reorderPoint: number;
+            variantId: string | null;
+        } | null;
         images: {
             url: string;
             id: string;
@@ -172,18 +184,6 @@ export declare class ProductsController {
             sellingPrice: import("@prisma/client-runtime-utils").Decimal | null;
             productId: string;
         }[];
-        inventory: {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            productId: string | null;
-            currentStock: number;
-            reservedStock: number;
-            incomingStock: number;
-            minimumRequired: number;
-            reorderPoint: number;
-            variantId: string | null;
-        } | null;
     } & {
         id: string;
         name: string;
@@ -217,6 +217,18 @@ export declare class ProductsController {
                 createdAt: Date;
                 updatedAt: Date;
             } | null;
+            inventory: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                productId: string | null;
+                currentStock: number;
+                reservedStock: number;
+                incomingStock: number;
+                minimumRequired: number;
+                reorderPoint: number;
+                variantId: string | null;
+            } | null;
             images: {
                 url: string;
                 id: string;
@@ -237,18 +249,6 @@ export declare class ProductsController {
                 sellingPrice: import("@prisma/client-runtime-utils").Decimal | null;
                 productId: string;
             }[];
-            inventory: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                productId: string | null;
-                currentStock: number;
-                reservedStock: number;
-                incomingStock: number;
-                minimumRequired: number;
-                reorderPoint: number;
-                variantId: string | null;
-            } | null;
         } & {
             id: string;
             name: string;
@@ -319,6 +319,18 @@ export declare class ProductsController {
             createdAt: Date;
             updatedAt: Date;
         } | null;
+        inventory: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            productId: string | null;
+            currentStock: number;
+            reservedStock: number;
+            incomingStock: number;
+            minimumRequired: number;
+            reorderPoint: number;
+            variantId: string | null;
+        } | null;
         images: {
             url: string;
             id: string;
@@ -352,18 +364,6 @@ export declare class ProductsController {
             sellingPrice: import("@prisma/client-runtime-utils").Decimal | null;
             productId: string;
         })[];
-        inventory: {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            productId: string | null;
-            currentStock: number;
-            reservedStock: number;
-            incomingStock: number;
-            minimumRequired: number;
-            reorderPoint: number;
-            variantId: string | null;
-        } | null;
     } & {
         id: string;
         name: string;

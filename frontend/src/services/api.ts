@@ -12,6 +12,7 @@ export function getAccessToken() {
 
 export interface RequestOptions extends RequestInit {
   skipAuthRefresh?: boolean;
+  timeout?: number;
 }
 
 export async function apiFetch<T = unknown>(path: string, options: RequestOptions = {}): Promise<T> {
@@ -27,7 +28,8 @@ export async function apiFetch<T = unknown>(path: string, options: RequestOption
   }
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 3000);
+  const timeoutMs = options.timeout ?? 10000;
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   const mergedOptions: RequestInit = {
     ...options,

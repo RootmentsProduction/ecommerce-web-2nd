@@ -16,6 +16,7 @@ export async function createPhonepePayment(orderId: string): Promise<PhonepeRedi
   return apiFetch<PhonepeRedirectResponse>("/api/payments/phonepe/create", {
     method: "POST",
     body: JSON.stringify({ orderId }),
+    timeout: 20000,
   });
 }
 
@@ -23,7 +24,9 @@ export async function createPhonepePayment(orderId: string): Promise<PhonepeRedi
    * Fetches the verification status of a merchant transaction ID from backend pg status check
    */
 export async function verifyPhonepePayment(merchantTransactionId: string): Promise<PhonepeStatusResponse> {
-  return apiFetch<PhonepeStatusResponse>(`/api/payments/phonepe/status/${merchantTransactionId}`);
+  return apiFetch<PhonepeStatusResponse>(`/api/payments/phonepe/status/${merchantTransactionId}`, {
+    timeout: 20000,
+  });
 }
 
 /**

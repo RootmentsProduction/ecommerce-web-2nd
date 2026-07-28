@@ -26,6 +26,12 @@ export class PhonepeService {
     this.baseUrl = this.configService.get<string>('PHONEPE_BASE_URL') || 'https://api-preprod.phonepe.com';
     this.callbackUrl = this.configService.get<string>('PHONEPE_CALLBACK_URL') || 'http://localhost:7001/api/payments/phonepe/callback';
     this.redirectUrl = this.configService.get<string>('PHONEPE_REDIRECT_URL') || 'http://localhost:3000/payment/success';
+
+    if (this.merchantId === 'YOUR_MERCHANT_ID' || this.saltKey === 'YOUR_SALT_KEY') {
+      this.logger.warn(
+        'PhonePe credentials not configured. Please define PHONEPE_MERCHANT_ID and PHONEPE_SALT_KEY in your .env file.',
+      );
+    }
   }
 
   /**
@@ -49,9 +55,15 @@ export class PhonepeService {
     const amountInPaise = Math.round(Number(order.total) * 100);
     const merchantTransactionId = `TXN-${Date.now()}-${order.orderNumber}`;
 
-    // Safely extract phone number from shipping address if present
+    // Safely extract and sanitize customer phone number (must be a valid 10-digit number for PhonePe)
     const shippingAddress = order.shippingAddress as any;
-    const mobileNumber = shippingAddress?.phone || undefined;
+    let mobileNumber = shippingAddress?.phone ? String(shippingAddress.phone).replace(/\D/g, '') : undefined;
+    if (mobileNumber && mobileNumber.length > 10) {
+      mobileNumber = mobileNumber.slice(-10);
+    }
+    if (mobileNumber && !/^[6-9]\d{9}$/.test(mobileNumber)) {
+      mobileNumber = undefined; // Omit invalid numbers to prevent PhonePe validation rejection
+    }
 
     // Construct request payload
     const payload: PhonepePaymentRequest = {
