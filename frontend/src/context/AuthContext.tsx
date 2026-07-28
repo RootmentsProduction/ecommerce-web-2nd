@@ -31,6 +31,16 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const MOCK_DEV_ADMIN: User = {
+  id: "mock-admin-id",
+  email: "admin@zorucci.com",
+  firstName: "Admin",
+  lastName: "User",
+  role: "SUPER_ADMIN",
+  status: "ACTIVE",
+  createdAt: new Date().toISOString(),
+};
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);

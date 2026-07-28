@@ -260,6 +260,127 @@ let OrdersService = class OrdersService {
         }
         return updatedOrder;
     }
+    async markOrderAsPaid(orderId, paymentDetails) {
+        const order = await this.prisma.order.findUnique({
+            where: { id: orderId },
+            include: { items: true },
+        });
+        if (!order) {
+            throw new common_1.NotFoundException(`Order with ID ${orderId} not found.`);
+        }
+        if (order.paymentStatus === 'PAID') {
+            return order;
+        }
+        const lowStockItems = [];
+        const updatedOrder = await this.prisma.$transaction(async (tx) => {
+            const currentOrder = await tx.order.findUnique({
+                where: { id: orderId },
+                include: { items: true },
+            });
+            if (!currentOrder) {
+                throw new common_1.NotFoundException(`Order with ID ${orderId} not found.`);
+            }
+            if (currentOrder.paymentStatus === 'PAID') {
+                return currentOrder;
+            }
+            for (const item of currentOrder.items) {
+                const whereClause = {};
+                if (item.variantId) {
+                    whereClause.variantId = item.variantId;
+                }
+                else {
+                    whereClause.productId = item.productId;
+                }
+                const inventory = await tx.inventory.findFirst({
+                    where: whereClause,
+                });
+                if (!inventory) {
+                    throw new common_1.BadRequestException(`Inventory record not found for item ${item.name} (SKU: ${item.sku})`);
+                }
+                const beforeStock = inventory.currentStock;
+                const afterStock = beforeStock - item.quantity;
+                if (afterStock < 0) {
+                    throw new common_1.BadRequestException(`Insufficient stock to confirm order. SKU ${item.sku} has only ${beforeStock} units available, but ${item.quantity} are requested.`);
+                }
+                await tx.inventory.update({
+                    where: { id: inventory.id },
+                    data: {
+                        currentStock: afterStock,
+                    },
+                });
+                if (afterStock < 5) {
+                    lowStockItems.push({
+                        sku: item.sku,
+                        name: item.name,
+                        variantName: item.variantName || null,
+                        stock: afterStock,
+                    });
+                }
+                await tx.stockTransaction.create({
+                    data: {
+                        productId: item.productId,
+                        variantId: item.variantId,
+                        type: client_js_1.StockTransactionType.SALE,
+                        quantity: -item.quantity,
+                        beforeStock,
+                        afterStock,
+                        reason: `PhonePe checkout deduction (Order: ${currentOrder.orderNumber})`,
+                        changedBy: 'SYSTEM',
+                        reference: currentOrder.id,
+                    },
+                });
+            }
+            return tx.order.update({
+                where: { id: orderId },
+                data: {
+                    status: 'CONFIRMED',
+                    paymentStatus: 'PAID',
+                    paymentMethod: paymentDetails.paymentMethod,
+                    paymentProvider: paymentDetails.paymentProvider,
+                    phonepeTransactionId: paymentDetails.phonepeTransactionId,
+                    merchantTransactionId: paymentDetails.merchantTransactionId,
+                    paymentReference: paymentDetails.paymentReference,
+                    paymentCompletedAt: paymentDetails.paymentCompletedAt,
+                    paymentResponse: paymentDetails.paymentResponse,
+                },
+                include: {
+                    items: true,
+                },
+            });
+        });
+        try {
+            const customer = await this.prisma.user.findUnique({
+                where: { id: order.customerId },
+            });
+            if (customer) {
+                await this.emailService.sendOrderConfirmation(updatedOrder, customer);
+                await this.emailService.sendAdminOrderNotification(updatedOrder, customer);
+            }
+        }
+        catch (err) {
+            console.error('Failed to dispatch order notification emails after payment:', err);
+        }
+        if (lowStockItems.length > 0) {
+            for (const item of lowStockItems) {
+                try {
+                    await this.emailService.sendLowStockAlert(item.sku, item.name, item.variantName, item.stock);
+                }
+                catch (err) {
+                    console.error(`Failed to send low stock alert for SKU ${item.sku}:`, err);
+                }
+            }
+        }
+        return updatedOrder;
+    }
+    async markOrderAsFailed(orderId, paymentResponse) {
+        return this.prisma.order.update({
+            where: { id: orderId },
+            data: {
+                paymentStatus: 'FAILED',
+                paymentResponse,
+            },
+        });
+    }
 };
 exports.OrdersService = OrdersService;
 exports.OrdersService = OrdersService = __decorate([

@@ -45,6 +45,20 @@ export class AuthService {
     const email = dto.email.toLowerCase().trim();
     const existingUser = await this.usersService.findByEmail(email);
     if (existingUser) {
+      if (existingUser.status === UserStatus.PENDING_VERIFICATION) {
+        const passwordHash = await bcrypt.hash(dto.password, 10);
+        await this.prisma.user.update({
+          where: { id: existingUser.id },
+          data: {
+            passwordHash,
+            firstName: dto.firstName,
+            lastName: dto.lastName,
+          },
+        });
+        const otp = await this.generateOtp(existingUser.id, OtpPurpose.EMAIL_VERIFICATION);
+        await this.emailService.sendVerificationOtp(email, otp);
+        return;
+      }
       throw new ConflictException('Email is already registered.');
     }
 

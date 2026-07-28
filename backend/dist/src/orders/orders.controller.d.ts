@@ -35,26 +35,33 @@ export declare class OrdersController {
             productId: string;
             variantId: string | null;
             quantity: number;
-            orderId: string;
             variantName: string | null;
             price: import("@prisma/client-runtime-utils").Decimal;
+            orderId: string;
         }[];
     } & {
         id: string;
+        status: string;
         createdAt: Date;
         updatedAt: Date;
-        status: string;
+        total: import("@prisma/client-runtime-utils").Decimal;
+        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         subtotal: import("@prisma/client-runtime-utils").Decimal;
         discountAmount: import("@prisma/client-runtime-utils").Decimal;
         taxTotal: import("@prisma/client-runtime-utils").Decimal;
-        total: import("@prisma/client-runtime-utils").Decimal;
         notes: string | null;
         orderNumber: string;
         customerId: string;
         paymentStatus: string;
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
-        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
-        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     }>;
     getMyOrders(user: any): Promise<({
         items: {
@@ -64,26 +71,33 @@ export declare class OrdersController {
             productId: string;
             variantId: string | null;
             quantity: number;
-            orderId: string;
             variantName: string | null;
             price: import("@prisma/client-runtime-utils").Decimal;
+            orderId: string;
         }[];
     } & {
         id: string;
+        status: string;
         createdAt: Date;
         updatedAt: Date;
-        status: string;
+        total: import("@prisma/client-runtime-utils").Decimal;
+        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         subtotal: import("@prisma/client-runtime-utils").Decimal;
         discountAmount: import("@prisma/client-runtime-utils").Decimal;
         taxTotal: import("@prisma/client-runtime-utils").Decimal;
-        total: import("@prisma/client-runtime-utils").Decimal;
         notes: string | null;
         orderNumber: string;
         customerId: string;
         paymentStatus: string;
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
-        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
-        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     })[]>;
     getAdminOrders(): Promise<({
         items: {
@@ -93,37 +107,44 @@ export declare class OrdersController {
             productId: string;
             variantId: string | null;
             quantity: number;
-            orderId: string;
             variantName: string | null;
             price: import("@prisma/client-runtime-utils").Decimal;
+            orderId: string;
         }[];
         customer: {
             id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            status: import("../generated/prisma/enums").UserStatus;
             email: string;
             passwordHash: string;
             firstName: string | null;
             lastName: string | null;
             role: UserRole;
+            status: import("../generated/prisma/enums").UserStatus;
+            createdAt: Date;
+            updatedAt: Date;
         };
     } & {
         id: string;
+        status: string;
         createdAt: Date;
         updatedAt: Date;
-        status: string;
+        total: import("@prisma/client-runtime-utils").Decimal;
+        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         subtotal: import("@prisma/client-runtime-utils").Decimal;
         discountAmount: import("@prisma/client-runtime-utils").Decimal;
         taxTotal: import("@prisma/client-runtime-utils").Decimal;
-        total: import("@prisma/client-runtime-utils").Decimal;
         notes: string | null;
         orderNumber: string;
         customerId: string;
         paymentStatus: string;
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
-        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
-        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     })[]>;
     getOrderDetails(id: string, user: any): Promise<{
         items: ({
@@ -131,8 +152,8 @@ export declare class OrdersController {
                 images: {
                     url: string;
                     id: string;
-                    sortOrder: number;
                     createdAt: Date;
+                    sortOrder: number;
                     altText: string | null;
                     isPrimary: boolean;
                     imageRole: import("../generated/prisma/enums").ProductImageRole;
@@ -140,24 +161,24 @@ export declare class OrdersController {
                 }[];
             } & {
                 id: string;
+                status: import("../generated/prisma/enums").ProductStatus;
+                createdAt: Date;
+                updatedAt: Date;
                 name: string;
                 slug: string;
                 description: string | null;
-                createdAt: Date;
-                updatedAt: Date;
+                categoryId: string | null;
                 sku: string;
                 shortDescription: string | null;
                 sellingPrice: import("@prisma/client-runtime-utils").Decimal;
                 mrp: import("@prisma/client-runtime-utils").Decimal | null;
                 costPrice: import("@prisma/client-runtime-utils").Decimal | null;
-                status: import("../generated/prisma/enums").ProductStatus;
                 featured: boolean;
                 newArrival: boolean;
                 bestSeller: boolean;
                 showOnHomepage: boolean;
                 occasion: string;
                 gender: string;
-                categoryId: string | null;
             };
         } & {
             id: string;
@@ -166,37 +187,44 @@ export declare class OrdersController {
             productId: string;
             variantId: string | null;
             quantity: number;
-            orderId: string;
             variantName: string | null;
             price: import("@prisma/client-runtime-utils").Decimal;
+            orderId: string;
         })[];
         customer: {
             id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            status: import("../generated/prisma/enums").UserStatus;
             email: string;
             passwordHash: string;
             firstName: string | null;
             lastName: string | null;
             role: UserRole;
+            status: import("../generated/prisma/enums").UserStatus;
+            createdAt: Date;
+            updatedAt: Date;
         };
     } & {
         id: string;
+        status: string;
         createdAt: Date;
         updatedAt: Date;
-        status: string;
+        total: import("@prisma/client-runtime-utils").Decimal;
+        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         subtotal: import("@prisma/client-runtime-utils").Decimal;
         discountAmount: import("@prisma/client-runtime-utils").Decimal;
         taxTotal: import("@prisma/client-runtime-utils").Decimal;
-        total: import("@prisma/client-runtime-utils").Decimal;
         notes: string | null;
         orderNumber: string;
         customerId: string;
         paymentStatus: string;
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
-        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
-        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     }>;
     updateOrderStatus(id: string, dto: UpdateOrderStatusBodyDto, admin: any): Promise<{
         items: {
@@ -206,26 +234,33 @@ export declare class OrdersController {
             productId: string;
             variantId: string | null;
             quantity: number;
-            orderId: string;
             variantName: string | null;
             price: import("@prisma/client-runtime-utils").Decimal;
+            orderId: string;
         }[];
     } & {
         id: string;
+        status: string;
         createdAt: Date;
         updatedAt: Date;
-        status: string;
+        total: import("@prisma/client-runtime-utils").Decimal;
+        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         subtotal: import("@prisma/client-runtime-utils").Decimal;
         discountAmount: import("@prisma/client-runtime-utils").Decimal;
         taxTotal: import("@prisma/client-runtime-utils").Decimal;
-        total: import("@prisma/client-runtime-utils").Decimal;
         notes: string | null;
         orderNumber: string;
         customerId: string;
         paymentStatus: string;
         shippingCharge: import("@prisma/client-runtime-utils").Decimal;
-        shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
-        billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
+        paymentMethod: string | null;
+        paymentProvider: string | null;
+        phonepeTransactionId: string | null;
+        merchantTransactionId: string | null;
+        paymentReference: string | null;
+        paymentCompletedAt: Date | null;
+        paymentResponse: string | null;
     }>;
 }
 export {};

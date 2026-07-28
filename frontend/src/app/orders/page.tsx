@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { getMyOrders } from '../../services/orders.service';
+import { retryPhonepePayment } from '../../services/phonepe.service';
 import Link from 'next/link';
 
 interface OrderItem {
@@ -29,6 +30,11 @@ interface Order {
   status: string;
   paymentStatus: string;
   items: OrderItem[];
+  paymentMethod?: string;
+  paymentProvider?: string;
+  phonepeTransactionId?: string;
+  merchantTransactionId?: string;
+  paymentCompletedAt?: string;
 }
 
 export default function MyOrdersPage() {
@@ -36,6 +42,15 @@ export default function MyOrdersPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const handleRetryPayment = async (orderId: string) => {
+    try {
+      const redirectRes = await retryPhonepePayment(orderId);
+      window.location.href = redirectRes.redirectUrl;
+    } catch (err: any) {
+      alert(err.message || 'Failed to initiate payment retry.');
+    }
+  };
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -138,7 +153,7 @@ export default function MyOrdersPage() {
                   </div>
 
                   {/* Order Card Items List */}
-                  <div className="p-6 divide-y divide-neutral-55 space-y-4">
+                  <div className="p-6 divide-y divide-neutral-55 space-y-4 font-sans">
                     {order.items.map((item, idx) => (
                       <div key={item.id || idx} className={`flex items-center space-x-4 pt-3 ${idx === 0 ? 'pt-0' : ''}`}>
                         <div className="w-14 h-14 bg-neutral-50 rounded-2xl border border-neutral-100 flex-shrink-0 flex items-center justify-center relative overflow-hidden">
@@ -147,19 +162,52 @@ export default function MyOrdersPage() {
                             <path d="M12 9V3m-3 2h6" />
                           </svg>
                         </div>
-                        <div className="flex-1 space-y-0.5 font-sans text-xs">
+                        <div className="flex-1 space-y-0.5 text-xs">
                           <p className="font-bold text-neutral-900">{item.name}</p>
                           <p className="text-[10px] text-neutral-450 font-medium">Quantity: {item.quantity} &bull; SKU: {item.sku}</p>
                         </div>
-                        <span className="font-bold text-neutral-900 font-sans text-xs">
+                        <span className="font-bold text-neutral-900 text-xs">
                           ₹ {(item.price * item.quantity).toLocaleString('en-IN')}.00
                         </span>
                       </div>
                     ))}
                   </div>
 
+                  {/* Payment Details Section */}
+                  <div className="px-6 py-4 bg-neutral-50/50 border-t border-neutral-100 flex flex-wrap justify-between items-center gap-4 text-xs font-sans">
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap gap-x-6 gap-y-1 text-[10px] text-neutral-500 font-semibold">
+                        <span>Payment Status: <span className={`font-bold uppercase ${
+                          order.paymentStatus === 'PAID' ? 'text-emerald-600' : order.paymentStatus === 'FAILED' ? 'text-red-600' : 'text-amber-600'
+                        }`}>{order.paymentStatus}</span></span>
+                        
+                        {order.paymentMethod && (
+                          <span>Method: <span className="font-bold text-neutral-700 uppercase">{order.paymentMethod}</span></span>
+                        )}
+
+                        {order.phonepeTransactionId && (
+                          <span>Txn ID: <span className="font-mono font-bold text-neutral-700">{order.phonepeTransactionId}</span></span>
+                        )}
+                        
+                        {order.paymentCompletedAt && (
+                          <span>Paid On: <span className="font-bold text-neutral-700">{new Date(order.paymentCompletedAt).toLocaleString('en-IN')}</span></span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Retry Payment Button if Failed or Pending */}
+                    {(order.paymentStatus === 'FAILED' || (order.paymentStatus === 'PENDING' && order.status === 'PENDING_PAYMENT')) && (
+                      <button
+                        onClick={() => handleRetryPayment(order.id)}
+                        className="bg-[#3762f9] hover:bg-[#2748c9] text-white px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors font-questrial cursor-pointer"
+                      >
+                        Retry Payment
+                      </button>
+                    )}
+                  </div>
+
                   {/* Visual Status Timeline Progress */}
-                  <div className="bg-neutral-50/20 px-6 py-4 border-t border-neutral-50 text-xs flex justify-between items-center font-sans">
+                  <div className="bg-neutral-50/20 px-6 py-4 border-t border-neutral-100 text-xs flex justify-between items-center font-sans">
                     <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Order Status Tracking</span>
                     <div className="flex items-center space-x-4 text-[10px] font-bold text-neutral-500 uppercase tracking-wider">
                       <span className="text-[#3762f9]">Placed</span>

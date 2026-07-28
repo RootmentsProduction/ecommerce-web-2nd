@@ -32,7 +32,12 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
       case "Packed":
         return "bg-[#E0F2F1] text-[#00695C] border border-[#80CBC4]/40";
       case "Returned":
+      case "Refunded":
         return "bg-[#ECEFF1] text-[#37474F] border border-[#CFD8DC]/40";
+      case "Paid":
+        return "bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9]/40";
+      case "Failed":
+        return "bg-[#FFEBEE] text-[#C62828] border border-[#FFCDD2]/40";
       case "Draft":
         return "bg-[#F5F5F5] text-[#757575] border border-[#BDBDBD]/40";
       case "Hidden":

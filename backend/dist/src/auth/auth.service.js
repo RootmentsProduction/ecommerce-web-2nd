@@ -77,6 +77,20 @@ let AuthService = AuthService_1 = class AuthService {
         const email = dto.email.toLowerCase().trim();
         const existingUser = await this.usersService.findByEmail(email);
         if (existingUser) {
+            if (existingUser.status === client_js_1.UserStatus.PENDING_VERIFICATION) {
+                const passwordHash = await bcrypt.hash(dto.password, 10);
+                await this.prisma.user.update({
+                    where: { id: existingUser.id },
+                    data: {
+                        passwordHash,
+                        firstName: dto.firstName,
+                        lastName: dto.lastName,
+                    },
+                });
+                const otp = await this.generateOtp(existingUser.id, client_js_1.OtpPurpose.EMAIL_VERIFICATION);
+                await this.emailService.sendVerificationOtp(email, otp);
+                return;
+            }
             throw new common_1.ConflictException('Email is already registered.');
         }
         const passwordHash = await bcrypt.hash(dto.password, 10);

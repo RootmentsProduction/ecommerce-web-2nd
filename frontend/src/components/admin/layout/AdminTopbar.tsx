@@ -5,6 +5,7 @@ import AdminBreadcrumb from "./AdminBreadcrumb";
 import { apiFetch } from "@/services/api";
 import { AlertTriangle, ShoppingBag, Bell, X, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 interface BreadcrumbItem {
   label: string;
@@ -48,11 +49,14 @@ export default function AdminTopbar({
   maxWidthClass = "max-w-7xl",
 }: AdminTopbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [notifications, setNotifications] = useState<NotificationsResponse>({
     lowStock: [],
     recentOrders: [],
   });
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     // Fetch notifications
@@ -76,11 +80,14 @@ export default function AdminTopbar({
     return () => clearInterval(interval);
   }, []);
 
-  // Handle clicking outside the dropdown to close it
+  // Handle clicking outside the dropdowns to close them
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setProfileOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -230,14 +237,58 @@ export default function AdminTopbar({
             )}
           </div>
 
-          {/* User Profile Icon */}
-          <button className="flex items-center space-x-2 focus:outline-none">
-            <div className="w-8 h-8 rounded-full bg-neutral-900 border border-neutral-200 flex items-center justify-center text-white text-xs font-semibold overflow-hidden hover:opacity-85 transition-opacity">
-              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-              </svg>
-            </div>
-          </button>
+          {/* User Profile Icon & Dropdown */}
+          <div className="relative" ref={profileRef}>
+            <button 
+              onClick={() => setProfileOpen(!profileOpen)}
+              className="flex items-center space-x-2 focus:outline-none cursor-pointer"
+            >
+              <div className="w-8 h-8 rounded-full bg-neutral-900 border border-neutral-200 flex items-center justify-center text-white text-xs font-semibold overflow-hidden hover:opacity-85 transition-opacity">
+                {user?.firstName ? (
+                  <span className="text-[10px] uppercase font-bold tracking-wider font-sans">
+                    {user.firstName[0]}{user.lastName ? user.lastName[0] : ""}
+                  </span>
+                ) : (
+                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                  </svg>
+                )}
+              </div>
+            </button>
+
+            {profileOpen && (
+              <div className="absolute right-0 mt-3 w-56 bg-white border border-[#E5E5E5] rounded-[16px] shadow-xl z-50 overflow-hidden text-left flex flex-col">
+                <div className="px-5 py-4 border-b border-neutral-100 bg-[#FAF9F6] space-y-0.5">
+                  <span className="text-[11px] font-bold text-neutral-850 block">
+                    {user?.firstName ? `${user.firstName} ${user.lastName || ""}` : "Administrator"}
+                  </span>
+                  <span className="text-[10px] text-neutral-450 block truncate">
+                    {user?.email || "admin@zorucci.com"}
+                  </span>
+                </div>
+                <div className="p-2 space-y-1">
+                  <Link
+                    href="/shop"
+                    target="_blank"
+                    onClick={() => setProfileOpen(false)}
+                    className="flex items-center px-4 py-2 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 hover:text-black rounded-lg transition-colors"
+                  >
+                    View Storefront
+                  </Link>
+                  <button
+                    onClick={async () => {
+                      setProfileOpen(false);
+                      await logout();
+                      window.location.href = "/admin/login";
+                    }}
+                    className="w-full text-left flex items-center px-4 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer border-none bg-transparent"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>

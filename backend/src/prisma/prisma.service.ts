@@ -22,18 +22,21 @@ export class PrismaService
     const url = new URL(connectionString);
 
     // Attempt to load AWS RDS root CA certificate bundle
-    let sslConfig: any = {
-      rejectUnauthorized: false,
-    };
-    try {
-      const certPath = path.join(__dirname, 'global-bundle.pem');
-      if (fs.existsSync(certPath)) {
-        sslConfig = {
-          ca: fs.readFileSync(certPath),
-        };
+    let sslConfig: any = false;
+    if (url.searchParams.get('sslmode') !== 'disable') {
+      sslConfig = {
+        rejectUnauthorized: false,
+      };
+      try {
+        const certPath = path.join(__dirname, 'global-bundle.pem');
+        if (fs.existsSync(certPath)) {
+          sslConfig = {
+            ca: fs.readFileSync(certPath),
+          };
+        }
+      } catch (e) {
+        // Fallback silently to rejectUnauthorized
       }
-    } catch (e) {
-      // Fallback silently to rejectUnauthorized
     }
 
     const poolConfig: PoolConfig = {

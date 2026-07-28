@@ -57,17 +57,17 @@ export declare class VendorsService {
     constructor(prisma: PrismaService);
     findAll(): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: string;
         email: string;
         firstName: string;
         lastName: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        mobile: string;
         salutation: string | null;
         companyName: string;
         displayName: string;
         workPhone: string;
-        mobile: string;
         language: string;
         gstTreatment: string;
         sourceOfSupply: string;
@@ -103,9 +103,9 @@ export declare class VendorsService {
             email: string;
             firstName: string;
             lastName: string;
+            mobile: string | null;
             salutation: string | null;
             workPhone: string | null;
-            mobile: string | null;
             vendorId: string;
         }[];
         bankAccounts: {
@@ -118,17 +118,17 @@ export declare class VendorsService {
         }[];
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: string;
         email: string;
         firstName: string;
         lastName: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        mobile: string;
         salutation: string | null;
         companyName: string;
         displayName: string;
         workPhone: string;
-        mobile: string;
         language: string;
         gstTreatment: string;
         sourceOfSupply: string;
@@ -146,17 +146,17 @@ export declare class VendorsService {
     }>;
     create(dto: CreateVendorDto): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: string;
         email: string;
         firstName: string;
         lastName: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        mobile: string;
         salutation: string | null;
         companyName: string;
         displayName: string;
         workPhone: string;
-        mobile: string;
         language: string;
         gstTreatment: string;
         sourceOfSupply: string;
@@ -174,17 +174,17 @@ export declare class VendorsService {
     }>;
     update(id: string, dto: Partial<CreateVendorDto>): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: string;
         email: string;
         firstName: string;
         lastName: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        mobile: string;
         salutation: string | null;
         companyName: string;
         displayName: string;
         workPhone: string;
-        mobile: string;
         language: string;
         gstTreatment: string;
         sourceOfSupply: string;
@@ -202,17 +202,17 @@ export declare class VendorsService {
     }>;
     remove(id: string): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: string;
         email: string;
         firstName: string;
         lastName: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        mobile: string;
         salutation: string | null;
         companyName: string;
         displayName: string;
         workPhone: string;
-        mobile: string;
         language: string;
         gstTreatment: string;
         sourceOfSupply: string;

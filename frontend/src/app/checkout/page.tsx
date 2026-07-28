@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { placeOrder } from '../../services/orders.service';
+import { createPhonepePayment } from '../../services/phonepe.service';
 import Link from 'next/link';
 
 interface AddressState {
@@ -52,6 +53,7 @@ export default function CheckoutPage() {
 
   const [orderNotes, setOrderNotes] = useState('');
   const [placingOrder, setPlacingOrder] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
   const [confirmedOrder, setConfirmedOrder] = useState<{ id: string; orderNumber: string } | null>(null);
 
   // Redirect if not authenticated
@@ -87,6 +89,20 @@ export default function CheckoutPage() {
 
   if (!isAuthenticated) {
     return null; // Redirect handles it
+  }
+
+  if (redirecting) {
+    return (
+      <div className="min-h-screen pt-32 px-[6.5%] max-w-md mx-auto text-center space-y-6 font-sans">
+        <div className="bg-white border border-[#e1e5f5] rounded-3xl p-8 shadow-sm space-y-4">
+          <div className="animate-spin w-8 h-8 border-4 border-[#3762f9] border-t-transparent rounded-full mx-auto"></div>
+          <h2 className="text-sm font-bold text-neutral-800 font-sans uppercase tracking-wider">Redirecting to PhonePe...</h2>
+          <p className="text-xs text-neutral-500 font-questrial leading-relaxed">
+            Please wait while we establish a secure connection to the PhonePe Payment Gateway. Do not close or refresh this page.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   if (cartItems.length === 0 && !confirmedOrder) {
@@ -151,13 +167,13 @@ export default function CheckoutPage() {
         items: payloadItems,
       });
 
-      // Clear the local storage cart and local state
-      clearCart();
-      setConfirmedOrder(orderRes);
+      setRedirecting(true);
+      const redirectRes = await createPhonepePayment(orderRes.id);
+      window.location.href = redirectRes.redirectUrl;
     } catch (err: unknown) {
       alert((err as Error).message || 'Failed to place your order. Please check item stock levels and try again.');
-    } finally {
       setPlacingOrder(false);
+      setRedirecting(false);
     }
   };
 
@@ -537,13 +553,13 @@ export default function CheckoutPage() {
 
               <button
                 type="submit"
-                disabled={placingOrder}
+                disabled={placingOrder || redirecting}
                 className="w-full bg-[#3762f9] hover:bg-[#2748c9] disabled:bg-neutral-250 text-white font-bold text-xs uppercase tracking-wider py-4 rounded-xl transition-colors font-questrial cursor-pointer flex items-center justify-center space-x-2"
               >
-                {placingOrder ? (
-                  <span>Processing Order...</span>
+                {placingOrder || redirecting ? (
+                  <span>Processing Payment...</span>
                 ) : (
-                  <span>Place Order (Pay on Delivery)</span>
+                  <span>Proceed to Pay (PhonePe)</span>
                 )}
               </button>
             </div>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import ProductCard from '../../components/product/ProductCard';
 import { getProducts } from '../../services/products.service';
 import { Product } from '../../types/product';
@@ -12,7 +13,16 @@ import { Product } from '../../types/product';
 export default function CartPage() {
   const router = useRouter();
   const { cartItems, cartSubtotal, updateQuantity, removeFromCart } = useCart();
+  const { isAuthenticated } = useAuth();
   const [recommendations, setRecommendations] = React.useState<Product[]>([]);
+
+  const handleProceedToCheckout = () => {
+    if (!isAuthenticated) {
+      router.push('/login?redirect=/checkout');
+    } else {
+      router.push('/checkout');
+    }
+  };
 
   React.useEffect(() => {
     getProducts().then((res) => {
@@ -227,7 +237,7 @@ export default function CartPage() {
 
               {/* Checkout button */}
               <button
-                onClick={() => router.push('/checkout')}
+                onClick={handleProceedToCheckout}
                 className="w-full bg-neutral-900 hover:bg-neutral-850 text-white transition-colors duration-300 py-4 text-[12px] uppercase tracking-widest font-questrial font-medium flex items-center justify-center cursor-pointer"
               >
                 Proceed to Checkout

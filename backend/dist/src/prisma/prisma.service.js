@@ -59,18 +59,21 @@ let PrismaService = class PrismaService extends client_js_1.PrismaClient {
             throw new Error('DATABASE_URL environment variable is missing.');
         }
         const url = new URL(connectionString);
-        let sslConfig = {
-            rejectUnauthorized: false,
-        };
-        try {
-            const certPath = path.join(__dirname, 'global-bundle.pem');
-            if (fs.existsSync(certPath)) {
-                sslConfig = {
-                    ca: fs.readFileSync(certPath),
-                };
+        let sslConfig = false;
+        if (url.searchParams.get('sslmode') !== 'disable') {
+            sslConfig = {
+                rejectUnauthorized: false,
+            };
+            try {
+                const certPath = path.join(__dirname, 'global-bundle.pem');
+                if (fs.existsSync(certPath)) {
+                    sslConfig = {
+                        ca: fs.readFileSync(certPath),
+                    };
+                }
             }
-        }
-        catch (e) {
+            catch (e) {
+            }
         }
         const poolConfig = {
             user: decodeURIComponent(url.username),

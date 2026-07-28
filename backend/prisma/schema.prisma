@@ -397,9 +397,16 @@ model Order {
   shippingAddress Json? // snapshotted address info
   billingAddress  Json? // snapshotted address info
   notes           String?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  items           OrderItem[]
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+  items                 OrderItem[]
+  paymentMethod         String?
+  paymentProvider       String?
+  phonepeTransactionId  String?
+  merchantTransactionId String?
+  paymentReference      String?
+  paymentCompletedAt    DateTime?
+  paymentResponse       String?
 
   @@index([customerId])
 }
