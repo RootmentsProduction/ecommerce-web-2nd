@@ -84,17 +84,17 @@ export declare class VendorsController {
     constructor(vendorsService: VendorsService);
     getVendors(): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: string;
         email: string;
         firstName: string;
         lastName: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        mobile: string;
         salutation: string | null;
         companyName: string;
         displayName: string;
         workPhone: string;
-        mobile: string;
         language: string;
         gstTreatment: string;
         sourceOfSupply: string;
@@ -130,9 +130,9 @@ export declare class VendorsController {
             email: string;
             firstName: string;
             lastName: string;
+            mobile: string | null;
             salutation: string | null;
             workPhone: string | null;
-            mobile: string | null;
             vendorId: string;
         }[];
         bankAccounts: {
@@ -145,17 +145,17 @@ export declare class VendorsController {
         }[];
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: string;
         email: string;
         firstName: string;
         lastName: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        mobile: string;
         salutation: string | null;
         companyName: string;
         displayName: string;
         workPhone: string;
-        mobile: string;
         language: string;
         gstTreatment: string;
         sourceOfSupply: string;
@@ -173,17 +173,17 @@ export declare class VendorsController {
     }>;
     createVendor(dto: CreateVendorBodyDto): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: string;
         email: string;
         firstName: string;
         lastName: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        mobile: string;
         salutation: string | null;
         companyName: string;
         displayName: string;
         workPhone: string;
-        mobile: string;
         language: string;
         gstTreatment: string;
         sourceOfSupply: string;
@@ -201,17 +201,17 @@ export declare class VendorsController {
     }>;
     updateVendor(id: string, dto: UpdateVendorBodyDto): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: string;
         email: string;
         firstName: string;
         lastName: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        mobile: string;
         salutation: string | null;
         companyName: string;
         displayName: string;
         workPhone: string;
-        mobile: string;
         language: string;
         gstTreatment: string;
         sourceOfSupply: string;

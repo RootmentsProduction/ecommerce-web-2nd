@@ -8,6 +8,7 @@ function VerifyEmailForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams?.get('email') || '';
+  const redirect = searchParams?.get('redirect') || '';
 
   const { verifyEmail, resendOtp } = useAuth();
   
@@ -86,8 +87,9 @@ function VerifyEmailForm() {
     try {
       await verifyEmail(email, otpCode);
       setSuccess('Your email has been verified successfully. Redirecting to login...');
+      const loginUrl = redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : '/login';
       setTimeout(() => {
-        router.push('/login');
+        router.push(loginUrl);
       }, 2000);
     } catch (err: unknown) {
       const errMsg = err instanceof Error ? err.message : 'Verification failed. Please check the code and try again.';

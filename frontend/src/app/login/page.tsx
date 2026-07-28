@@ -1,12 +1,15 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams?.get('redirect') || '/';
+
   const { login } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -28,7 +31,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(email, password);
-      router.push('/');
+      router.push(redirect);
     } catch (err: unknown) {
       const errMsg = err instanceof Error ? err.message : 'Login failed. Invalid credentials.';
       setError(errMsg);
@@ -36,6 +39,10 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  const signupHref = redirect !== '/' 
+    ? `/signup?redirect=${encodeURIComponent(redirect)}` 
+    : '/signup';
 
   return (
     <div className="min-h-screen bg-[#fafafa] flex items-center justify-center pt-24 pb-16 px-4">
@@ -123,12 +130,24 @@ export default function LoginPage() {
         <div className="mt-6 text-center">
           <p className="font-questrial text-xs text-neutral-500">
             Don&apos;t have an account?{' '}
-            <Link href="/signup" className="text-[#c59b27] hover:underline">
+            <Link href={signupHref} className="text-[#c59b27] hover:underline">
               Create account
             </Link>
           </p>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#fafafa] flex items-center justify-center pt-24">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#c59b27]"></div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

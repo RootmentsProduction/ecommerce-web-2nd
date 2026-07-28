@@ -24,14 +24,14 @@ export declare class CategoriesController {
             products: number;
         };
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         name: string;
         slug: string;
         description: string | null;
         image: string | null;
         isActive: boolean;
         sortOrder: number;
-        createdAt: Date;
-        updatedAt: Date;
     }[]>;
     getAdminCategories(): Promise<{
         productCount: number;
@@ -39,14 +39,14 @@ export declare class CategoriesController {
             products: number;
         };
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         name: string;
         slug: string;
         description: string | null;
         image: string | null;
         isActive: boolean;
         sortOrder: number;
-        createdAt: Date;
-        updatedAt: Date;
     }[]>;
     getCategoryDetails(idOrSlug: string): Promise<{
         productCount: number;
@@ -54,36 +54,36 @@ export declare class CategoriesController {
             products: number;
         };
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         name: string;
         slug: string;
         description: string | null;
         image: string | null;
         isActive: boolean;
         sortOrder: number;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     createCategory(dto: CreateCategoryBodyDto): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         name: string;
         slug: string;
         description: string | null;
         image: string | null;
         isActive: boolean;
         sortOrder: number;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     updateCategory(id: string, dto: UpdateCategoryBodyDto): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         name: string;
         slug: string;
         description: string | null;
         image: string | null;
         isActive: boolean;
         sortOrder: number;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     deleteCategory(id: string): Promise<void>;
 }

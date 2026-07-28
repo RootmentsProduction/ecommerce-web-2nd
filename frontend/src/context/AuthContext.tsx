@@ -42,7 +42,7 @@ const MOCK_DEV_ADMIN: User = {
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(MOCK_DEV_ADMIN);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const isAuthenticated = !!user;
@@ -54,10 +54,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response && response.user) {
         setUser(response.user);
       } else {
-        setUser(MOCK_DEV_ADMIN);
+        setUser(null);
       }
     } catch {
-      setUser(MOCK_DEV_ADMIN);
+      setUser(null);
     } finally {
       setIsLoading(false);
     }
@@ -96,8 +96,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       setAccessToken(response.accessToken);
       setUser(response.user);
-    } catch {
-      setUser(MOCK_DEV_ADMIN);
+    } catch (error) {
+      setUser(null);
+      throw error;
     } finally {
       setIsLoading(false);
     }
