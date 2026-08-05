@@ -8,6 +8,7 @@ import OrderDetailsSummary from "@/components/admin/orders/OrderDetailsSummary";
 import OrderCustomerCard from "@/components/admin/orders/OrderCustomerCard";
 import OrderItemsTable from "@/components/admin/orders/OrderItemsTable";
 import OrderPaymentCard from "@/components/admin/orders/OrderPaymentCard";
+import OrderShippingCard from "@/components/admin/orders/OrderShippingCard";
 import OrderTimeline from "@/components/admin/orders/OrderTimeline";
 import { getOrderById, updateOrderStatus } from "@/services/orders.service";
 import { AdminOrderDetails, StatusType } from "@/types/admin";
@@ -123,8 +124,16 @@ export default function AdminOrderDetailsPage({ params }: PageProps) {
             <OrderTimeline timeline={order.timeline} />
           </div>
 
-          {/* Customer profile & Financial details */}
+          {/* Customer profile, Shipping & Financial details */}
           <div className="lg:col-span-1 space-y-6">
+            <OrderShippingCard
+              orderId={order.id}
+              initialShipment={order.shipment}
+              onShipmentUpdate={(updatedShipment) => {
+                setOrder((prev) => (prev ? { ...prev, shipment: updatedShipment } : null));
+              }}
+            />
+
             <OrderCustomerCard
               name={order.customerName}
               phone={order.customerPhone}
@@ -152,3 +161,4 @@ export default function AdminOrderDetailsPage({ params }: PageProps) {
     </div>
   );
 }
+
