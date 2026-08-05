@@ -38,3 +38,23 @@ export declare const OtpPurpose: {
     readonly PASSWORD_RESET: "PASSWORD_RESET";
 };
 export type OtpPurpose = (typeof OtpPurpose)[keyof typeof OtpPurpose];
+export declare const ShipmentStatus: {
+    readonly NEW: "NEW";
+    readonly COURIER_ASSIGNED: "COURIER_ASSIGNED";
+    readonly PICKUP_SCHEDULED: "PICKUP_SCHEDULED";
+    readonly PICKED_UP: "PICKED_UP";
+    readonly IN_TRANSIT: "IN_TRANSIT";
+    readonly OUT_FOR_DELIVERY: "OUT_FOR_DELIVERY";
+    readonly DELIVERED: "DELIVERED";
+    readonly CANCELLED: "CANCELLED";
+    readonly RTO_INITIATED: "RTO_INITIATED";
+    readonly RTO_DELIVERED: "RTO_DELIVERED";
+};
+export type ShipmentStatus = (typeof ShipmentStatus)[keyof typeof ShipmentStatus];
+export declare const PickupStatus: {
+    readonly PENDING: "PENDING";
+    readonly SCHEDULED: "SCHEDULED";
+    readonly PICKED_UP: "PICKED_UP";
+    readonly CANCELLED: "CANCELLED";
+};
+export type PickupStatus = (typeof PickupStatus)[keyof typeof PickupStatus];

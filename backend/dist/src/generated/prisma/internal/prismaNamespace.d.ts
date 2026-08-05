@@ -176,6 +176,11 @@ export declare const ModelName: {
     readonly PurchaseReceiptItem: "PurchaseReceiptItem";
     readonly CustomerAddress: "CustomerAddress";
     readonly Order: "Order";
+    readonly ShippingSettings: "ShippingSettings";
+    readonly Shipment: "Shipment";
+    readonly ShipmentLog: "ShipmentLog";
+    readonly ShipmentEvent: "ShipmentEvent";
+    readonly ShippingWebhookLog: "ShippingWebhookLog";
     readonly OrderItem: "OrderItem";
     readonly SystemSetting: "SystemSetting";
 };
@@ -190,7 +195,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "category" | "product" | "productImage" | "productVariant" | "inventory" | "stockTransaction" | "user" | "emailOtp" | "refreshSession" | "vendor" | "vendorAddress" | "vendorContact" | "vendorBankAccount" | "purchaseOrder" | "purchaseOrderItem" | "purchaseReceipt" | "purchaseReceiptItem" | "customerAddress" | "order" | "orderItem" | "systemSetting";
+        modelProps: "category" | "product" | "productImage" | "productVariant" | "inventory" | "stockTransaction" | "user" | "emailOtp" | "refreshSession" | "vendor" | "vendorAddress" | "vendorContact" | "vendorBankAccount" | "purchaseOrder" | "purchaseOrderItem" | "purchaseReceipt" | "purchaseReceiptItem" | "customerAddress" | "order" | "shippingSettings" | "shipment" | "shipmentLog" | "shipmentEvent" | "shippingWebhookLog" | "orderItem" | "systemSetting";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -1600,6 +1605,376 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 };
             };
         };
+        ShippingSettings: {
+            payload: Prisma.$ShippingSettingsPayload<ExtArgs>;
+            fields: Prisma.ShippingSettingsFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.ShippingSettingsFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingSettingsPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.ShippingSettingsFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingSettingsPayload>;
+                };
+                findFirst: {
+                    args: Prisma.ShippingSettingsFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingSettingsPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.ShippingSettingsFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingSettingsPayload>;
+                };
+                findMany: {
+                    args: Prisma.ShippingSettingsFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingSettingsPayload>[];
+                };
+                create: {
+                    args: Prisma.ShippingSettingsCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingSettingsPayload>;
+                };
+                createMany: {
+                    args: Prisma.ShippingSettingsCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.ShippingSettingsCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingSettingsPayload>[];
+                };
+                delete: {
+                    args: Prisma.ShippingSettingsDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingSettingsPayload>;
+                };
+                update: {
+                    args: Prisma.ShippingSettingsUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingSettingsPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.ShippingSettingsDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.ShippingSettingsUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.ShippingSettingsUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingSettingsPayload>[];
+                };
+                upsert: {
+                    args: Prisma.ShippingSettingsUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingSettingsPayload>;
+                };
+                aggregate: {
+                    args: Prisma.ShippingSettingsAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateShippingSettings>;
+                };
+                groupBy: {
+                    args: Prisma.ShippingSettingsGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.ShippingSettingsGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.ShippingSettingsCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.ShippingSettingsCountAggregateOutputType> | number;
+                };
+            };
+        };
+        Shipment: {
+            payload: Prisma.$ShipmentPayload<ExtArgs>;
+            fields: Prisma.ShipmentFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.ShipmentFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.ShipmentFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentPayload>;
+                };
+                findFirst: {
+                    args: Prisma.ShipmentFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.ShipmentFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentPayload>;
+                };
+                findMany: {
+                    args: Prisma.ShipmentFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentPayload>[];
+                };
+                create: {
+                    args: Prisma.ShipmentCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentPayload>;
+                };
+                createMany: {
+                    args: Prisma.ShipmentCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.ShipmentCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentPayload>[];
+                };
+                delete: {
+                    args: Prisma.ShipmentDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentPayload>;
+                };
+                update: {
+                    args: Prisma.ShipmentUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.ShipmentDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.ShipmentUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.ShipmentUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentPayload>[];
+                };
+                upsert: {
+                    args: Prisma.ShipmentUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentPayload>;
+                };
+                aggregate: {
+                    args: Prisma.ShipmentAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateShipment>;
+                };
+                groupBy: {
+                    args: Prisma.ShipmentGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.ShipmentGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.ShipmentCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.ShipmentCountAggregateOutputType> | number;
+                };
+            };
+        };
+        ShipmentLog: {
+            payload: Prisma.$ShipmentLogPayload<ExtArgs>;
+            fields: Prisma.ShipmentLogFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.ShipmentLogFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentLogPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.ShipmentLogFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentLogPayload>;
+                };
+                findFirst: {
+                    args: Prisma.ShipmentLogFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentLogPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.ShipmentLogFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentLogPayload>;
+                };
+                findMany: {
+                    args: Prisma.ShipmentLogFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentLogPayload>[];
+                };
+                create: {
+                    args: Prisma.ShipmentLogCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentLogPayload>;
+                };
+                createMany: {
+                    args: Prisma.ShipmentLogCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.ShipmentLogCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentLogPayload>[];
+                };
+                delete: {
+                    args: Prisma.ShipmentLogDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentLogPayload>;
+                };
+                update: {
+                    args: Prisma.ShipmentLogUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentLogPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.ShipmentLogDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.ShipmentLogUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.ShipmentLogUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentLogPayload>[];
+                };
+                upsert: {
+                    args: Prisma.ShipmentLogUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentLogPayload>;
+                };
+                aggregate: {
+                    args: Prisma.ShipmentLogAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateShipmentLog>;
+                };
+                groupBy: {
+                    args: Prisma.ShipmentLogGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.ShipmentLogGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.ShipmentLogCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.ShipmentLogCountAggregateOutputType> | number;
+                };
+            };
+        };
+        ShipmentEvent: {
+            payload: Prisma.$ShipmentEventPayload<ExtArgs>;
+            fields: Prisma.ShipmentEventFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.ShipmentEventFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentEventPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.ShipmentEventFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentEventPayload>;
+                };
+                findFirst: {
+                    args: Prisma.ShipmentEventFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentEventPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.ShipmentEventFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentEventPayload>;
+                };
+                findMany: {
+                    args: Prisma.ShipmentEventFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentEventPayload>[];
+                };
+                create: {
+                    args: Prisma.ShipmentEventCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentEventPayload>;
+                };
+                createMany: {
+                    args: Prisma.ShipmentEventCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.ShipmentEventCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentEventPayload>[];
+                };
+                delete: {
+                    args: Prisma.ShipmentEventDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentEventPayload>;
+                };
+                update: {
+                    args: Prisma.ShipmentEventUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentEventPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.ShipmentEventDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.ShipmentEventUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.ShipmentEventUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentEventPayload>[];
+                };
+                upsert: {
+                    args: Prisma.ShipmentEventUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShipmentEventPayload>;
+                };
+                aggregate: {
+                    args: Prisma.ShipmentEventAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateShipmentEvent>;
+                };
+                groupBy: {
+                    args: Prisma.ShipmentEventGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.ShipmentEventGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.ShipmentEventCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.ShipmentEventCountAggregateOutputType> | number;
+                };
+            };
+        };
+        ShippingWebhookLog: {
+            payload: Prisma.$ShippingWebhookLogPayload<ExtArgs>;
+            fields: Prisma.ShippingWebhookLogFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.ShippingWebhookLogFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingWebhookLogPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.ShippingWebhookLogFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingWebhookLogPayload>;
+                };
+                findFirst: {
+                    args: Prisma.ShippingWebhookLogFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingWebhookLogPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.ShippingWebhookLogFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingWebhookLogPayload>;
+                };
+                findMany: {
+                    args: Prisma.ShippingWebhookLogFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingWebhookLogPayload>[];
+                };
+                create: {
+                    args: Prisma.ShippingWebhookLogCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingWebhookLogPayload>;
+                };
+                createMany: {
+                    args: Prisma.ShippingWebhookLogCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.ShippingWebhookLogCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingWebhookLogPayload>[];
+                };
+                delete: {
+                    args: Prisma.ShippingWebhookLogDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingWebhookLogPayload>;
+                };
+                update: {
+                    args: Prisma.ShippingWebhookLogUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingWebhookLogPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.ShippingWebhookLogDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.ShippingWebhookLogUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.ShippingWebhookLogUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingWebhookLogPayload>[];
+                };
+                upsert: {
+                    args: Prisma.ShippingWebhookLogUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$ShippingWebhookLogPayload>;
+                };
+                aggregate: {
+                    args: Prisma.ShippingWebhookLogAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateShippingWebhookLog>;
+                };
+                groupBy: {
+                    args: Prisma.ShippingWebhookLogGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.ShippingWebhookLogGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.ShippingWebhookLogCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.ShippingWebhookLogCountAggregateOutputType> | number;
+                };
+            };
+        };
         OrderItem: {
             payload: Prisma.$OrderItemPayload<ExtArgs>;
             fields: Prisma.OrderItemFieldRefs;
@@ -1787,6 +2162,10 @@ export declare const CategoryScalarFieldEnum: {
     readonly image: "image";
     readonly isActive: "isActive";
     readonly sortOrder: "sortOrder";
+    readonly defaultLength: "defaultLength";
+    readonly defaultWidth: "defaultWidth";
+    readonly defaultHeight: "defaultHeight";
+    readonly defaultWeight: "defaultWeight";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
 };
@@ -1808,6 +2187,10 @@ export declare const ProductScalarFieldEnum: {
     readonly showOnHomepage: "showOnHomepage";
     readonly occasion: "occasion";
     readonly gender: "gender";
+    readonly packageLength: "packageLength";
+    readonly packageWidth: "packageWidth";
+    readonly packageHeight: "packageHeight";
+    readonly packageWeight: "packageWeight";
     readonly categoryId: "categoryId";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
@@ -2064,6 +2447,101 @@ export declare const OrderScalarFieldEnum: {
     readonly paymentResponse: "paymentResponse";
 };
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum];
+export declare const ShippingSettingsScalarFieldEnum: {
+    readonly id: "id";
+    readonly provider: "provider";
+    readonly shiprocketEmail: "shiprocketEmail";
+    readonly shiprocketPassword: "shiprocketPassword";
+    readonly pickupLocation: "pickupLocation";
+    readonly defaultLength: "defaultLength";
+    readonly defaultWidth: "defaultWidth";
+    readonly defaultHeight: "defaultHeight";
+    readonly defaultWeight: "defaultWeight";
+    readonly weightUnit: "weightUnit";
+    readonly autoCreateShipment: "autoCreateShipment";
+    readonly autoAssignCourier: "autoAssignCourier";
+    readonly autoGenerateAwb: "autoGenerateAwb";
+    readonly autoSchedulePickup: "autoSchedulePickup";
+    readonly autoGenerateManifest: "autoGenerateManifest";
+    readonly autoGenerateLabel: "autoGenerateLabel";
+    readonly freeShippingThreshold: "freeShippingThreshold";
+    readonly standardShippingCharge: "standardShippingCharge";
+    readonly expressShippingCharge: "expressShippingCharge";
+    readonly codEnabled: "codEnabled";
+    readonly internationalShipping: "internationalShipping";
+    readonly returnShippingEnabled: "returnShippingEnabled";
+    readonly rtoSettings: "rtoSettings";
+    readonly webhookSecret: "webhookSecret";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type ShippingSettingsScalarFieldEnum = (typeof ShippingSettingsScalarFieldEnum)[keyof typeof ShippingSettingsScalarFieldEnum];
+export declare const ShipmentScalarFieldEnum: {
+    readonly id: "id";
+    readonly orderId: "orderId";
+    readonly shiprocketOrderId: "shiprocketOrderId";
+    readonly shipmentId: "shipmentId";
+    readonly awb: "awb";
+    readonly courierCompanyId: "courierCompanyId";
+    readonly courier: "courier";
+    readonly courierRating: "courierRating";
+    readonly estimatedDays: "estimatedDays";
+    readonly shippingCharge: "shippingCharge";
+    readonly codCharge: "codCharge";
+    readonly trackingUrl: "trackingUrl";
+    readonly pickupStatus: "pickupStatus";
+    readonly shipmentStatus: "shipmentStatus";
+    readonly statusCode: "statusCode";
+    readonly labelUrl: "labelUrl";
+    readonly manifestUrl: "manifestUrl";
+    readonly invoiceUrl: "invoiceUrl";
+    readonly pickupScheduledDate: "pickupScheduledDate";
+    readonly pickupTokenNumber: "pickupTokenNumber";
+    readonly length: "length";
+    readonly width: "width";
+    readonly height: "height";
+    readonly weight: "weight";
+    readonly pickupLocation: "pickupLocation";
+    readonly estimatedDelivery: "estimatedDelivery";
+    readonly lastTrackingUpdate: "lastTrackingUpdate";
+    readonly rawShipmentData: "rawShipmentData";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type ShipmentScalarFieldEnum = (typeof ShipmentScalarFieldEnum)[keyof typeof ShipmentScalarFieldEnum];
+export declare const ShipmentLogScalarFieldEnum: {
+    readonly id: "id";
+    readonly shipmentId: "shipmentId";
+    readonly action: "action";
+    readonly performedBy: "performedBy";
+    readonly remarks: "remarks";
+    readonly payload: "payload";
+    readonly createdAt: "createdAt";
+};
+export type ShipmentLogScalarFieldEnum = (typeof ShipmentLogScalarFieldEnum)[keyof typeof ShipmentLogScalarFieldEnum];
+export declare const ShipmentEventScalarFieldEnum: {
+    readonly id: "id";
+    readonly shipmentId: "shipmentId";
+    readonly status: "status";
+    readonly statusCode: "statusCode";
+    readonly activity: "activity";
+    readonly location: "location";
+    readonly eventTimestamp: "eventTimestamp";
+    readonly rawPayload: "rawPayload";
+    readonly createdAt: "createdAt";
+};
+export type ShipmentEventScalarFieldEnum = (typeof ShipmentEventScalarFieldEnum)[keyof typeof ShipmentEventScalarFieldEnum];
+export declare const ShippingWebhookLogScalarFieldEnum: {
+    readonly id: "id";
+    readonly eventId: "eventId";
+    readonly event: "event";
+    readonly payload: "payload";
+    readonly processed: "processed";
+    readonly error: "error";
+    readonly receivedAt: "receivedAt";
+    readonly createdAt: "createdAt";
+};
+export type ShippingWebhookLogScalarFieldEnum = (typeof ShippingWebhookLogScalarFieldEnum)[keyof typeof ShippingWebhookLogScalarFieldEnum];
 export declare const OrderItemScalarFieldEnum: {
     readonly id: "id";
     readonly orderId: "orderId";
@@ -2114,6 +2592,8 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>;
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>;
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>;
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>;
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>;
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>;
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>;
 export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>;
@@ -2132,8 +2612,10 @@ export type EnumOtpPurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
 export type ListEnumOtpPurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OtpPurpose[]'>;
 export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>;
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>;
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>;
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>;
+export type EnumPickupStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PickupStatus'>;
+export type ListEnumPickupStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PickupStatus[]'>;
+export type EnumShipmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ShipmentStatus'>;
+export type ListEnumShipmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ShipmentStatus[]'>;
 export type BatchPayload = {
     count: number;
 };
@@ -2178,6 +2660,11 @@ export type GlobalOmitConfig = {
     purchaseReceiptItem?: Prisma.PurchaseReceiptItemOmit;
     customerAddress?: Prisma.CustomerAddressOmit;
     order?: Prisma.OrderOmit;
+    shippingSettings?: Prisma.ShippingSettingsOmit;
+    shipment?: Prisma.ShipmentOmit;
+    shipmentLog?: Prisma.ShipmentLogOmit;
+    shipmentEvent?: Prisma.ShipmentEventOmit;
+    shippingWebhookLog?: Prisma.ShippingWebhookLogOmit;
     orderItem?: Prisma.OrderItemOmit;
     systemSetting?: Prisma.SystemSettingOmit;
 };
