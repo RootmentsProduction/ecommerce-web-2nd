@@ -29,18 +29,37 @@ export async function apiFetch<T = unknown>(path: string, options: RequestOption
 
   const controller = new AbortController();
   const timeoutMs = options.timeout ?? 10000;
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  const timeoutId = setTimeout(() => {
+    controller.abort(new Error(`Request to ${path} timed out after ${timeoutMs}ms`));
+  }, timeoutMs);
+
+  let signal: AbortSignal = controller.signal;
+  if (options.signal) {
+    if (typeof AbortSignal.any === 'function') {
+      signal = AbortSignal.any([options.signal, controller.signal]);
+    } else {
+      options.signal.addEventListener('abort', () => controller.abort(options.signal?.reason), { once: true });
+    }
+  }
 
   const mergedOptions: RequestInit = {
     ...options,
     headers,
-    signal: options.signal || controller.signal,
+    signal,
     credentials: 'include', // Send cookies
   };
 
   let response: Response;
   try {
     response = await fetch(url, mergedOptions);
+  } catch (err: any) {
+    if (err?.name === 'AbortError') {
+      if (options.signal?.aborted) {
+        throw err;
+      }
+      throw new Error(`Request timed out after ${timeoutMs}ms`);
+    }
+    throw err;
   } finally {
     clearTimeout(timeoutId);
   }

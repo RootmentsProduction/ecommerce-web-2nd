@@ -58,12 +58,12 @@ export declare class PurchaseOrdersService {
     findAll(): Promise<({
         vendor: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            status: string;
             email: string;
             firstName: string;
             lastName: string;
-            status: string;
-            createdAt: Date;
-            updatedAt: Date;
             mobile: string;
             salutation: string | null;
             companyName: string;
@@ -86,9 +86,9 @@ export declare class PurchaseOrdersService {
         };
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         paymentTerms: string;
         attachments: string | null;
@@ -124,12 +124,12 @@ export declare class PurchaseOrdersService {
     findOne(id: string): Promise<{
         vendor: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            status: string;
             email: string;
             firstName: string;
             lastName: string;
-            status: string;
-            createdAt: Date;
-            updatedAt: Date;
             mobile: string;
             salutation: string | null;
             companyName: string;
@@ -179,9 +179,9 @@ export declare class PurchaseOrdersService {
         })[];
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         paymentTerms: string;
         attachments: string | null;
@@ -230,9 +230,9 @@ export declare class PurchaseOrdersService {
         }[];
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         paymentTerms: string;
         attachments: string | null;
@@ -281,9 +281,9 @@ export declare class PurchaseOrdersService {
         }[];
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         paymentTerms: string;
         attachments: string | null;
@@ -322,9 +322,9 @@ export declare class PurchaseOrdersService {
     }>;
     updateStatus(id: string, status: string): Promise<{
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         paymentTerms: string;
         attachments: string | null;

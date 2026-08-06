@@ -19,37 +19,29 @@ export default function Header() {
   const isHomePage = pathname === '/';
 
   const [isScrolled, setIsScrolled] = useState(!isHomePage);
-  const [prevIsHomePage, setPrevIsHomePage] = useState(isHomePage);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<MenuItem | null>(null);
   const [mobileExpandedItem, setMobileExpandedItem] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  if (isHomePage !== prevIsHomePage) {
-    setPrevIsHomePage(isHomePage);
-    setIsScrolled(!isHomePage);
-  }
-
   useEffect(() => {
-    if (!isHomePage) return;
+    if (!isHomePage) {
+      setIsScrolled(true);
+      return;
+    }
 
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 50);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    // Run once on mount to handle initial scroll position
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isHomePage]);
+  }, [isHomePage, pathname]);
 
   // Determine header classes based on route and scroll state
   const headerBgClass = isHomePage
@@ -112,7 +104,7 @@ export default function Header() {
                 <span className="text-[#B78924] text-xl font-bold leading-none select-none md:hidden pt-0.5">✳</span>
                 <Link href="/" className="inline-block">
                   <span className={`font-raleway text-[17px] sm:text-[21.25px] leading-none tracking-[0em] font-medium transition-colors duration-350 ${logoColorClass}`}>
-                    Jewelry by Zorucci
+                    Crafts by Zorucci
                   </span>
                 </Link>
               </div>
@@ -129,15 +121,15 @@ export default function Header() {
                 >
                   <Link
                     href={item.href}
-                    className={`font-questrial text-[17.38px] leading-[25.11px] uppercase tracking-normal transition-colors py-2 flex items-center gap-1.5 ${navLinkClass(
+                    className={`font-questrial text-[15px] lg:text-[16.5px] leading-[25px] uppercase tracking-wider transition-colors py-2 flex items-center gap-1.5 ${navLinkClass(
                       item.href,
                       item.name
                     )}`}
                   >
                     <span>{item.name}</span>
-                    {item.name === 'Collections' && (
-                      <svg className="w-2.5 h-2.5 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
+                    {item.hasMegaMenu && (
+                      <svg className="w-3 h-3 opacity-80 pt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                       </svg>
                     )}
                   </Link>

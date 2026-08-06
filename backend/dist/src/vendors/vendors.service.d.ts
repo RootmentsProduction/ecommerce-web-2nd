@@ -57,12 +57,12 @@ export declare class VendorsService {
     constructor(prisma: PrismaService);
     findAll(): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
         email: string;
         firstName: string;
         lastName: string;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         mobile: string;
         salutation: string | null;
         companyName: string;
@@ -118,12 +118,12 @@ export declare class VendorsService {
         }[];
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
         email: string;
         firstName: string;
         lastName: string;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         mobile: string;
         salutation: string | null;
         companyName: string;
@@ -146,12 +146,12 @@ export declare class VendorsService {
     }>;
     create(dto: CreateVendorDto): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
         email: string;
         firstName: string;
         lastName: string;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         mobile: string;
         salutation: string | null;
         companyName: string;
@@ -174,12 +174,12 @@ export declare class VendorsService {
     }>;
     update(id: string, dto: Partial<CreateVendorDto>): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
         email: string;
         firstName: string;
         lastName: string;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         mobile: string;
         salutation: string | null;
         companyName: string;
@@ -202,12 +202,12 @@ export declare class VendorsService {
     }>;
     remove(id: string): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
         email: string;
         firstName: string;
         lastName: string;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         mobile: string;
         salutation: string | null;
         companyName: string;

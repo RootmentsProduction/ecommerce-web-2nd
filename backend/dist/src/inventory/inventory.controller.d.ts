@@ -31,9 +31,9 @@ export declare class InventoryController {
         transaction: {
             id: string;
             createdAt: Date;
-            type: import("../generated/prisma/enums").StockTransactionType;
             productId: string;
             variantId: string | null;
+            type: import("../generated/prisma/enums").StockTransactionType;
             quantity: number;
             beforeStock: number;
             afterStock: number;

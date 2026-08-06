@@ -110,130 +110,76 @@ function EmptyCategories() {
 // ---------------------------------------------------------------------------
 // Main async server component
 // ---------------------------------------------------------------------------
+const DEFAULT_CRAFTS_CATEGORIES = [
+  { id: 'cat-1', name: 'Stationery', slug: 'stationery', image: '/crafts/cat_stationaries.png' },
+  { id: 'cat-2', name: 'Art & Craft', slug: 'art-craft', image: '/crafts/cat_stationaries.png' },
+  { id: 'cat-3', name: 'Drinkware', slug: 'drinkware', image: '/crafts/plush_rocking_horse.png' },
+  { id: 'cat-4', name: 'Hair Accessories', slug: 'hair-accessories', image: '/crafts/teething_ring_toy.png' },
+  { id: 'cat-5', name: 'Bags & Pouches', slug: 'bags-pouches', image: '/crafts/bear_keychain.png' },
+  { id: 'cat-6', name: 'Plush Toys', slug: 'plush-toys', image: '/crafts/cat_plush_toys.png' },
+  { id: 'cat-7', name: 'Keychains', slug: 'keychains', image: '/crafts/cat_keychains.png' },
+  { id: 'cat-8', name: 'Home & Living', slug: 'home-living', image: '/crafts/cat_home_living.png' },
+  { id: 'cat-9', name: 'Gifting', slug: 'gifting', image: '/crafts/hero_stacking_toy.png' },
+];
+
 export default async function CategorySection() {
-  // getCategories() already catches all errors and returns [] on failure.
-  const [raw, settings] = await Promise.all([
-    getCategories(),
-    getSystemSettings()
-  ]);
-  const categoryImage = settings.category_image || "/cat_large.png";
+  const raw = await getCategories();
+  const backendCategories = raw as unknown as BackendCategory[];
 
-  // Cast to the richer backend shape. The service may return objects where
-  // `count` maps to productCount; both are optional here and we don't use them
-  // in the UI, so no mapping is required beyond slug/image.
-  const categories = raw as unknown as BackendCategory[];
-
-  if (categories.length === 0) {
-    return <EmptyCategories />;
-  }
+  const categories = backendCategories.length > 0
+    ? backendCategories.map((c, i) => ({
+        id: c.id,
+        name: c.name,
+        slug: c.slug,
+        image: c.image || DEFAULT_CRAFTS_CATEGORIES[i % DEFAULT_CRAFTS_CATEGORIES.length].image,
+      }))
+    : DEFAULT_CRAFTS_CATEGORIES;
 
   return (
-    <section className="py-12 sm:py-16 bg-white">
+    <section className="py-12 sm:py-20 bg-white">
       <div className="w-full px-[6.5%] mx-auto max-w-none">
 
-        {/* Desktop Centered Heading (hidden on mobile) */}
-        <div className="hidden sm:block text-center mb-10 sm:mb-14">
-          <h2 className="font-raleway font-medium text-[36px] leading-[100%] tracking-normal text-center text-[#453920]">
+        {/* Section Heading */}
+        <div className="text-center mb-10 sm:mb-16">
+          <h2 className="font-raleway font-medium text-[30px] sm:text-[40px] leading-[100%] tracking-normal text-[#3c2f1d]">
             Shop By Categories
           </h2>
         </div>
 
-        {/* Mobile Centered Heading */}
-        <div className="flex flex-col items-center text-center mb-6 sm:hidden">
-          <div
-            className="flex items-center gap-2 mb-2"
-            style={{
-              color: '#B78924',
-              fontFamily: "'Questrial', sans-serif",
-              fontWeight: 200,
-              fontSize: '18px',
-              lineHeight: '26px',
-              letterSpacing: '0%',
-              textTransform: 'uppercase',
-            }}
-          >
-            <span className="text-[16px]">✳</span>
-            <span>Our Collection</span>
-          </div>
-          <h2 className="font-raleway font-medium text-[26px] leading-[32px] tracking-wide text-neutral-900 uppercase max-w-xs mx-auto">
-            Shop By Categories
-          </h2>
-        </div>
-
-        {/* Split Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-
-          {/* Left Column – live category rows */}
-          <div className="lg:col-span-5 order-2 lg:order-1">
-            {categories.map((cat, idx) => (
-              <Link
-                key={cat.id}
-                href={`/shop?category=${encodeURIComponent(cat.slug)}`}
-                className={`flex items-center justify-between py-[22px] group transition-colors duration-300 hover:bg-neutral-50/50 px-0 ${
-                  idx !== categories.length - 1 ? 'border-b border-neutral-200' : ''
-                }`}
-              >
-                <div className="flex items-center gap-8">
-                  {/* Category Thumbnail */}
-                  <div className="relative w-[72px] h-[72px] bg-neutral-50 overflow-hidden flex-shrink-0 rounded-md border border-neutral-100">
-                    {cat.image ? (
-                      <Image
-                        src={cat.image}
-                        alt={cat.name}
-                        fill
-                        sizes="72px"
-                        className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
-                        unoptimized={false}
-                      />
-                    ) : (
-                      /* Placeholder when no image is set */
-                      <div className="w-full h-full flex items-center justify-center bg-neutral-100">
-                        <svg
-                          className="w-6 h-6 text-neutral-300"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="1.2"
-                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Category Name */}
-                  <span className="font-questrial font-normal text-[22px] leading-[26px] tracking-normal text-neutral-800">
-                    {cat.name}
-                  </span>
+        {/* 3-Column Category Grid matching Screenshot 3 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
+          {categories.map((cat) => (
+            <Link
+              key={cat.id}
+              href={`/shop?category=${encodeURIComponent(cat.slug)}`}
+              className="flex items-center justify-between py-4 border-b border-neutral-200 group hover:border-neutral-400 transition-colors"
+            >
+              <div className="flex items-center gap-5">
+                {/* Image Thumbnail */}
+                <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-[#f7f5f0] overflow-hidden flex-shrink-0">
+                  <Image
+                    src={cat.image}
+                    alt={cat.name}
+                    fill
+                    sizes="96px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                 </div>
 
-                {/* Arrow indicator */}
-                <div className="text-neutral-900 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300">
-                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.2" d="M5 19L19 5m0 0H9m10 0v10" />
-                  </svg>
-                </div>
-              </Link>
-            ))}
-          </div>
+                {/* Category Name */}
+                <span className="font-questrial font-normal text-lg sm:text-[21px] text-neutral-800 group-hover:text-neutral-950 transition-colors">
+                  {cat.name}
+                </span>
+              </div>
 
-          {/* Right Column – large editorial image */}
-          <div className="lg:col-span-7 h-full order-1 lg:order-2">
-            <div className="relative aspect-[4/3.1] w-full overflow-hidden bg-neutral-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-500">
-              <Image
-                src={categoryImage}
-                alt="Layered Gold Necklaces Styling"
-                fill
-                sizes="(max-width: 1024px) 100vw, 55vw"
-                className="object-cover object-center transition-transform duration-1000 ease-out hover:scale-105"
-              />
-            </div>
-          </div>
-
+              {/* Arrow Up-Right Icon ↗ */}
+              <div className="text-neutral-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300">
+                <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.2" d="M7 17L17 7M17 7H9M17 7V15" />
+                </svg>
+              </div>
+            </Link>
+          ))}
         </div>
 
       </div>

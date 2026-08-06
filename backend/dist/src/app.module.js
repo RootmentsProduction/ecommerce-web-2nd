@@ -27,6 +27,8 @@ const orders_module_1 = require("./orders/orders.module");
 const dashboard_module_1 = require("./dashboard/dashboard.module");
 const system_settings_module_1 = require("./system-settings/system-settings.module");
 const phonepe_module_1 = require("./phonepe/phonepe.module");
+const shipping_module_1 = require("./shipping/shipping.module");
+const schedule_1 = require("@nestjs/schedule");
 const jwt_auth_guard_1 = require("./auth/guards/jwt-auth.guard");
 let AppModule = class AppModule {
 };
@@ -37,6 +39,7 @@ exports.AppModule = AppModule = __decorate([
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
             }),
+            schedule_1.ScheduleModule.forRoot(),
             prisma_module_1.PrismaModule,
             users_module_1.UsersModule,
             email_module_1.EmailModule,
@@ -52,6 +55,7 @@ exports.AppModule = AppModule = __decorate([
             dashboard_module_1.DashboardModule,
             system_settings_module_1.SystemSettingsModule,
             phonepe_module_1.PhonepeModule,
+            shipping_module_1.ShippingModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [

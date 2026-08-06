@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.SystemSettingScalarFieldEnum = exports.OrderItemScalarFieldEnum = exports.OrderScalarFieldEnum = exports.CustomerAddressScalarFieldEnum = exports.PurchaseReceiptItemScalarFieldEnum = exports.PurchaseReceiptScalarFieldEnum = exports.PurchaseOrderItemScalarFieldEnum = exports.PurchaseOrderScalarFieldEnum = exports.VendorBankAccountScalarFieldEnum = exports.VendorContactScalarFieldEnum = exports.VendorAddressScalarFieldEnum = exports.VendorScalarFieldEnum = exports.RefreshSessionScalarFieldEnum = exports.EmailOtpScalarFieldEnum = exports.UserScalarFieldEnum = exports.StockTransactionScalarFieldEnum = exports.InventoryScalarFieldEnum = exports.ProductVariantScalarFieldEnum = exports.ProductImageScalarFieldEnum = exports.ProductScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.SystemSettingScalarFieldEnum = exports.OrderItemScalarFieldEnum = exports.ShippingWebhookLogScalarFieldEnum = exports.ShipmentEventScalarFieldEnum = exports.ShipmentLogScalarFieldEnum = exports.ShipmentScalarFieldEnum = exports.ShippingSettingsScalarFieldEnum = exports.OrderScalarFieldEnum = exports.CustomerAddressScalarFieldEnum = exports.PurchaseReceiptItemScalarFieldEnum = exports.PurchaseReceiptScalarFieldEnum = exports.PurchaseOrderItemScalarFieldEnum = exports.PurchaseOrderScalarFieldEnum = exports.VendorBankAccountScalarFieldEnum = exports.VendorContactScalarFieldEnum = exports.VendorAddressScalarFieldEnum = exports.VendorScalarFieldEnum = exports.RefreshSessionScalarFieldEnum = exports.EmailOtpScalarFieldEnum = exports.UserScalarFieldEnum = exports.StockTransactionScalarFieldEnum = exports.InventoryScalarFieldEnum = exports.ProductVariantScalarFieldEnum = exports.ProductImageScalarFieldEnum = exports.ProductScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -64,6 +64,11 @@ exports.ModelName = {
     PurchaseReceiptItem: 'PurchaseReceiptItem',
     CustomerAddress: 'CustomerAddress',
     Order: 'Order',
+    ShippingSettings: 'ShippingSettings',
+    Shipment: 'Shipment',
+    ShipmentLog: 'ShipmentLog',
+    ShipmentEvent: 'ShipmentEvent',
+    ShippingWebhookLog: 'ShippingWebhookLog',
     OrderItem: 'OrderItem',
     SystemSetting: 'SystemSetting'
 };
@@ -81,6 +86,10 @@ exports.CategoryScalarFieldEnum = {
     image: 'image',
     isActive: 'isActive',
     sortOrder: 'sortOrder',
+    defaultLength: 'defaultLength',
+    defaultWidth: 'defaultWidth',
+    defaultHeight: 'defaultHeight',
+    defaultWeight: 'defaultWeight',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
@@ -101,6 +110,10 @@ exports.ProductScalarFieldEnum = {
     showOnHomepage: 'showOnHomepage',
     occasion: 'occasion',
     gender: 'gender',
+    packageLength: 'packageLength',
+    packageWidth: 'packageWidth',
+    packageHeight: 'packageHeight',
+    packageWeight: 'packageWeight',
     categoryId: 'categoryId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -338,6 +351,96 @@ exports.OrderScalarFieldEnum = {
     paymentReference: 'paymentReference',
     paymentCompletedAt: 'paymentCompletedAt',
     paymentResponse: 'paymentResponse'
+};
+exports.ShippingSettingsScalarFieldEnum = {
+    id: 'id',
+    provider: 'provider',
+    shiprocketEmail: 'shiprocketEmail',
+    shiprocketPassword: 'shiprocketPassword',
+    pickupLocation: 'pickupLocation',
+    defaultLength: 'defaultLength',
+    defaultWidth: 'defaultWidth',
+    defaultHeight: 'defaultHeight',
+    defaultWeight: 'defaultWeight',
+    weightUnit: 'weightUnit',
+    autoCreateShipment: 'autoCreateShipment',
+    autoAssignCourier: 'autoAssignCourier',
+    autoGenerateAwb: 'autoGenerateAwb',
+    autoSchedulePickup: 'autoSchedulePickup',
+    autoGenerateManifest: 'autoGenerateManifest',
+    autoGenerateLabel: 'autoGenerateLabel',
+    freeShippingThreshold: 'freeShippingThreshold',
+    standardShippingCharge: 'standardShippingCharge',
+    expressShippingCharge: 'expressShippingCharge',
+    codEnabled: 'codEnabled',
+    internationalShipping: 'internationalShipping',
+    returnShippingEnabled: 'returnShippingEnabled',
+    rtoSettings: 'rtoSettings',
+    webhookSecret: 'webhookSecret',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.ShipmentScalarFieldEnum = {
+    id: 'id',
+    orderId: 'orderId',
+    shiprocketOrderId: 'shiprocketOrderId',
+    shipmentId: 'shipmentId',
+    awb: 'awb',
+    courierCompanyId: 'courierCompanyId',
+    courier: 'courier',
+    courierRating: 'courierRating',
+    estimatedDays: 'estimatedDays',
+    shippingCharge: 'shippingCharge',
+    codCharge: 'codCharge',
+    trackingUrl: 'trackingUrl',
+    pickupStatus: 'pickupStatus',
+    shipmentStatus: 'shipmentStatus',
+    statusCode: 'statusCode',
+    labelUrl: 'labelUrl',
+    manifestUrl: 'manifestUrl',
+    invoiceUrl: 'invoiceUrl',
+    pickupScheduledDate: 'pickupScheduledDate',
+    pickupTokenNumber: 'pickupTokenNumber',
+    length: 'length',
+    width: 'width',
+    height: 'height',
+    weight: 'weight',
+    pickupLocation: 'pickupLocation',
+    estimatedDelivery: 'estimatedDelivery',
+    lastTrackingUpdate: 'lastTrackingUpdate',
+    rawShipmentData: 'rawShipmentData',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.ShipmentLogScalarFieldEnum = {
+    id: 'id',
+    shipmentId: 'shipmentId',
+    action: 'action',
+    performedBy: 'performedBy',
+    remarks: 'remarks',
+    payload: 'payload',
+    createdAt: 'createdAt'
+};
+exports.ShipmentEventScalarFieldEnum = {
+    id: 'id',
+    shipmentId: 'shipmentId',
+    status: 'status',
+    statusCode: 'statusCode',
+    activity: 'activity',
+    location: 'location',
+    eventTimestamp: 'eventTimestamp',
+    rawPayload: 'rawPayload',
+    createdAt: 'createdAt'
+};
+exports.ShippingWebhookLogScalarFieldEnum = {
+    id: 'id',
+    eventId: 'eventId',
+    event: 'event',
+    payload: 'payload',
+    processed: 'processed',
+    error: 'error',
+    receivedAt: 'receivedAt',
+    createdAt: 'createdAt'
 };
 exports.OrderItemScalarFieldEnum = {
     id: 'id',

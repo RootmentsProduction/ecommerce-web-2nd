@@ -31,16 +31,20 @@ enum StockTransactionType {
 }
 
 model Category {
-  id          String    @id @default(uuid())
-  name        String
-  slug        String    @unique
-  description String?
-  image       String?
-  isActive    Boolean   @default(true)
-  sortOrder   Int       @default(0)
-  products    Product[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id            String    @id @default(uuid())
+  name          String
+  slug          String    @unique
+  description   String?
+  image         String?
+  isActive      Boolean   @default(true)
+  sortOrder     Int       @default(0)
+  defaultLength Float?
+  defaultWidth  Float?
+  defaultHeight Float?
+  defaultWeight Float?
+  products      Product[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model Product {
@@ -60,6 +64,10 @@ model Product {
   showOnHomepage    Boolean            @default(false)
   occasion          String             @default("Everyday")
   gender            String             @default("Unisex")
+  packageLength     Float?
+  packageWidth      Float?
+  packageHeight     Float?
+  packageWeight     Float?
   categoryId        String?
   category          Category?          @relation(fields: [categoryId], references: [id])
   images            ProductImage[]
@@ -407,8 +415,133 @@ model Order {
   paymentReference      String?
   paymentCompletedAt    DateTime?
   paymentResponse       String?
+  shipment              Shipment?
 
   @@index([customerId])
+}
+
+enum ShipmentStatus {
+  NEW
+  COURIER_ASSIGNED
+  PICKUP_SCHEDULED
+  PICKED_UP
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+  RTO_INITIATED
+  RTO_DELIVERED
+}
+
+enum PickupStatus {
+  PENDING
+  SCHEDULED
+  PICKED_UP
+  CANCELLED
+}
+
+model ShippingSettings {
+  id                     String   @id @default(uuid())
+  provider               String   @default("SHIPROCKET")
+  shiprocketEmail        String?
+  shiprocketPassword     String?
+  pickupLocation         String   @default("Primary")
+  defaultLength          Float    @default(20)
+  defaultWidth           Float    @default(20)
+  defaultHeight          Float    @default(10)
+  defaultWeight          Float    @default(0.5)
+  weightUnit             String   @default("kg")
+  autoCreateShipment     Boolean  @default(false)
+  autoAssignCourier      Boolean  @default(false)
+  autoGenerateAwb        Boolean  @default(false)
+  autoSchedulePickup     Boolean  @default(false)
+  autoGenerateManifest   Boolean  @default(false)
+  autoGenerateLabel      Boolean  @default(false)
+  freeShippingThreshold  Decimal  @default(2000.00) @db.Decimal(12, 2)
+  standardShippingCharge Decimal  @default(100.00) @db.Decimal(12, 2)
+  expressShippingCharge  Decimal  @default(200.00) @db.Decimal(12, 2)
+  codEnabled             Boolean  @default(false)
+  internationalShipping  Boolean  @default(false)
+  returnShippingEnabled  Boolean  @default(false)
+  rtoSettings            String?
+  webhookSecret          String?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
+
+model Shipment {
+  id                  String          @id @default(uuid())
+  orderId             String          @unique
+  order               Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  shiprocketOrderId   String?
+  shipmentId          String?
+  awb                 String?
+  courierCompanyId    Int?
+  courier             String?
+  courierRating       Float?
+  estimatedDays       String?
+  shippingCharge      Decimal?        @db.Decimal(12, 2)
+  codCharge           Decimal?        @db.Decimal(12, 2)
+  trackingUrl         String?
+  pickupStatus        PickupStatus    @default(PENDING)
+  shipmentStatus      ShipmentStatus  @default(NEW)
+  statusCode          Int?
+  labelUrl            String?
+  manifestUrl         String?
+  invoiceUrl          String?
+  pickupScheduledDate DateTime?
+  pickupTokenNumber   String?
+  length              Float           @default(20)
+  width               Float           @default(20)
+  height              Float           @default(10)
+  weight              Float           @default(0.5)
+  pickupLocation      String?
+  estimatedDelivery   DateTime?
+  lastTrackingUpdate  DateTime?
+  rawShipmentData     Json?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  events              ShipmentEvent[]
+  logs                ShipmentLog[]
+}
+
+model ShipmentLog {
+  id          String   @id @default(uuid())
+  shipmentId  String
+  shipment    Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+  action      String
+  performedBy String   @default("SYSTEM")
+  remarks     String?
+  payload     Json?
+  createdAt   DateTime @default(now())
+
+  @@index([shipmentId])
+}
+
+model ShipmentEvent {
+  id             String   @id @default(uuid())
+  shipmentId     String
+  shipment       Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+  status         String
+  statusCode     Int?
+  activity       String
+  location       String?
+  eventTimestamp DateTime
+  rawPayload     String?  @db.Text
+  createdAt      DateTime @default(now())
+
+  @@index([shipmentId])
+}
+
+model ShippingWebhookLog {
+  id        String   @id @default(uuid())
+  eventId   String?
+  event     String?
+  payload   String   @db.Text
+  processed Boolean  @default(false)
+  error     String?
+  receivedAt DateTime @default(now())
+  createdAt DateTime @default(now())
 }
 
 model OrderItem {
@@ -436,3 +569,5 @@ model SystemSetting {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+

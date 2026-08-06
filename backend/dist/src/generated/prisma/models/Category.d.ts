@@ -10,9 +10,17 @@ export type AggregateCategory = {
 };
 export type CategoryAvgAggregateOutputType = {
     sortOrder: number | null;
+    defaultLength: number | null;
+    defaultWidth: number | null;
+    defaultHeight: number | null;
+    defaultWeight: number | null;
 };
 export type CategorySumAggregateOutputType = {
     sortOrder: number | null;
+    defaultLength: number | null;
+    defaultWidth: number | null;
+    defaultHeight: number | null;
+    defaultWeight: number | null;
 };
 export type CategoryMinAggregateOutputType = {
     id: string | null;
@@ -22,6 +30,10 @@ export type CategoryMinAggregateOutputType = {
     image: string | null;
     isActive: boolean | null;
     sortOrder: number | null;
+    defaultLength: number | null;
+    defaultWidth: number | null;
+    defaultHeight: number | null;
+    defaultWeight: number | null;
     createdAt: Date | null;
     updatedAt: Date | null;
 };
@@ -33,6 +45,10 @@ export type CategoryMaxAggregateOutputType = {
     image: string | null;
     isActive: boolean | null;
     sortOrder: number | null;
+    defaultLength: number | null;
+    defaultWidth: number | null;
+    defaultHeight: number | null;
+    defaultWeight: number | null;
     createdAt: Date | null;
     updatedAt: Date | null;
 };
@@ -44,15 +60,27 @@ export type CategoryCountAggregateOutputType = {
     image: number;
     isActive: number;
     sortOrder: number;
+    defaultLength: number;
+    defaultWidth: number;
+    defaultHeight: number;
+    defaultWeight: number;
     createdAt: number;
     updatedAt: number;
     _all: number;
 };
 export type CategoryAvgAggregateInputType = {
     sortOrder?: true;
+    defaultLength?: true;
+    defaultWidth?: true;
+    defaultHeight?: true;
+    defaultWeight?: true;
 };
 export type CategorySumAggregateInputType = {
     sortOrder?: true;
+    defaultLength?: true;
+    defaultWidth?: true;
+    defaultHeight?: true;
+    defaultWeight?: true;
 };
 export type CategoryMinAggregateInputType = {
     id?: true;
@@ -62,6 +90,10 @@ export type CategoryMinAggregateInputType = {
     image?: true;
     isActive?: true;
     sortOrder?: true;
+    defaultLength?: true;
+    defaultWidth?: true;
+    defaultHeight?: true;
+    defaultWeight?: true;
     createdAt?: true;
     updatedAt?: true;
 };
@@ -73,6 +105,10 @@ export type CategoryMaxAggregateInputType = {
     image?: true;
     isActive?: true;
     sortOrder?: true;
+    defaultLength?: true;
+    defaultWidth?: true;
+    defaultHeight?: true;
+    defaultWeight?: true;
     createdAt?: true;
     updatedAt?: true;
 };
@@ -84,6 +120,10 @@ export type CategoryCountAggregateInputType = {
     image?: true;
     isActive?: true;
     sortOrder?: true;
+    defaultLength?: true;
+    defaultWidth?: true;
+    defaultHeight?: true;
+    defaultWeight?: true;
     createdAt?: true;
     updatedAt?: true;
     _all?: true;
@@ -124,6 +164,10 @@ export type CategoryGroupByOutputType = {
     image: string | null;
     isActive: boolean;
     sortOrder: number;
+    defaultLength: number | null;
+    defaultWidth: number | null;
+    defaultHeight: number | null;
+    defaultWeight: number | null;
     createdAt: Date;
     updatedAt: Date;
     _count: CategoryCountAggregateOutputType | null;
@@ -146,6 +190,10 @@ export type CategoryWhereInput = {
     image?: Prisma.StringNullableFilter<"Category"> | string | null;
     isActive?: Prisma.BoolFilter<"Category"> | boolean;
     sortOrder?: Prisma.IntFilter<"Category"> | number;
+    defaultLength?: Prisma.FloatNullableFilter<"Category"> | number | null;
+    defaultWidth?: Prisma.FloatNullableFilter<"Category"> | number | null;
+    defaultHeight?: Prisma.FloatNullableFilter<"Category"> | number | null;
+    defaultWeight?: Prisma.FloatNullableFilter<"Category"> | number | null;
     createdAt?: Prisma.DateTimeFilter<"Category"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Category"> | Date | string;
     products?: Prisma.ProductListRelationFilter;
@@ -158,6 +206,10 @@ export type CategoryOrderByWithRelationInput = {
     image?: Prisma.SortOrderInput | Prisma.SortOrder;
     isActive?: Prisma.SortOrder;
     sortOrder?: Prisma.SortOrder;
+    defaultLength?: Prisma.SortOrderInput | Prisma.SortOrder;
+    defaultWidth?: Prisma.SortOrderInput | Prisma.SortOrder;
+    defaultHeight?: Prisma.SortOrderInput | Prisma.SortOrder;
+    defaultWeight?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     products?: Prisma.ProductOrderByRelationAggregateInput;
@@ -173,6 +225,10 @@ export type CategoryWhereUniqueInput = Prisma.AtLeast<{
     image?: Prisma.StringNullableFilter<"Category"> | string | null;
     isActive?: Prisma.BoolFilter<"Category"> | boolean;
     sortOrder?: Prisma.IntFilter<"Category"> | number;
+    defaultLength?: Prisma.FloatNullableFilter<"Category"> | number | null;
+    defaultWidth?: Prisma.FloatNullableFilter<"Category"> | number | null;
+    defaultHeight?: Prisma.FloatNullableFilter<"Category"> | number | null;
+    defaultWeight?: Prisma.FloatNullableFilter<"Category"> | number | null;
     createdAt?: Prisma.DateTimeFilter<"Category"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Category"> | Date | string;
     products?: Prisma.ProductListRelationFilter;
@@ -185,6 +241,10 @@ export type CategoryOrderByWithAggregationInput = {
     image?: Prisma.SortOrderInput | Prisma.SortOrder;
     isActive?: Prisma.SortOrder;
     sortOrder?: Prisma.SortOrder;
+    defaultLength?: Prisma.SortOrderInput | Prisma.SortOrder;
+    defaultWidth?: Prisma.SortOrderInput | Prisma.SortOrder;
+    defaultHeight?: Prisma.SortOrderInput | Prisma.SortOrder;
+    defaultWeight?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     _count?: Prisma.CategoryCountOrderByAggregateInput;
@@ -204,6 +264,10 @@ export type CategoryScalarWhereWithAggregatesInput = {
     image?: Prisma.StringNullableWithAggregatesFilter<"Category"> | string | null;
     isActive?: Prisma.BoolWithAggregatesFilter<"Category"> | boolean;
     sortOrder?: Prisma.IntWithAggregatesFilter<"Category"> | number;
+    defaultLength?: Prisma.FloatNullableWithAggregatesFilter<"Category"> | number | null;
+    defaultWidth?: Prisma.FloatNullableWithAggregatesFilter<"Category"> | number | null;
+    defaultHeight?: Prisma.FloatNullableWithAggregatesFilter<"Category"> | number | null;
+    defaultWeight?: Prisma.FloatNullableWithAggregatesFilter<"Category"> | number | null;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"Category"> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Category"> | Date | string;
 };
@@ -215,6 +279,10 @@ export type CategoryCreateInput = {
     image?: string | null;
     isActive?: boolean;
     sortOrder?: number;
+    defaultLength?: number | null;
+    defaultWidth?: number | null;
+    defaultHeight?: number | null;
+    defaultWeight?: number | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     products?: Prisma.ProductCreateNestedManyWithoutCategoryInput;
@@ -227,6 +295,10 @@ export type CategoryUncheckedCreateInput = {
     image?: string | null;
     isActive?: boolean;
     sortOrder?: number;
+    defaultLength?: number | null;
+    defaultWidth?: number | null;
+    defaultHeight?: number | null;
+    defaultWeight?: number | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     products?: Prisma.ProductUncheckedCreateNestedManyWithoutCategoryInput;
@@ -239,6 +311,10 @@ export type CategoryUpdateInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     sortOrder?: Prisma.IntFieldUpdateOperationsInput | number;
+    defaultLength?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultWidth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultHeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     products?: Prisma.ProductUpdateManyWithoutCategoryNestedInput;
@@ -251,6 +327,10 @@ export type CategoryUncheckedUpdateInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     sortOrder?: Prisma.IntFieldUpdateOperationsInput | number;
+    defaultLength?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultWidth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultHeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     products?: Prisma.ProductUncheckedUpdateManyWithoutCategoryNestedInput;
@@ -263,6 +343,10 @@ export type CategoryCreateManyInput = {
     image?: string | null;
     isActive?: boolean;
     sortOrder?: number;
+    defaultLength?: number | null;
+    defaultWidth?: number | null;
+    defaultHeight?: number | null;
+    defaultWeight?: number | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -274,6 +358,10 @@ export type CategoryUpdateManyMutationInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     sortOrder?: Prisma.IntFieldUpdateOperationsInput | number;
+    defaultLength?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultWidth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultHeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -285,6 +373,10 @@ export type CategoryUncheckedUpdateManyInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     sortOrder?: Prisma.IntFieldUpdateOperationsInput | number;
+    defaultLength?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultWidth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultHeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -296,11 +388,19 @@ export type CategoryCountOrderByAggregateInput = {
     image?: Prisma.SortOrder;
     isActive?: Prisma.SortOrder;
     sortOrder?: Prisma.SortOrder;
+    defaultLength?: Prisma.SortOrder;
+    defaultWidth?: Prisma.SortOrder;
+    defaultHeight?: Prisma.SortOrder;
+    defaultWeight?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
 export type CategoryAvgOrderByAggregateInput = {
     sortOrder?: Prisma.SortOrder;
+    defaultLength?: Prisma.SortOrder;
+    defaultWidth?: Prisma.SortOrder;
+    defaultHeight?: Prisma.SortOrder;
+    defaultWeight?: Prisma.SortOrder;
 };
 export type CategoryMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -310,6 +410,10 @@ export type CategoryMaxOrderByAggregateInput = {
     image?: Prisma.SortOrder;
     isActive?: Prisma.SortOrder;
     sortOrder?: Prisma.SortOrder;
+    defaultLength?: Prisma.SortOrder;
+    defaultWidth?: Prisma.SortOrder;
+    defaultHeight?: Prisma.SortOrder;
+    defaultWeight?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
@@ -321,11 +425,19 @@ export type CategoryMinOrderByAggregateInput = {
     image?: Prisma.SortOrder;
     isActive?: Prisma.SortOrder;
     sortOrder?: Prisma.SortOrder;
+    defaultLength?: Prisma.SortOrder;
+    defaultWidth?: Prisma.SortOrder;
+    defaultHeight?: Prisma.SortOrder;
+    defaultWeight?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
 export type CategorySumOrderByAggregateInput = {
     sortOrder?: Prisma.SortOrder;
+    defaultLength?: Prisma.SortOrder;
+    defaultWidth?: Prisma.SortOrder;
+    defaultHeight?: Prisma.SortOrder;
+    defaultWeight?: Prisma.SortOrder;
 };
 export type CategoryNullableScalarRelationFilter = {
     is?: Prisma.CategoryWhereInput | null;
@@ -342,6 +454,13 @@ export type BoolFieldUpdateOperationsInput = {
 };
 export type IntFieldUpdateOperationsInput = {
     set?: number;
+    increment?: number;
+    decrement?: number;
+    multiply?: number;
+    divide?: number;
+};
+export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null;
     increment?: number;
     decrement?: number;
     multiply?: number;
@@ -372,6 +491,10 @@ export type CategoryCreateWithoutProductsInput = {
     image?: string | null;
     isActive?: boolean;
     sortOrder?: number;
+    defaultLength?: number | null;
+    defaultWidth?: number | null;
+    defaultHeight?: number | null;
+    defaultWeight?: number | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -383,6 +506,10 @@ export type CategoryUncheckedCreateWithoutProductsInput = {
     image?: string | null;
     isActive?: boolean;
     sortOrder?: number;
+    defaultLength?: number | null;
+    defaultWidth?: number | null;
+    defaultHeight?: number | null;
+    defaultWeight?: number | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -407,6 +534,10 @@ export type CategoryUpdateWithoutProductsInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     sortOrder?: Prisma.IntFieldUpdateOperationsInput | number;
+    defaultLength?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultWidth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultHeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -418,6 +549,10 @@ export type CategoryUncheckedUpdateWithoutProductsInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     sortOrder?: Prisma.IntFieldUpdateOperationsInput | number;
+    defaultLength?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultWidth?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultHeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    defaultWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -441,6 +576,10 @@ export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
     image?: boolean;
     isActive?: boolean;
     sortOrder?: boolean;
+    defaultLength?: boolean;
+    defaultWidth?: boolean;
+    defaultHeight?: boolean;
+    defaultWeight?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     products?: boolean | Prisma.Category$productsArgs<ExtArgs>;
@@ -454,6 +593,10 @@ export type CategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
     image?: boolean;
     isActive?: boolean;
     sortOrder?: boolean;
+    defaultLength?: boolean;
+    defaultWidth?: boolean;
+    defaultHeight?: boolean;
+    defaultWeight?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 }, ExtArgs["result"]["category"]>;
@@ -465,6 +608,10 @@ export type CategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
     image?: boolean;
     isActive?: boolean;
     sortOrder?: boolean;
+    defaultLength?: boolean;
+    defaultWidth?: boolean;
+    defaultHeight?: boolean;
+    defaultWeight?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 }, ExtArgs["result"]["category"]>;
@@ -476,10 +623,14 @@ export type CategorySelectScalar = {
     image?: boolean;
     isActive?: boolean;
     sortOrder?: boolean;
+    defaultLength?: boolean;
+    defaultWidth?: boolean;
+    defaultHeight?: boolean;
+    defaultWeight?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 };
-export type CategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "description" | "image" | "isActive" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>;
+export type CategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "description" | "image" | "isActive" | "sortOrder" | "defaultLength" | "defaultWidth" | "defaultHeight" | "defaultWeight" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>;
 export type CategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     products?: boolean | Prisma.Category$productsArgs<ExtArgs>;
     _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>;
@@ -499,6 +650,10 @@ export type $CategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
         image: string | null;
         isActive: boolean;
         sortOrder: number;
+        defaultLength: number | null;
+        defaultWidth: number | null;
+        defaultHeight: number | null;
+        defaultWeight: number | null;
         createdAt: Date;
         updatedAt: Date;
     }, ExtArgs["result"]["category"]>;
@@ -566,6 +721,10 @@ export interface CategoryFieldRefs {
     readonly image: Prisma.FieldRef<"Category", 'String'>;
     readonly isActive: Prisma.FieldRef<"Category", 'Boolean'>;
     readonly sortOrder: Prisma.FieldRef<"Category", 'Int'>;
+    readonly defaultLength: Prisma.FieldRef<"Category", 'Float'>;
+    readonly defaultWidth: Prisma.FieldRef<"Category", 'Float'>;
+    readonly defaultHeight: Prisma.FieldRef<"Category", 'Float'>;
+    readonly defaultWeight: Prisma.FieldRef<"Category", 'Float'>;
     readonly createdAt: Prisma.FieldRef<"Category", 'DateTime'>;
     readonly updatedAt: Prisma.FieldRef<"Category", 'DateTime'>;
 }

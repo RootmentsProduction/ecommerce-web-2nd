@@ -38,15 +38,15 @@ export default function Footer() {
           {/* Left Column (Brand + Newsletter Form) */}
           <div className="lg:col-span-6 space-y-8">
             <div className="flex items-center gap-2 select-none">
-              <span className="text-[#B78924] text-[32px] font-normal leading-none select-none">✳</span>
+              <span className="text-[#8b5cf6] text-[32px] font-normal leading-none select-none">✳</span>
               <span className="font-raleway text-[22px] tracking-normal font-medium text-neutral-900 leading-none">
-                Jewelry by Zorucci
+                Crafts by Zorucci
               </span>
             </div>
             
             <div className="space-y-4 max-w-md">
               <p className="text-neutral-500 font-questrial text-sm leading-relaxed">
-                Get updates about new collections, offers, and special events.
+                Get updates about new handcrafted arrivals, plushies, and special offers.
               </p>
               
               <form onSubmit={(e) => e.preventDefault()} className="flex items-center gap-0 max-w-sm">
@@ -58,7 +58,7 @@ export default function Footer() {
                 />
                 <button
                   type="submit"
-                  className="bg-black hover:bg-neutral-850 text-white uppercase tracking-wider font-questrial font-medium text-sm py-2.5 px-6 transition-colors duration-300 rounded-none flex-shrink-0 border border-black"
+                  className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white uppercase tracking-wider font-questrial font-medium text-sm py-2.5 px-6 transition-colors duration-300 rounded-none flex-shrink-0 border border-[#8b5cf6]"
                 >
                   Subscribe
                 </button>
@@ -71,13 +71,13 @@ export default function Footer() {
             
             {/* Column 1: Shop */}
             <div className="space-y-4">
-              <h4 className="text-sm font-questrial uppercase text-[#B78924] font-medium tracking-wider">
+              <h4 className="text-sm font-questrial uppercase text-[#8b5cf6] font-medium tracking-wider">
                 Shop
               </h4>
               <ul className="space-y-3">
                 {shopLinks.map((link, idx) => (
                   <li key={idx}>
-                    <Link href={link.href} className="font-questrial text-sm text-neutral-600 hover:text-gold-550 transition-colors">
+                    <Link href={link.href} className="font-questrial text-sm text-neutral-600 hover:text-[#8b5cf6] transition-colors">
                       {link.name}
                     </Link>
                   </li>
@@ -87,13 +87,13 @@ export default function Footer() {
 
             {/* Column 2: Help */}
             <div className="space-y-4">
-              <h4 className="text-sm font-questrial uppercase text-[#B78924] font-medium tracking-wider">
+              <h4 className="text-sm font-questrial uppercase text-[#8b5cf6] font-medium tracking-wider">
                 Help
               </h4>
               <ul className="space-y-3">
                 {helpLinks.map((link, idx) => (
                   <li key={idx}>
-                    <Link href={link.href} className="font-questrial text-sm text-neutral-600 hover:text-gold-550 transition-colors">
+                    <Link href={link.href} className="font-questrial text-sm text-neutral-600 hover:text-[#8b5cf6] transition-colors">
                       {link.name}
                     </Link>
                   </li>
@@ -103,7 +103,7 @@ export default function Footer() {
 
             {/* Column 3: Follow Us */}
             <div className="space-y-4">
-              <h4 className="text-sm font-questrial uppercase text-[#B78924] font-medium tracking-wider">
+              <h4 className="text-sm font-questrial uppercase text-[#8b5cf6] font-medium tracking-wider">
                 Follow Us
               </h4>
               <ul className="space-y-3">
@@ -113,7 +113,7 @@ export default function Footer() {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-questrial text-sm text-neutral-600 hover:text-gold-550 transition-colors"
+                      className="font-questrial text-sm text-neutral-600 hover:text-[#8b5cf6] transition-colors"
                     >
                       {link.name}
                     </a>
@@ -128,8 +128,8 @@ export default function Footer() {
 
         {/* 3. Bottom Copyrights Bar */}
         <div className="border-t border-neutral-200 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-neutral-500 text-sm font-questrial">
-          <span>Copyrights</span>
-          <span>© 2026 Your Brand. All Rights Reserved.</span>
+          <span>Crafts by Zorucci</span>
+          <span>© 2026 Crafts by Zorucci. All Rights Reserved.</span>
         </div>
 
       </div>

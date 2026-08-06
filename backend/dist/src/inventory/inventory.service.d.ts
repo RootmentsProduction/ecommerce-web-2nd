@@ -35,9 +35,9 @@ export declare class InventoryService {
         transaction: {
             id: string;
             createdAt: Date;
-            type: StockTransactionType;
             productId: string;
             variantId: string | null;
+            type: StockTransactionType;
             quantity: number;
             beforeStock: number;
             afterStock: number;
