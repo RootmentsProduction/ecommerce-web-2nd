@@ -136,46 +136,49 @@ export default async function CategorySection() {
     : DEFAULT_CRAFTS_CATEGORIES;
 
   return (
-    <section className="py-12 sm:py-20 bg-white">
+    <section className="py-16 sm:py-24 bg-[#FAF8F5]">
       <div className="w-full px-[6.5%] mx-auto max-w-none">
 
         {/* Section Heading */}
-        <div className="text-center mb-10 sm:mb-16">
-          <h2 className="font-raleway font-medium text-[30px] sm:text-[40px] leading-[100%] tracking-normal text-[#3c2f1d]">
+        <div className="text-center mb-12 sm:mb-16">
+          <span className="font-doodle text-2xl sm:text-3xl text-[#7c3aed] font-medium block mb-1">
+            ✨ Handcrafted Collections ✨
+          </span>
+          <h2 className="font-fredoka font-semibold text-3xl sm:text-4xl text-neutral-900 tracking-tight">
             Shop By Categories
           </h2>
         </div>
 
-        {/* 3-Column Category Grid matching Screenshot 3 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
+        {/* 3-Column Category Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {categories.map((cat) => (
             <Link
               key={cat.id}
               href={`/shop?category=${encodeURIComponent(cat.slug)}`}
-              className="flex items-center justify-between py-4 border-b border-neutral-200 group hover:border-neutral-400 transition-colors"
+              className="flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-white border border-neutral-200/80 group hover:border-[#7c3aed] hover:shadow-md transition-all duration-300"
             >
-              <div className="flex items-center gap-5">
+              <div className="flex items-center gap-4 sm:gap-5">
                 {/* Image Thumbnail */}
-                <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-[#f7f5f0] overflow-hidden flex-shrink-0">
+                <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-[#f7f5f0] rounded-xl overflow-hidden flex-shrink-0 border border-neutral-100">
                   <Image
                     src={cat.image}
                     alt={cat.name}
                     fill
-                    sizes="96px"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="80px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>
 
                 {/* Category Name */}
-                <span className="font-questrial font-normal text-lg sm:text-[21px] text-neutral-800 group-hover:text-neutral-950 transition-colors">
+                <span className="font-fredoka font-medium text-base sm:text-lg text-neutral-900 group-hover:text-[#7c3aed] transition-colors">
                   {cat.name}
                 </span>
               </div>
 
               {/* Arrow Up-Right Icon ↗ */}
-              <div className="text-neutral-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300">
-                <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.2" d="M7 17L17 7M17 7H9M17 7V15" />
+              <div className="text-[#7c3aed] bg-purple-50 p-2 rounded-full group-hover:bg-[#7c3aed] group-hover:text-white transition-colors duration-300">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 17L17 7M17 7H9M17 7V15" />
                 </svg>
               </div>
             </Link>

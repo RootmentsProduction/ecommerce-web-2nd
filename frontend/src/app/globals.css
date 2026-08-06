@@ -1,60 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #111111;
+  --background: #FAF8F5;
+  --foreground: #18181b;
+  --font-jakarta: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif;
+  --font-outfit: var(--font-outfit), 'Outfit', sans-serif;
   --font-fredoka: var(--font-fredoka), 'Fredoka', cursive, sans-serif;
   --font-doodle: var(--font-caveat), 'Caveat', cursive;
   --font-questrial: var(--font-questrial), 'Questrial', sans-serif;
   --font-raleway: var(--font-raleway), 'Raleway', sans-serif;
-  --font-stacksans: var(--font-instrument-sans), 'Instrument Sans', sans-serif;
-  --font-googlesans: var(--font-instrument-sans), 'Instrument Sans', sans-serif;
 }
 
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --font-jakarta: var(--font-jakarta);
+  --font-outfit: var(--font-outfit);
   --font-fredoka: var(--font-fredoka);
   --font-doodle: var(--font-doodle);
   --font-questrial: var(--font-questrial);
   --font-raleway: var(--font-raleway);
-  --font-stacksans: var(--font-stacksans);
-  --font-googlesans: var(--font-googlesans);
   
-  --color-craft-purple: #8b5cf6;
-  --color-craft-purple-dark: #7c3aed;
-  --color-craft-purple-light: #a855f7;
-  --color-craft-beige: #f5f2eb;
-  --color-craft-grey: #f7f7f7;
-  --color-gold-50: #faf8f2;
-  --color-gold-100: #f4efdb;
-  --color-gold-200: #e8dbb4;
-  --color-gold-300: #dcc88d;
-  --color-gold-400: #d0b466;
-  --color-gold-500: #c59b27;
-  --color-gold-600: #a9831e;
-  --color-gold-700: #8c6a16;
-  --color-gold-800: #6f520f;
-  --color-gold-900: #523b08;
+  --color-craft-purple: #7c3aed;
+  --color-craft-purple-dark: #6d28d9;
+  --color-craft-purple-light: #8b5cf6;
+  --color-craft-rose: #f43f5e;
+  --color-craft-cream: #faf8f5;
   
-  --color-luxury-charcoal: #111111;
-  --color-luxury-offwhite: #fafafa;
-  --color-luxury-sand: #f5f2eb;
+  --color-gold-500: #7c3aed;
+  --color-gold-600: #6d28d9;
 }
 
 /* Custom base styles */
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-stacksans);
+  font-family: var(--font-jakarta);
   font-feature-settings: "kern" 1, "liga" 1;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
-h1, h2, h3, h4, h5, h6, .font-serif-luxury {
-  font-family: var(--font-raleway);
-  letter-spacing: 0.02em;
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-fredoka);
+  letter-spacing: -0.01em;
 }
 
 /* Luxury border utilities */

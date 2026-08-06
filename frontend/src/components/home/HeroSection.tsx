@@ -34,31 +34,24 @@ export default async function HeroSection() {
       <div className="relative z-20 w-full max-w-4xl px-6 text-center text-white pt-24 pb-16 flex flex-col items-center justify-center">
 
         {/* Aesthetic Doodle Sub-tagline */}
-        <span 
-          className="text-2xl sm:text-4xl text-[#f3e8ff] mb-3 drop-shadow-md tracking-wider"
-          style={{ fontFamily: 'var(--font-caveat), cursive' }}
-        >
+        <span className="font-doodle text-3xl sm:text-4xl text-[#f3e8ff] mb-3 drop-shadow-md tracking-wider">
           ✨ Handcrafted with Love & Care ✨
         </span>
 
         {/* Big Headline in Aesthetic Fredoka font */}
-        <h1 
-          className="text-5xl sm:text-7xl lg:text-[95px] leading-[1.05] tracking-tight font-medium text-white mb-6 drop-shadow-lg"
-          style={{ fontFamily: 'var(--font-fredoka), sans-serif' }}
-        >
+        <h1 className="font-fredoka text-5xl sm:text-7xl lg:text-[95px] leading-[1.05] tracking-tight font-medium text-white mb-6 drop-shadow-lg">
           Perfection <br /> at Crafts
         </h1>
 
         {/* Subtitle */}
-        <p className="font-questrial text-base sm:text-xl lg:text-2xl text-white/95 max-w-2xl mx-auto mb-10 leading-relaxed font-light drop-shadow-sm">
+        <p className="font-jakarta text-base sm:text-xl text-white/95 max-w-2xl mx-auto mb-10 leading-relaxed font-light drop-shadow-sm">
           Discover timeless handmade treasures. From charming plushies to aesthetic stationaries, our crafts speak love.
         </p>
 
-        {/* White CTA Button with rounded aesthetic edges */}
+        {/* Purple CTA Button with rounded aesthetic edges */}
         <Link
           href="/shop"
-          className="inline-flex items-center justify-center bg-white text-neutral-900 hover:bg-[#f3e8ff] transition-all px-12 py-4 text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase shadow-xl hover:shadow-2xl rounded-full transform hover:-translate-y-1"
-          style={{ fontFamily: 'var(--font-fredoka), sans-serif' }}
+          className="inline-flex items-center justify-center bg-[#7c3aed] hover:bg-[#6d28d9] text-white transition-all px-12 py-4 text-xs sm:text-sm font-fredoka font-semibold tracking-[0.2em] uppercase shadow-xl hover:shadow-2xl rounded-full transform hover:-translate-y-1"
         >
           SHOP NOW
         </Link>

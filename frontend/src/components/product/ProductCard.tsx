@@ -34,7 +34,7 @@ export default function ProductCard({ product, centered = false }: ProductCardPr
       {/* Product Image Box */}
       <Link
         href={`/product/${product.slug}`}
-        className="relative block aspect-square w-full overflow-hidden bg-white border border-neutral-200"
+        className="relative block aspect-square w-full overflow-hidden bg-white border border-neutral-200/90 rounded-2xl shadow-xs hover:shadow-md transition-all duration-300"
       >
         <Image
           src={product.primaryImage || product.images[0] || '/placeholder.png'}
@@ -52,6 +52,7 @@ export default function ProductCard({ product, centered = false }: ProductCardPr
             className="object-cover absolute inset-0 transition-opacity duration-700 opacity-0 group-hover:opacity-100"
           />
         )}
+
         {/* Sticker Pill Badges */}
         <div className="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1.5 pointer-events-none">
           {product.isBestSeller && (
@@ -60,7 +61,7 @@ export default function ProductCard({ product, centered = false }: ProductCardPr
             </span>
           )}
           {product.isNewArrival && (
-            <span className="bg-[#8b5cf6] text-white font-fredoka text-[10px] uppercase font-semibold px-2.5 py-0.5 rounded-full shadow-xs tracking-wider">
+            <span className="bg-[#7c3aed] text-white font-fredoka text-[10px] uppercase font-semibold px-2.5 py-0.5 rounded-full shadow-xs tracking-wider">
               ✨ New
             </span>
           )}
@@ -70,39 +71,35 @@ export default function ProductCard({ product, centered = false }: ProductCardPr
         <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur-xs py-2.5 px-3 border-t border-neutral-200">
           <button
             onClick={handleQuickAdd}
-            className="w-full bg-[#8b5cf6] hover:bg-[#7c3aed] text-white transition-colors duration-300 py-2.5 text-[11px] font-fredoka uppercase tracking-widest rounded-full shadow-md"
+            className="w-full bg-neutral-900 hover:bg-[#7c3aed] text-white transition-colors duration-300 py-2.5 text-[10px] uppercase tracking-widest font-questrial rounded-full shadow-xs"
           >
-            Add to Cart
+            Add to Bag
           </button>
         </div>
       </Link>
 
       {/* Product details */}
       <div className={`pt-2 pb-4 px-3 ${centered ? 'text-center' : 'text-left'}`}>
-        {/* Product name: Questrial 400, 18px, 26px line-height, #4E4E4E */}
         <Link
           href={`/product/${product.slug}`}
-          className="block md:truncate mb-1 hover:text-[#B78924] transition-colors"
+          className="block md:truncate mb-1 hover:text-[#7c3aed] transition-colors"
           style={{
             fontFamily: 'Questrial, sans-serif',
             fontWeight: 400,
             fontSize: '14px',
             lineHeight: '20px',
-            letterSpacing: '0%',
             color: '#4E4E4E',
             textAlign: centered ? 'center' : 'left',
           }}
         >
           {product.title}
         </Link>
-        {/* Price: Google Sans Flex 500, 15px, 22px line-height, #312409 */}
         <p
           style={{
             fontFamily: "'Google Sans Flex', 'Google Sans', sans-serif",
             fontWeight: 500,
             fontSize: '15px',
             lineHeight: '22px',
-            letterSpacing: '0%',
             color: '#312409',
             textAlign: centered ? 'center' : 'left',
           }}

@@ -38,27 +38,27 @@ export default function Footer() {
           {/* Left Column (Brand + Newsletter Form) */}
           <div className="lg:col-span-6 space-y-8">
             <div className="flex items-center gap-2 select-none">
-              <span className="text-[#8b5cf6] text-[32px] font-normal leading-none select-none">✳</span>
-              <span className="font-raleway text-[22px] tracking-normal font-medium text-neutral-900 leading-none">
+              <span className="text-[#7c3aed] text-[32px] font-bold leading-none select-none">✳</span>
+              <span className="font-fredoka text-[23px] tracking-tight font-semibold text-neutral-900 leading-none">
                 Crafts by Zorucci
               </span>
             </div>
             
             <div className="space-y-4 max-w-md">
-              <p className="text-neutral-500 font-questrial text-sm leading-relaxed">
+              <p className="text-neutral-500 font-jakarta text-sm leading-relaxed">
                 Get updates about new handcrafted arrivals, plushies, and special offers.
               </p>
               
-              <form onSubmit={(e) => e.preventDefault()} className="flex items-center gap-0 max-w-sm">
+              <form onSubmit={(e) => e.preventDefault()} className="flex items-center gap-2 max-w-sm">
                 <input
                   type="email"
                   placeholder="Enter your email"
                   required
-                  className="bg-white border border-neutral-300 focus:outline-none w-full py-2.5 px-4 text-sm text-neutral-800 placeholder-neutral-400 rounded-none font-questrial"
+                  className="bg-white border border-neutral-300 focus:outline-none focus:border-[#7c3aed] w-full py-2.5 px-4 text-sm text-neutral-800 placeholder-neutral-400 rounded-xl font-jakarta"
                 />
                 <button
                   type="submit"
-                  className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white uppercase tracking-wider font-questrial font-medium text-sm py-2.5 px-6 transition-colors duration-300 rounded-none flex-shrink-0 border border-[#8b5cf6]"
+                  className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white uppercase tracking-wider font-fredoka font-medium text-xs py-3 px-6 transition-colors duration-300 rounded-xl flex-shrink-0 shadow-xs"
                 >
                   Subscribe
                 </button>

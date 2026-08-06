@@ -111,28 +111,28 @@ export default function NewArrivalsSection({ products: newArrivals }: NewArrival
       <div className="w-full px-[6.5%] mx-auto max-w-none relative z-10">
 
         {/* Desktop Section Header */}
-        <div className="hidden sm:flex items-baseline justify-between mb-6 sm:mb-8 pb-1">
-          <h2 className="font-raleway font-medium text-[32px] sm:text-[36px] leading-[100%] tracking-normal text-[#3c2f1d]">
+        <div className="hidden sm:flex items-baseline justify-between mb-8 pb-1">
+          <h2 className="font-fredoka font-semibold text-3xl sm:text-4xl text-neutral-900 tracking-tight">
             New Arrivals
           </h2>
           <Link
             href="/shop?sort=newest"
-            className="font-questrial text-[18px] sm:text-[20px] tracking-normal text-[#8b5cf6] hover:text-[#7c3aed] no-underline border-b border-[#8b5cf6] pb-[2px] text-right inline-block transition-colors"
+            className="font-fredoka font-medium text-sm text-[#7c3aed] hover:text-[#6d28d9] uppercase tracking-widest no-underline border-b border-[#7c3aed] pb-1 transition-colors"
           >
-            View More
+            View All
           </Link>
         </div>
 
         {/* Mobile Section Header */}
-        <div className="flex items-center justify-between mb-4 sm:hidden px-1">
-          <h2 className="font-raleway font-medium text-[24px] text-[#3c2f1d]">
+        <div className="flex items-center justify-between mb-6 sm:hidden px-1">
+          <h2 className="font-fredoka font-semibold text-2xl text-neutral-900 tracking-tight">
             New Arrivals
           </h2>
           <Link
             href="/shop?sort=newest"
-            className="font-questrial text-[14px] text-[#8b5cf6] hover:text-[#7c3aed] border-b border-[#8b5cf6] pb-[2px]"
+            className="font-fredoka font-medium text-xs text-[#7c3aed] uppercase tracking-wider border-b border-[#7c3aed] pb-0.5"
           >
-            View More
+            View All
           </Link>
         </div>
 

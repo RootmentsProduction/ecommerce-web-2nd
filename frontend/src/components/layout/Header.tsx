@@ -97,13 +97,13 @@ export default function Header() {
             <div className="flex items-stretch h-full">
               {/* Asterisk Box - desktop only */}
               <div className={`hidden md:flex w-10 items-center justify-center border-l ${borderClass}`}>
-                <span className="text-[#B78924] text-[32px] font-bold leading-none select-none">✳</span>
+                <span className="text-[#7c3aed] text-[32px] font-bold leading-none select-none">✳</span>
               </div>
               {/* Logo text box with inline mobile asterisk */}
               <div className="flex items-center px-4 md:pl-2 md:pr-6 gap-2">
-                <span className="text-[#B78924] text-xl font-bold leading-none select-none md:hidden pt-0.5">✳</span>
+                <span className="text-[#7c3aed] text-xl font-bold leading-none select-none md:hidden pt-0.5">✳</span>
                 <Link href="/" className="inline-block">
-                  <span className={`font-raleway text-[17px] sm:text-[21.25px] leading-none tracking-[0em] font-medium transition-colors duration-350 ${logoColorClass}`}>
+                  <span className={`font-fredoka text-[18px] sm:text-[23px] leading-none tracking-tight font-semibold transition-colors duration-350 ${logoColorClass}`}>
                     Crafts by Zorucci
                   </span>
                 </Link>

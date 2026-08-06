@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fredoka, Caveat, Questrial, Raleway, Instrument_Sans } from "next/font/google";
+import { Fredoka, Caveat, Plus_Jakarta_Sans, Outfit, Questrial, Raleway, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import ClientLayoutWrapper from "../components/layout/ClientLayoutWrapper";
 
@@ -12,6 +12,18 @@ const fredoka = Fredoka({
 const caveat = Caveat({
   subsets: ["latin"],
   variable: "--font-caveat",
+  display: "swap",
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+  display: "swap",
+});
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
   display: "swap",
 });
 
@@ -50,9 +62,9 @@ export default function RootLayout({
   return (
     <html 
       lang="en" 
-      className={`${fredoka.variable} ${caveat.variable} ${questrial.variable} ${raleway.variable} ${instrumentSans.variable} h-full scroll-smooth`}
+      className={`${fredoka.variable} ${caveat.variable} ${plusJakartaSans.variable} ${outfit.variable} ${questrial.variable} ${raleway.variable} ${instrumentSans.variable} h-full scroll-smooth`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-white text-neutral-900 selection:bg-purple-100 selection:text-neutral-900">
+      <body className="min-h-full flex flex-col font-jakarta bg-[#FAF8F5] text-neutral-900 selection:bg-purple-200 selection:text-purple-950">
         <ClientLayoutWrapper>
           {children}
         </ClientLayoutWrapper>

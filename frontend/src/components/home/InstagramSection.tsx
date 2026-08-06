@@ -25,17 +25,9 @@ export default function InstagramSection() {
 
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 pb-4">
-          <h2 className="font-raleway font-medium text-[30px] sm:text-[40px] leading-[100%] tracking-normal text-[#3c2f1d]">
+          <h2 className="font-fredoka font-semibold text-3xl sm:text-4xl text-neutral-900 tracking-tight">
             Follow Us On Instagram
           </h2>
-          <Link
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-questrial text-[18px] sm:text-[24px] text-[#8b5cf6] hover:text-[#7c3aed] no-underline border-b border-[#8b5cf6] pb-[2px] inline-block transition-colors"
-          >
-            @Craftsbyzorucci
-          </Link>
         </div>
 
       </div>
