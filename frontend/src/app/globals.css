@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #111111;
+  --font-fredoka: var(--font-fredoka), 'Fredoka', cursive, sans-serif;
+  --font-doodle: var(--font-caveat), 'Caveat', cursive;
   --font-questrial: var(--font-questrial), 'Questrial', sans-serif;
   --font-raleway: var(--font-raleway), 'Raleway', sans-serif;
   --font-stacksans: var(--font-instrument-sans), 'Instrument Sans', sans-serif;
@@ -12,6 +14,8 @@
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --font-fredoka: var(--font-fredoka);
+  --font-doodle: var(--font-doodle);
   --font-questrial: var(--font-questrial);
   --font-raleway: var(--font-raleway);
   --font-stacksans: var(--font-stacksans);

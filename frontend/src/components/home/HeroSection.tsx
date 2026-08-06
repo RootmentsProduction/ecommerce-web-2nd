@@ -5,24 +5,24 @@ import { getSystemSettings } from '@/services/system-settings.service';
 
 export default async function HeroSection() {
   const settings = await getSystemSettings();
-  const heroImage = settings.hero_image || "/crafts/hero_stacking_toy.png";
+  const heroImage = settings.hero_image || "/crafts/crafts_hero_cover.png";
 
   return (
-    <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-[#7e858a]">
+    <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-[#4a3b32]">
 
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full">
         <Image
           src={heroImage}
-          alt="Crafts & Toys Hero"
+          alt="Handcrafted Studio Crafts Hero"
           fill
           priority
           quality={100}
           sizes="100vw"
-          className="object-cover object-left md:object-[25%_center]"
+          className="object-cover object-center"
         />
-        {/* Soft overlay */}
-        <div className="absolute inset-0 bg-black/20 md:bg-black/15" />
+        {/* Soft elegant gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
       </div>
 
       {/* Header border line overlay */}
@@ -33,20 +33,32 @@ export default async function HeroSection() {
       {/* Centered Hero Content Container */}
       <div className="relative z-20 w-full max-w-4xl px-6 text-center text-white pt-24 pb-16 flex flex-col items-center justify-center">
 
-        {/* Big Headline */}
-        <h1 className="font-raleway text-5xl sm:text-7xl lg:text-[100px] leading-[1.05] tracking-tight font-light text-white mb-6 drop-shadow-sm">
-          Perfection <br /> at Jewel
+        {/* Aesthetic Doodle Sub-tagline */}
+        <span 
+          className="text-2xl sm:text-4xl text-[#f3e8ff] mb-3 drop-shadow-md tracking-wider"
+          style={{ fontFamily: 'var(--font-caveat), cursive' }}
+        >
+          ✨ Handcrafted with Love & Care ✨
+        </span>
+
+        {/* Big Headline in Aesthetic Fredoka font */}
+        <h1 
+          className="text-5xl sm:text-7xl lg:text-[95px] leading-[1.05] tracking-tight font-medium text-white mb-6 drop-shadow-lg"
+          style={{ fontFamily: 'var(--font-fredoka), sans-serif' }}
+        >
+          Perfection <br /> at Crafts
         </h1>
 
         {/* Subtitle */}
-        <p className="font-questrial text-sm sm:text-lg lg:text-xl text-white/95 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
-          Discover timeless elegance. From delicate rings to stunning necklaces, our jewellery speaks love.
+        <p className="font-questrial text-base sm:text-xl lg:text-2xl text-white/95 max-w-2xl mx-auto mb-10 leading-relaxed font-light drop-shadow-sm">
+          Discover timeless handmade treasures. From charming plushies to aesthetic stationaries, our crafts speak love.
         </p>
 
-        {/* White CTA Button */}
+        {/* White CTA Button with rounded aesthetic edges */}
         <Link
           href="/shop"
-          className="inline-flex items-center justify-center bg-white text-neutral-900 hover:bg-neutral-100 transition-all px-12 py-4 font-questrial text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+          className="inline-flex items-center justify-center bg-white text-neutral-900 hover:bg-[#f3e8ff] transition-all px-12 py-4 text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase shadow-xl hover:shadow-2xl rounded-full transform hover:-translate-y-1"
+          style={{ fontFamily: 'var(--font-fredoka), sans-serif' }}
         >
           SHOP NOW
         </Link>

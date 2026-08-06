@@ -104,7 +104,7 @@ export default function Header() {
                 <span className="text-[#B78924] text-xl font-bold leading-none select-none md:hidden pt-0.5">✳</span>
                 <Link href="/" className="inline-block">
                   <span className={`font-raleway text-[17px] sm:text-[21.25px] leading-none tracking-[0em] font-medium transition-colors duration-350 ${logoColorClass}`}>
-                    Jewelry by Zorucci
+                    Crafts by Zorucci
                   </span>
                 </Link>
               </div>

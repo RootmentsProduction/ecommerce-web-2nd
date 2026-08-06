@@ -6,28 +6,6 @@ export const menuItems: MenuItem[] = [
     href: '/shop',
   },
   {
-    name: 'Women',
-    href: '/shop?gender=Women',
-    hasMegaMenu: true,
-    megaMenuColumns: [
-      {
-        title: 'CRAFTS & TOYS',
-        items: [
-          { name: 'ALL TOYS', href: '/shop?category=toys' },
-          { name: 'PLUSH TOYS', href: '/shop?category=plush-toys' },
-          { name: 'KEYCHAINS', href: '/shop?category=keychains' },
-        ],
-      },
-      {
-        title: 'ACCESSORIES',
-        items: [
-          { name: 'HAIR ACCESSORIES', href: '/shop?category=hair-accessories' },
-          { name: 'BAGS & POUCHES', href: '/shop?category=bags-pouches' },
-        ],
-      },
-    ],
-  },
-  {
     name: 'Collections',
     href: '/shop',
     hasMegaMenu: true,

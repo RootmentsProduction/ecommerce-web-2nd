@@ -34,7 +34,7 @@ export default function InstagramSection() {
             rel="noopener noreferrer"
             className="font-questrial text-[18px] sm:text-[24px] text-[#8b5cf6] hover:text-[#7c3aed] no-underline border-b border-[#8b5cf6] pb-[2px] inline-block transition-colors"
           >
-            @Jewelrybyzorucci
+            @Craftsbyzorucci
           </Link>
         </div>
 
