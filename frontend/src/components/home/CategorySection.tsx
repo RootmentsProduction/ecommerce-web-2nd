@@ -111,18 +111,15 @@ function EmptyCategories() {
 // Main async server component
 // ---------------------------------------------------------------------------
 const DEFAULT_CRAFTS_CATEGORIES = [
-  { id: 'cat-1', name: 'Toys', slug: 'toys', image: '/crafts/hero_stacking_toy.png' },
-  { id: 'cat-2', name: 'Plush Toys', slug: 'plush-toys', image: '/crafts/cat_plush_toys.png' },
-  { id: 'cat-3', name: 'Stationaries', slug: 'stationaries', image: '/crafts/cat_stationaries.png' },
-  { id: 'cat-4', name: 'Art & Crafts', slug: 'art-crafts', image: '/crafts/cat_stationaries.png' },
-  { id: 'cat-5', name: 'Keychains', slug: 'keychains', image: '/crafts/cat_keychains.png' },
-  { id: 'cat-6', name: 'Diary', slug: 'diary', image: '/crafts/cat_stationaries.png' },
-  { id: 'cat-7', name: 'Bags & Pouches', slug: 'bags-pouches', image: '/crafts/bear_keychain.png' },
+  { id: 'cat-1', name: 'Stationery', slug: 'stationery', image: '/crafts/cat_stationaries.png' },
+  { id: 'cat-2', name: 'Art & Craft', slug: 'art-craft', image: '/crafts/cat_stationaries.png' },
+  { id: 'cat-3', name: 'Drinkware', slug: 'drinkware', image: '/crafts/plush_rocking_horse.png' },
+  { id: 'cat-4', name: 'Hair Accessories', slug: 'hair-accessories', image: '/crafts/teething_ring_toy.png' },
+  { id: 'cat-5', name: 'Bags & Pouches', slug: 'bags-pouches', image: '/crafts/bear_keychain.png' },
+  { id: 'cat-6', name: 'Plush Toys', slug: 'plush-toys', image: '/crafts/cat_plush_toys.png' },
+  { id: 'cat-7', name: 'Keychains', slug: 'keychains', image: '/crafts/cat_keychains.png' },
   { id: 'cat-8', name: 'Home & Living', slug: 'home-living', image: '/crafts/cat_home_living.png' },
-  { id: 'cat-9', name: 'Hair Accessories', slug: 'hair-accessories', image: '/crafts/teething_ring_toy.png' },
-  { id: 'cat-10', name: 'Drinkware', slug: 'drinkware', image: '/crafts/plush_rocking_horse.png' },
-  { id: 'cat-11', name: 'Candles', slug: 'candles', image: '/crafts/plush_teddy_bear.png' },
-  { id: 'cat-12', name: 'Gifting', slug: 'gifting', image: '/crafts/cat_keychains.png' },
+  { id: 'cat-9', name: 'Gifting', slug: 'gifting', image: '/crafts/hero_stacking_toy.png' },
 ];
 
 export default async function CategorySection() {

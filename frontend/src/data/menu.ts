@@ -11,34 +11,32 @@ export const menuItems: MenuItem[] = [
     hasMegaMenu: true,
     megaMenuColumns: [
       {
-        title: 'TOYS & PLUSH',
+        title: 'CRAFTS & STATIONERY',
         items: [
-          { name: 'ALL TOYS', href: '/shop?category=toys' },
-          { name: 'PLUSH TOYS', href: '/shop?category=plush-toys' },
-          { name: 'KEYCHAINS', href: '/shop?category=keychains' },
-        ],
-      },
-      {
-        title: 'STATIONERY & GIFTS',
-        items: [
-          { name: 'STATIONARIES', href: '/shop?category=stationaries' },
-          { name: 'ART & CRAFTS', href: '/shop?category=art-crafts' },
-          { name: 'DIARY & JOURNALS', href: '/shop?category=diary' },
+          { name: 'STATIONERY', href: '/shop?category=stationery' },
+          { name: 'ART & CRAFT', href: '/shop?category=art-craft' },
           { name: 'GIFTING', href: '/shop?category=gifting' },
         ],
       },
       {
-        title: 'HOME & ACCESSORIES',
+        title: 'ACCESSORIES & LIVING',
         items: [
-          { name: 'HOME & LIVING', href: '/shop?category=home-living' },
-          { name: 'HAIR ACCESSORIES', href: '/shop?category=hair-accessories' },
           { name: 'DRINKWARE', href: '/shop?category=drinkware' },
-          { name: 'CANDLES', href: '/shop?category=candles' },
+          { name: 'HAIR ACCESSORIES', href: '/shop?category=hair-accessories' },
+          { name: 'BAGS & POUCHES', href: '/shop?category=bags-pouches' },
+          { name: 'HOME & LIVING', href: '/shop?category=home-living' },
+        ],
+      },
+      {
+        title: 'TOYS & PLUSH',
+        items: [
+          { name: 'PLUSH TOYS', href: '/shop?category=plush-toys' },
+          { name: 'KEYCHAINS', href: '/shop?category=keychains' },
         ],
       },
     ],
     promoImage: {
-      src: '/crafts/hero_stacking_toy.png',
+      src: '/crafts/crafts_hero_cover.png',
       alt: 'Crafts Promo',
       title: '',
       subtitle: '',

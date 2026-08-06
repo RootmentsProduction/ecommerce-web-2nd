@@ -5,10 +5,10 @@ import { getSystemSettings } from '@/services/system-settings.service';
 
 export default async function HeroSection() {
   const settings = await getSystemSettings();
-  const heroImage = settings.hero_image || "/crafts/crafts_hero_cover.png";
+  const heroImage = settings.hero_image || "/crafts/crafts_hero_cover_aesthetic.png";
 
   return (
-    <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-[#4a3b32]">
+    <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-[#1c1815]">
 
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full">
@@ -19,10 +19,10 @@ export default async function HeroSection() {
           priority
           quality={100}
           sizes="100vw"
-          className="object-cover object-center"
+          className="object-cover object-center scale-105"
         />
-        {/* Soft elegant gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
+        {/* Soft aesthetic black overlay shade */}
+        <div className="absolute inset-0 bg-black/25 bg-gradient-to-t from-black/50 via-black/25 to-black/10" />
       </div>
 
       {/* Header border line overlay */}
