@@ -52,13 +52,27 @@ export default function ProductCard({ product, centered = false }: ProductCardPr
             className="object-cover absolute inset-0 transition-opacity duration-700 opacity-0 group-hover:opacity-100"
           />
         )}
+        {/* Sticker Pill Badges */}
+        <div className="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1.5 pointer-events-none">
+          {product.isBestSeller && (
+            <span className="bg-[#fbbf24] text-neutral-950 font-fredoka text-[10px] uppercase font-semibold px-2.5 py-0.5 rounded-full shadow-xs tracking-wider">
+              ⭐ Bestseller
+            </span>
+          )}
+          {product.isNewArrival && (
+            <span className="bg-[#8b5cf6] text-white font-fredoka text-[10px] uppercase font-semibold px-2.5 py-0.5 rounded-full shadow-xs tracking-wider">
+              ✨ New
+            </span>
+          )}
+        </div>
+
         {/* Quick add on hover */}
-        <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white py-2.5 px-3 border-t border-neutral-200">
+        <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur-xs py-2.5 px-3 border-t border-neutral-200">
           <button
             onClick={handleQuickAdd}
-            className="w-full bg-neutral-900 hover:bg-[#B78924] text-white transition-colors duration-300 py-2 text-[10px] uppercase tracking-widest font-questrial"
+            className="w-full bg-[#8b5cf6] hover:bg-[#7c3aed] text-white transition-colors duration-300 py-2.5 text-[11px] font-fredoka uppercase tracking-widest rounded-full shadow-md"
           >
-            Add to Bag
+            Add to Cart
           </button>
         </div>
       </Link>

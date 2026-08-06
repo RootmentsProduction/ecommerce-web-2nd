@@ -153,7 +153,7 @@ export default function ProductDetailsClient({
                   <button
                     onClick={handleBuyNow}
                     disabled={product.stock <= 0}
-                    className="h-12 bg-neutral-900 hover:bg-neutral-850 disabled:bg-neutral-200 disabled:text-neutral-400 text-white font-questrial text-[12px] uppercase tracking-widest px-8 transition-colors flex items-center justify-center cursor-pointer font-medium"
+                    className="h-12 bg-[#8b5cf6] hover:bg-[#7c3aed] disabled:bg-neutral-200 disabled:text-neutral-400 text-white font-fredoka text-[13px] uppercase tracking-widest px-8 transition-colors flex items-center justify-center cursor-pointer font-medium rounded-xl shadow-sm"
                   >
                     {product.stock > 0 ? "Buy It Now" : "Out of Stock"}
                   </button>
@@ -162,7 +162,7 @@ export default function ProductDetailsClient({
                   {product.stock > 0 && (
                     <button
                       onClick={handleAddToCart}
-                      className="h-12 bg-white hover:bg-neutral-50 border border-neutral-300 text-neutral-900 font-questrial text-[12px] uppercase tracking-widest px-8 transition-colors flex items-center justify-center cursor-pointer font-medium"
+                      className="h-12 bg-white hover:bg-purple-50 border border-[#8b5cf6] text-[#8b5cf6] font-fredoka text-[13px] uppercase tracking-widest px-8 transition-colors flex items-center justify-center cursor-pointer font-medium rounded-xl"
                     >
                       Add To Cart
                     </button>

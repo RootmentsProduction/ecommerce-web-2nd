@@ -89,7 +89,7 @@ export default function Header() {
 
   return (
     <>
-      <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${headerBgClass}`}>
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${headerBgClass}`}>
         <div className="w-full px-[6.5%]">
           <div className="flex items-stretch justify-between h-16 md:h-20">
 
