@@ -18,6 +18,8 @@ import { OrdersModule } from './orders/orders.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { SystemSettingsModule } from './system-settings/system-settings.module';
 import { PhonepeModule } from './phonepe/phonepe.module';
+import { ShippingModule } from './shipping/shipping.module';
+import { ScheduleModule } from '@nestjs/schedule';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Module({
@@ -25,6 +27,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     UsersModule,
     EmailModule,
@@ -40,7 +43,9 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     DashboardModule,
     SystemSettingsModule,
     PhonepeModule,
+    ShippingModule,
   ],
+
   controllers: [AppController],
   providers: [
     AppService,

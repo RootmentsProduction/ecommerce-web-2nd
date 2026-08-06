@@ -25,9 +25,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (savedCart) {
       try {
         const parsedCart = JSON.parse(savedCart);
-        setTimeout(() => {
-          setCartItems(parsedCart);
-        }, 0);
+        setCartItems(parsedCart);
       } catch (e) {
         console.error('Error loading cart:', e);
       }

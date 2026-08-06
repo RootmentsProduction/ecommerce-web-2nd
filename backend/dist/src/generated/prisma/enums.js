@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OtpPurpose = exports.UserStatus = exports.UserRole = exports.ProductImageRole = exports.StockTransactionType = exports.ProductStatus = void 0;
+exports.PickupStatus = exports.ShipmentStatus = exports.OtpPurpose = exports.UserStatus = exports.UserRole = exports.ProductImageRole = exports.StockTransactionType = exports.ProductStatus = void 0;
 exports.ProductStatus = {
     DRAFT: 'DRAFT',
     ACTIVE: 'ACTIVE',
@@ -34,5 +34,23 @@ exports.UserStatus = {
 exports.OtpPurpose = {
     EMAIL_VERIFICATION: 'EMAIL_VERIFICATION',
     PASSWORD_RESET: 'PASSWORD_RESET'
+};
+exports.ShipmentStatus = {
+    NEW: 'NEW',
+    COURIER_ASSIGNED: 'COURIER_ASSIGNED',
+    PICKUP_SCHEDULED: 'PICKUP_SCHEDULED',
+    PICKED_UP: 'PICKED_UP',
+    IN_TRANSIT: 'IN_TRANSIT',
+    OUT_FOR_DELIVERY: 'OUT_FOR_DELIVERY',
+    DELIVERED: 'DELIVERED',
+    CANCELLED: 'CANCELLED',
+    RTO_INITIATED: 'RTO_INITIATED',
+    RTO_DELIVERED: 'RTO_DELIVERED'
+};
+exports.PickupStatus = {
+    PENDING: 'PENDING',
+    SCHEDULED: 'SCHEDULED',
+    PICKED_UP: 'PICKED_UP',
+    CANCELLED: 'CANCELLED'
 };
 //# sourceMappingURL=enums.js.map

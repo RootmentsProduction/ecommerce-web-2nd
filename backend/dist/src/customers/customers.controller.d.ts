@@ -25,9 +25,9 @@ export declare class CustomersController {
         totalSpend: number;
         orders: {
             id: string;
-            status: string;
             createdAt: Date;
             updatedAt: Date;
+            status: string;
             total: import("@prisma/client-runtime-utils").Decimal;
             billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
             shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
@@ -50,8 +50,8 @@ export declare class CustomersController {
         addresses: {
             id: string;
             createdAt: Date;
-            userId: string;
             type: string;
+            userId: string;
             street1: string;
             street2: string | null;
             city: string;

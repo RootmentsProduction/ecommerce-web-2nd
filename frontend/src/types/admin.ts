@@ -294,4 +294,6 @@ export interface AdminOrderDetails {
   stockDeductionBeforeStock?: number;
   stockDeductionAfterStock?: number;
   timeline: OrderTimelineEvent[];
+  shipment?: any;
 }
+

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { getMyOrders } from '../../services/orders.service';
 import { retryPhonepePayment } from '../../services/phonepe.service';
+import { trackShipment, ShipmentDetails } from '../../services/shipping.service';
 import Link from 'next/link';
 
 interface OrderItem {
@@ -35,6 +36,7 @@ interface Order {
   phonepeTransactionId?: string;
   merchantTransactionId?: string;
   paymentCompletedAt?: string;
+  shipment?: ShipmentDetails;
 }
 
 export default function MyOrdersPage() {
@@ -42,6 +44,9 @@ export default function MyOrdersPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [trackingModalOrder, setTrackingModalOrder] = useState<Order | null>(null);
+  const [activeShipment, setActiveShipment] = useState<ShipmentDetails | null>(null);
+  const [loadingTracking, setLoadingTracking] = useState(false);
 
   const handleRetryPayment = async (orderId: string) => {
     try {
@@ -49,6 +54,19 @@ export default function MyOrdersPage() {
       window.location.href = redirectRes.redirectUrl;
     } catch (err: any) {
       alert(err.message || 'Failed to initiate payment retry.');
+    }
+  };
+
+  const handleOpenTracking = async (order: Order) => {
+    setTrackingModalOrder(order);
+    setLoadingTracking(true);
+    try {
+      const shipment = await trackShipment(order.id);
+      setActiveShipment(shipment || order.shipment || null);
+    } catch {
+      setActiveShipment(order.shipment || null);
+    } finally {
+      setLoadingTracking(false);
     }
   };
 
@@ -62,7 +80,6 @@ export default function MyOrdersPage() {
   useEffect(() => {
     if (isAuthenticated) {
       getMyOrders().then((res) => {
-        // cast to Order[]
         setOrders((res as unknown as Order[]) || []);
         setLoading(false);
       });
@@ -78,18 +95,35 @@ export default function MyOrdersPage() {
   }
 
   if (!isAuthenticated) {
-    return null; // Redirect handles it
+    return null;
   }
 
+  const getTimelineStages = (order: Order, shipment?: ShipmentDetails | null) => {
+    const s = (shipment?.shipmentStatus || order.status || '').toUpperCase();
+    const paid = order.paymentStatus === 'PAID';
+
+    const stages = [
+      { id: 'placed', label: 'Order Placed', done: true },
+      { id: 'paid', label: 'Paid', done: paid },
+      { id: 'packed', label: 'Packed', done: ['PACKED', 'SHIPPED', 'DELIVERED'].includes(order.status) || ['PICKUP_SCHEDULED', 'PICKED_UP', 'IN_TRANSIT', 'OUT_FOR_DELIVERY', 'DELIVERED'].includes(s) },
+      { id: 'pickup', label: 'Pickup Scheduled', done: ['PICKUP_SCHEDULED', 'PICKED_UP', 'IN_TRANSIT', 'OUT_FOR_DELIVERY', 'DELIVERED'].includes(s) },
+      { id: 'shipped', label: 'Shipped', done: ['SHIPPED', 'DELIVERED'].includes(order.status) || ['IN_TRANSIT', 'OUT_FOR_DELIVERY', 'DELIVERED'].includes(s) },
+      { id: 'transit', label: 'In Transit', done: ['IN_TRANSIT', 'OUT_FOR_DELIVERY', 'DELIVERED'].includes(s) },
+      { id: 'ofd', label: 'Out For Delivery', done: ['OUT_FOR_DELIVERY', 'DELIVERED'].includes(s) },
+      { id: 'delivered', label: 'Delivered', done: order.status === 'DELIVERED' || s === 'DELIVERED' },
+    ];
+    return stages;
+  };
+
   return (
-    <div className="min-h-screen pt-28 pb-16 bg-[#fcfcfc] text-left">
+    <div className="min-h-screen pt-28 pb-16 bg-[#fcfcfc] text-left font-sans">
       <div className="w-full px-[6.5%] mx-auto max-w-4xl space-y-8">
         <div>
           <h1 className="text-[32px] font-medium tracking-normal text-neutral-900 font-raleway">
             My Orders
           </h1>
           <p className="text-xs text-neutral-450 mt-1 font-questrial font-medium">
-            Manage your purchases, check shipment tracking, and download invoices
+            Manage your purchases, check live shipment tracking, and download invoices
           </p>
         </div>
 
@@ -120,6 +154,8 @@ export default function MyOrdersPage() {
                 day: 'numeric',
               });
 
+              const timeline = getTimelineStages(order, order.shipment);
+
               return (
                 <div key={order.id} className="bg-white border border-[#e1e5f5] rounded-3xl overflow-hidden shadow-xs hover:shadow-sm transition-all duration-300">
                   {/* Order Card Header */}
@@ -139,17 +175,25 @@ export default function MyOrdersPage() {
                       </div>
                     </div>
 
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
-                      order.status === 'DELIVERED'
-                        ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
-                        : order.status === 'SHIPPED'
-                        ? 'bg-blue-50 text-blue-600 border border-blue-100'
-                        : order.status === 'CANCELLED'
-                        ? 'bg-red-50 text-red-600 border border-red-100'
-                        : 'bg-amber-50 text-amber-600 border border-amber-100'
-                    }`}>
-                      {order.status.replace('_', ' ')}
-                    </span>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => handleOpenTracking(order)}
+                        className="px-3 py-1 bg-neutral-900 hover:bg-neutral-800 text-white rounded-full text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                      >
+                        🚚 Track Package
+                      </button>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                        order.status === 'DELIVERED'
+                          ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
+                          : order.status === 'SHIPPED'
+                          ? 'bg-blue-50 text-blue-600 border border-blue-100'
+                          : order.status === 'CANCELLED'
+                          ? 'bg-red-50 text-red-600 border border-red-100'
+                          : 'bg-amber-50 text-amber-600 border border-amber-100'
+                      }`}>
+                        {order.status.replace('_', ' ')}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Order Card Items List */}
@@ -173,29 +217,24 @@ export default function MyOrdersPage() {
                     ))}
                   </div>
 
-                  {/* Payment Details Section */}
+                  {/* Payment & Courier Bar */}
                   <div className="px-6 py-4 bg-neutral-50/50 border-t border-neutral-100 flex flex-wrap justify-between items-center gap-4 text-xs font-sans">
                     <div className="space-y-1">
                       <div className="flex flex-wrap gap-x-6 gap-y-1 text-[10px] text-neutral-500 font-semibold">
                         <span>Payment Status: <span className={`font-bold uppercase ${
                           order.paymentStatus === 'PAID' ? 'text-emerald-600' : order.paymentStatus === 'FAILED' ? 'text-red-600' : 'text-amber-600'
                         }`}>{order.paymentStatus}</span></span>
-                        
-                        {order.paymentMethod && (
-                          <span>Method: <span className="font-bold text-neutral-700 uppercase">{order.paymentMethod}</span></span>
+
+                        {order.shipment?.courier && (
+                          <span>Courier: <span className="font-bold text-neutral-800">{order.shipment.courier}</span></span>
                         )}
 
-                        {order.phonepeTransactionId && (
-                          <span>Txn ID: <span className="font-mono font-bold text-neutral-700">{order.phonepeTransactionId}</span></span>
-                        )}
-                        
-                        {order.paymentCompletedAt && (
-                          <span>Paid On: <span className="font-bold text-neutral-700">{new Date(order.paymentCompletedAt).toLocaleString('en-IN')}</span></span>
+                        {order.shipment?.awb && (
+                          <span>AWB: <span className="font-mono font-bold text-neutral-800">{order.shipment.awb}</span></span>
                         )}
                       </div>
                     </div>
 
-                    {/* Retry Payment Button if Failed or Pending */}
                     {(order.paymentStatus === 'FAILED' || (order.paymentStatus === 'PENDING' && order.status === 'PENDING_PAYMENT')) && (
                       <button
                         onClick={() => handleRetryPayment(order.id)}
@@ -206,17 +245,27 @@ export default function MyOrdersPage() {
                     )}
                   </div>
 
-                  {/* Visual Status Timeline Progress */}
-                  <div className="bg-neutral-50/20 px-6 py-4 border-t border-neutral-100 text-xs flex justify-between items-center font-sans">
-                    <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Order Status Tracking</span>
-                    <div className="flex items-center space-x-4 text-[10px] font-bold text-neutral-500 uppercase tracking-wider">
-                      <span className="text-[#3762f9]">Placed</span>
-                      <span>&rarr;</span>
-                      <span className={order.status !== 'PENDING_PAYMENT' ? 'text-[#3762f9]' : ''}>Confirmed</span>
-                      <span>&rarr;</span>
-                      <span className={order.status === 'SHIPPED' || order.status === 'DELIVERED' ? 'text-[#3762f9]' : ''}>Shipped</span>
-                      <span>&rarr;</span>
-                      <span className={order.status === 'DELIVERED' ? 'text-[#3762f9]' : ''}>Delivered</span>
+                  {/* Visual 8-Stage Shipping Timeline */}
+                  <div className="bg-neutral-50/20 px-6 py-4 border-t border-neutral-100 overflow-x-auto no-scrollbar">
+                    <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-3">
+                      Shipping Timeline
+                    </span>
+                    <div className="flex items-center justify-between min-w-[600px] text-[10px] font-bold font-sans">
+                      {timeline.map((st, i) => (
+                        <div key={st.id} className="flex items-center space-x-2">
+                          <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] ${
+                            st.done ? 'bg-[#3762f9] text-white' : 'bg-neutral-200 text-neutral-500'
+                          }`}>
+                            {st.done ? '✓' : i + 1}
+                          </div>
+                          <span className={st.done ? 'text-[#3762f9]' : 'text-neutral-400'}>
+                            {st.label}
+                          </span>
+                          {i < timeline.length - 1 && (
+                            <span className="text-neutral-300 font-normal mx-1">&rarr;</span>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   </div>
 
@@ -225,7 +274,106 @@ export default function MyOrdersPage() {
             })}
           </div>
         )}
+
+        {/* Live Tracking Modal */}
+        {trackingModalOrder && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl relative text-left">
+              <button
+                onClick={() => {
+                  setTrackingModalOrder(null);
+                  setActiveShipment(null);
+                }}
+                className="absolute top-6 right-6 text-neutral-400 hover:text-neutral-900 font-bold text-lg cursor-pointer"
+              >
+                ✕
+              </button>
+
+              <div>
+                <h3 className="text-lg font-bold text-neutral-900 font-raleway">
+                  Live Tracking Details
+                </h3>
+                <p className="text-xs text-neutral-500 mt-1 font-questrial">
+                  Order #{trackingModalOrder.orderNumber}
+                </p>
+              </div>
+
+              {loadingTracking ? (
+                <div className="py-8 text-center text-xs font-semibold text-neutral-500">
+                  Fetching live status from Shiprocket...
+                </div>
+              ) : activeShipment ? (
+                <div className="space-y-4 text-xs font-sans">
+                  <div className="grid grid-cols-2 gap-3 bg-neutral-50 p-4 rounded-2xl border border-neutral-100">
+                    <div>
+                      <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block">Courier</span>
+                      <span className="font-bold text-neutral-800">{activeShipment.courier || 'Assigned Courier'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block">AWB Code</span>
+                      <span className="font-mono font-bold text-neutral-800">{activeShipment.awb || 'N/A'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block">Status</span>
+                      <span className="font-bold text-[#3762f9]">{activeShipment.shipmentStatus || 'NEW'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block">Est. Delivery</span>
+                      <span className="font-semibold text-neutral-700">
+                        {activeShipment.estimatedDelivery
+                          ? new Date(activeShipment.estimatedDelivery).toLocaleDateString('en-IN')
+                          : 'Pending scan'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Scans list */}
+                  {activeShipment.events && activeShipment.events.length > 0 && (
+                    <div className="space-y-2 pt-2">
+                      <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block">
+                        Tracking Activity History
+                      </span>
+                      <div className="max-h-48 overflow-y-auto divide-y divide-neutral-100 pr-1">
+                        {activeShipment.events.map((ev) => (
+                          <div key={ev.id} className="py-2 space-y-0.5">
+                            <div className="flex justify-between font-bold text-neutral-800">
+                              <span>{ev.activity}</span>
+                              <span className="text-[10px] text-neutral-400 font-normal">
+                                {new Date(ev.eventTimestamp).toLocaleString('en-IN')}
+                              </span>
+                            </div>
+                            {ev.location && (
+                              <p className="text-[10px] text-neutral-500">{ev.location}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {activeShipment.trackingUrl && (
+                    <div className="pt-3 border-t border-neutral-100">
+                      <a
+                        href={activeShipment.trackingUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block w-full text-center bg-[#3762f9] text-white py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-[#2748c9] transition-colors"
+                      >
+                        Open Carrier Tracking Portal ↗
+                      </a>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="py-6 text-center text-xs text-neutral-500 font-questrial">
+                  Shipment is currently being packed and assigned to courier partners. Please check back shortly for live scans.
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 }
+

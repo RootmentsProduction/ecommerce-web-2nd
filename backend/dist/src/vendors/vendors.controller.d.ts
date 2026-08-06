@@ -84,12 +84,12 @@ export declare class VendorsController {
     constructor(vendorsService: VendorsService);
     getVendors(): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
         email: string;
         firstName: string;
         lastName: string;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         mobile: string;
         salutation: string | null;
         companyName: string;
@@ -145,12 +145,12 @@ export declare class VendorsController {
         }[];
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
         email: string;
         firstName: string;
         lastName: string;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         mobile: string;
         salutation: string | null;
         companyName: string;
@@ -173,12 +173,12 @@ export declare class VendorsController {
     }>;
     createVendor(dto: CreateVendorBodyDto): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
         email: string;
         firstName: string;
         lastName: string;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         mobile: string;
         salutation: string | null;
         companyName: string;
@@ -201,12 +201,12 @@ export declare class VendorsController {
     }>;
     updateVendor(id: string, dto: UpdateVendorBodyDto): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: string;
         email: string;
         firstName: string;
         lastName: string;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         mobile: string;
         salutation: string | null;
         companyName: string;

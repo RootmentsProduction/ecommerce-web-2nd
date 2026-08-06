@@ -6,6 +6,7 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { placeOrder } from '../../services/orders.service';
 import { createPhonepePayment } from '../../services/phonepe.service';
+import { estimateShipping, ShippingOption } from '../../services/shipping.service';
 import Link from 'next/link';
 
 interface AddressState {
@@ -56,76 +57,43 @@ export default function CheckoutPage() {
   const [redirecting, setRedirecting] = useState(false);
   const [confirmedOrder, setConfirmedOrder] = useState<{ id: string; orderNumber: string } | null>(null);
 
-  // Redirect if not authenticated
+  // Shipping estimation states
+  const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([]);
+  const [selectedOptionCode, setSelectedOptionCode] = useState<string>('STANDARD');
+  const [estimatingShipping, setEstimatingShipping] = useState(false);
+  const [freeEligible, setFreeEligible] = useState(false);
+
+  // Auto-estimate shipping when postal code is entered
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push('/login?redirect=/checkout');
+    const cleanPincode = shipping.postalCode.trim();
+    if (cleanPincode.length >= 6) {
+      setEstimatingShipping(true);
+      estimateShipping({
+        pincode: cleanPincode,
+        orderValue: cartSubtotal,
+      })
+        .then((res) => {
+          if (res && res.options && res.options.length > 0) {
+            setShippingOptions(res.options);
+            setFreeEligible(res.freeShippingEligible);
+            if (!res.options.some((o) => o.code === selectedOptionCode)) {
+              setSelectedOptionCode(res.options[0].code);
+            }
+          }
+        })
+        .catch(() => {
+          // Graceful fallback
+        })
+        .finally(() => setEstimatingShipping(false));
     }
-  }, [isAuthenticated, authLoading, router]);
-
-  // Pre-fill names from user profile if available
-  useEffect(() => {
-    if (user) {
-      setShipping((prev) => ({
-        ...prev,
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-      }));
-      setBilling((prev) => ({
-        ...prev,
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-      }));
-    }
-  }, [user]);
-
-  if (authLoading) {
-    return (
-      <div className="min-h-screen pt-32 text-center text-xs font-semibold text-neutral-500 font-questrial">
-        Checking authentication session...
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return null; // Redirect handles it
-  }
-
-  if (redirecting) {
-    return (
-      <div className="min-h-screen pt-32 px-[6.5%] max-w-md mx-auto text-center space-y-6 font-sans">
-        <div className="bg-white border border-[#e1e5f5] rounded-3xl p-8 shadow-sm space-y-4">
-          <div className="animate-spin w-8 h-8 border-4 border-[#3762f9] border-t-transparent rounded-full mx-auto"></div>
-          <h2 className="text-sm font-bold text-neutral-800 font-sans uppercase tracking-wider">Redirecting to PhonePe...</h2>
-          <p className="text-xs text-neutral-500 font-questrial leading-relaxed">
-            Please wait while we establish a secure connection to the PhonePe Payment Gateway. Do not close or refresh this page.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (cartItems.length === 0 && !confirmedOrder) {
-    return (
-      <div className="min-h-screen pt-32 px-[6.5%] mx-auto max-w-lg text-center space-y-4">
-        <h1 className="text-xl font-medium font-raleway text-neutral-900">Your Shopping Bag is empty</h1>
-        <p className="text-xs text-neutral-500 font-questrial leading-relaxed">
-          Please add some jewelry items to your bag before trying to checkout.
-        </p>
-        <Link
-          href="/shop"
-          className="inline-block bg-neutral-900 text-white text-[11px] uppercase tracking-widest px-6 py-3 font-questrial hover:bg-neutral-850 transition-colors"
-        >
-          Explore Catalog
-        </Link>
-      </div>
-    );
-  }
+  }, [shipping.postalCode, cartSubtotal]);
 
   // Financial splits
-  const shippingCharge = 0; // Free shipping
+  const selectedOption = shippingOptions.find((o) => o.code === selectedOptionCode);
+  const shippingCharge = selectedOption ? selectedOption.rate : 0;
   const taxTotal = Math.round(cartSubtotal * 0.03); // 3% GST on jewelry items in India
-  const total = cartSubtotal + taxTotal;
+  const total = cartSubtotal + taxTotal + shippingCharge;
+
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -529,6 +497,48 @@ export default function CheckoutPage() {
                 ))}
               </div>
 
+              {/* Shipping Method Selector */}
+              {shippingOptions.length > 0 && (
+                <div className="border-t border-neutral-100 pt-4 space-y-2 font-sans text-xs">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block">
+                    Shipping Speed & Carrier
+                  </span>
+                  {estimatingShipping && (
+                    <span className="text-[10px] text-neutral-400 animate-pulse block">Estimating live rates...</span>
+                  )}
+                  <div className="space-y-2">
+                    {shippingOptions.map((opt) => (
+                      <label
+                        key={opt.code}
+                        onClick={() => setSelectedOptionCode(opt.code)}
+                        className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
+                          selectedOptionCode === opt.code
+                            ? 'border-[#3762f9] bg-blue-50/40 text-neutral-900 font-bold'
+                            : 'border-neutral-200 hover:bg-neutral-50 text-neutral-700 font-medium'
+                        }`}
+                      >
+                        <div className="flex items-center space-x-2.5">
+                          <input
+                            type="radio"
+                            name="shippingOption"
+                            checked={selectedOptionCode === opt.code}
+                            onChange={() => setSelectedOptionCode(opt.code)}
+                            className="w-3.5 h-3.5 text-[#3762f9]"
+                          />
+                          <div>
+                            <p className="text-xs">{opt.name}</p>
+                            <p className="text-[10px] text-neutral-400 font-normal">Est: {opt.estimatedDays}</p>
+                          </div>
+                        </div>
+                        <span className="text-xs">
+                          {opt.rate === 0 ? <span className="text-emerald-600 font-bold">FREE</span> : `₹ ${opt.rate}`}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="border-t border-neutral-100 pt-4 space-y-3 font-sans text-xs font-semibold text-neutral-500">
                 <div className="flex justify-between">
                   <span className="uppercase tracking-wider">Subtotal</span>
@@ -536,7 +546,9 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="uppercase tracking-wider">Shipping</span>
-                  <span className="text-emerald-600">FREE</span>
+                  <span className={shippingCharge === 0 ? "text-emerald-600" : "text-neutral-800"}>
+                    {shippingCharge === 0 ? "FREE" : `₹ ${shippingCharge.toLocaleString('en-IN')}.00`}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="uppercase tracking-wider">Estimated GST (3%)</span>

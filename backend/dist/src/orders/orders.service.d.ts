@@ -38,9 +38,9 @@ export declare class OrdersService {
         }[];
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
@@ -74,9 +74,9 @@ export declare class OrdersService {
         }[];
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
@@ -105,8 +105,8 @@ export declare class OrdersService {
                 images: {
                     url: string;
                     id: string;
-                    createdAt: Date;
                     sortOrder: number;
+                    createdAt: Date;
                     altText: string | null;
                     isPrimary: boolean;
                     imageRole: import("../generated/prisma/enums").ProductImageRole;
@@ -114,24 +114,28 @@ export declare class OrdersService {
                 }[];
             } & {
                 id: string;
-                status: import("../generated/prisma/enums").ProductStatus;
-                createdAt: Date;
-                updatedAt: Date;
                 name: string;
                 slug: string;
                 description: string | null;
-                categoryId: string | null;
+                createdAt: Date;
+                updatedAt: Date;
                 sku: string;
                 shortDescription: string | null;
                 sellingPrice: import("@prisma/client-runtime-utils").Decimal;
                 mrp: import("@prisma/client-runtime-utils").Decimal | null;
                 costPrice: import("@prisma/client-runtime-utils").Decimal | null;
+                status: import("../generated/prisma/enums").ProductStatus;
                 featured: boolean;
-                newArrival: boolean;
                 bestSeller: boolean;
+                newArrival: boolean;
                 showOnHomepage: boolean;
                 occasion: string;
                 gender: string;
+                categoryId: string | null;
+                packageLength: number | null;
+                packageWidth: number | null;
+                packageHeight: number | null;
+                packageWeight: number | null;
             };
         } & {
             id: string;
@@ -146,20 +150,20 @@ export declare class OrdersService {
         })[];
         customer: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            status: import("../generated/prisma/enums").UserStatus;
             email: string;
             passwordHash: string;
             firstName: string | null;
             lastName: string | null;
             role: import("../generated/prisma/enums").UserRole;
-            status: import("../generated/prisma/enums").UserStatus;
-            createdAt: Date;
-            updatedAt: Date;
         };
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
@@ -193,20 +197,20 @@ export declare class OrdersService {
         }[];
         customer: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            status: import("../generated/prisma/enums").UserStatus;
             email: string;
             passwordHash: string;
             firstName: string | null;
             lastName: string | null;
             role: import("../generated/prisma/enums").UserRole;
-            status: import("../generated/prisma/enums").UserStatus;
-            createdAt: Date;
-            updatedAt: Date;
         };
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
@@ -240,9 +244,9 @@ export declare class OrdersService {
         }[];
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
@@ -284,9 +288,9 @@ export declare class OrdersService {
         }[];
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;
@@ -308,9 +312,9 @@ export declare class OrdersService {
     }>;
     markOrderAsFailed(orderId: string, paymentResponse: string): Promise<{
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         billingAddress: import("@prisma/client/runtime/client").JsonValue | null;
         shippingAddress: import("@prisma/client/runtime/client").JsonValue | null;

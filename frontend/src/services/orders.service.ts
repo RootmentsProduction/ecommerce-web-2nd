@@ -147,6 +147,7 @@ export function mapBackendOrderToAdminOrderDetails(order: any): AdminOrderDetail
     stockDeductionStatus: isDeducted ? "Completed" : "Pending",
     stockDeductedQty: totalDeductedQty,
     timeline,
+    shipment: order.shipment || undefined,
   };
 }
 

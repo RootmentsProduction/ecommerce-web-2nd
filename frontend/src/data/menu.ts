@@ -6,51 +6,62 @@ export const menuItems: MenuItem[] = [
     href: '/shop',
   },
   {
+    name: 'Women',
+    href: '/shop?gender=Women',
+    hasMegaMenu: true,
+    megaMenuColumns: [
+      {
+        title: 'CRAFTS & TOYS',
+        items: [
+          { name: 'ALL TOYS', href: '/shop?category=toys' },
+          { name: 'PLUSH TOYS', href: '/shop?category=plush-toys' },
+          { name: 'KEYCHAINS', href: '/shop?category=keychains' },
+        ],
+      },
+      {
+        title: 'ACCESSORIES',
+        items: [
+          { name: 'HAIR ACCESSORIES', href: '/shop?category=hair-accessories' },
+          { name: 'BAGS & POUCHES', href: '/shop?category=bags-pouches' },
+        ],
+      },
+    ],
+  },
+  {
     name: 'Collections',
     href: '/shop',
     hasMegaMenu: true,
     megaMenuColumns: [
       {
-        title: 'EARRINGS',
+        title: 'TOYS & PLUSH',
         items: [
-          { name: 'ALL EARRINGS', href: '/shop?category=earrings' },
-          { name: 'HOOPS', href: '/shop?category=earrings&type=hoops' },
-          { name: 'STUDS', href: '/shop?category=earrings&type=studs' },
-          { name: 'DANGLER', href: '/shop?category=earrings&type=dangler' },
-          { name: 'EARCUFFS AND CRAWLERS', href: '/shop?category=earrings&type=crawlers' },
+          { name: 'ALL TOYS', href: '/shop?category=toys' },
+          { name: 'PLUSH TOYS', href: '/shop?category=plush-toys' },
+          { name: 'KEYCHAINS', href: '/shop?category=keychains' },
         ],
       },
       {
-        title: 'NECKLACES',
+        title: 'STATIONERY & GIFTS',
         items: [
-          { name: 'ALL NECKLACES', href: '/shop?category=necklaces' },
-          { name: 'PENDENTS', href: '/shop?category=necklaces&type=pendents' },
-          { name: 'CHAIN', href: '/shop?category=necklaces&type=chain' },
-          { name: 'CHOKER', href: '/shop?category=necklaces&type=choker' },
-          { name: 'LAYERED NECKLACE', href: '/shop?category=necklaces&type=layered' },
-          { name: 'INITIALS', href: '/shop?category=necklaces&type=initials' },
+          { name: 'STATIONARIES', href: '/shop?category=stationaries' },
+          { name: 'ART & CRAFTS', href: '/shop?category=art-crafts' },
+          { name: 'DIARY & JOURNALS', href: '/shop?category=diary' },
+          { name: 'GIFTING', href: '/shop?category=gifting' },
         ],
       },
       {
-        title: 'RINGS',
+        title: 'HOME & ACCESSORIES',
         items: [
-          { name: 'ALL RINGS', href: '/shop?category=rings' },
-          { name: 'STACKABLE RINGS', href: '/shop?category=rings&type=stackable' },
-          { name: 'ADJUSTABLE RINGS', href: '/shop?category=rings&type=adjustable' },
+          { name: 'HOME & LIVING', href: '/shop?category=home-living' },
+          { name: 'HAIR ACCESSORIES', href: '/shop?category=hair-accessories' },
+          { name: 'DRINKWARE', href: '/shop?category=drinkware' },
+          { name: 'CANDLES', href: '/shop?category=candles' },
         ],
-        secondarySection: {
-          title: 'BRACELETS',
-          items: [
-            { name: 'ALL BRACELETS', href: '/shop?category=bracelets' },
-            { name: 'KADA', href: '/shop?category=bracelets&type=kada' },
-            { name: 'CHAIN', href: '/shop?category=bracelets&type=chain' },
-          ],
-        },
       },
     ],
     promoImage: {
-      src: '/product-main.png',
-      alt: 'Luxury Jewellery Promo',
+      src: '/crafts/hero_stacking_toy.png',
+      alt: 'Crafts Promo',
       title: '',
       subtitle: '',
       href: '/shop',

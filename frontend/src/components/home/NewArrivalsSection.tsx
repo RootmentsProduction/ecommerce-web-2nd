@@ -62,7 +62,8 @@ export default function NewArrivalsSection({ products: newArrivals }: NewArrival
     container.addEventListener('scroll', handleScroll, { passive: true });
 
     const step = () => {
-      if (!isInteracting && isMobile() && container.children.length >= originalCount * 2) {
+      if (!isMobile()) return;
+      if (!isInteracting && container.children.length >= originalCount * 2) {
         scrollPos += scrollSpeed;
 
         const firstSetEndElement = container.children[originalCount] as HTMLElement;
@@ -78,7 +79,9 @@ export default function NewArrivalsSection({ products: newArrivals }: NewArrival
       animationFrameId = requestAnimationFrame(step);
     };
 
-    animationFrameId = requestAnimationFrame(step);
+    if (isMobile()) {
+      animationFrameId = requestAnimationFrame(step);
+    }
 
     return () => {
       cancelAnimationFrame(animationFrameId);
@@ -107,65 +110,48 @@ export default function NewArrivalsSection({ products: newArrivals }: NewArrival
     <section className="py-12 sm:py-16 bg-white relative">
       <div className="w-full px-[6.5%] mx-auto max-w-none relative z-10">
 
-        {/* Desktop Section Header (hidden on mobile) */}
-        <div className="hidden sm:flex items-baseline justify-between mb-4 sm:mb-8 pb-1">
-          <h2 className="font-raleway font-medium text-[36px] leading-[100%] tracking-normal text-[#453920]">
+        {/* Desktop Section Header */}
+        <div className="hidden sm:flex items-baseline justify-between mb-6 sm:mb-8 pb-1">
+          <h2 className="font-raleway font-medium text-[32px] sm:text-[36px] leading-[100%] tracking-normal text-[#3c2f1d]">
             New Arrivals
           </h2>
           <Link
             href="/shop?sort=newest"
-            className="font-questrial font-light text-[22px] leading-[26px] tracking-normal text-[#B78924] hover:text-gold-600 no-underline border-b border-[#B78924] pb-[2px] text-right inline-block"
+            className="font-questrial text-[18px] sm:text-[20px] tracking-normal text-[#8b5cf6] hover:text-[#7c3aed] no-underline border-b border-[#8b5cf6] pb-[2px] text-right inline-block transition-colors"
           >
             View More
           </Link>
         </div>
 
-        {/* Mobile Section Header (centered style matching mobile screenshot) */}
-        <div className="flex flex-col items-center text-center mb-6 sm:hidden">
-          <div
-            className="flex items-center gap-2 mb-2"
-            style={{
-              color: '#B78924',
-              fontFamily: "'Questrial', sans-serif",
-              fontWeight: 200,
-              fontSize: '18px',
-              lineHeight: '26px',
-              letterSpacing: '0%',
-              textTransform: 'uppercase'
-            }}
-          >
-            <span className="text-[16px]">✳</span>
-            <span>New Arrivals</span>
-          </div>
-          <h2 className="font-raleway font-medium text-[26px] leading-[32px] tracking-wide text-neutral-900 uppercase max-w-xs mx-auto mb-3">
-            Discover Our Latest Jewelry Designs.
+        {/* Mobile Section Header */}
+        <div className="flex items-center justify-between mb-4 sm:hidden px-1">
+          <h2 className="font-raleway font-medium text-[24px] text-[#3c2f1d]">
+            New Arrivals
           </h2>
-          <div className="w-full text-right px-2 mt-2">
-            <Link
-              href="/shop?sort=newest"
-              className="font-questrial font-light text-[15px] text-[#B78924] hover:text-gold-600 no-underline border-b border-[#B78924] pb-[2px] inline-block"
-            >
-              View More
-            </Link>
-          </div>
+          <Link
+            href="/shop?sort=newest"
+            className="font-questrial text-[14px] text-[#8b5cf6] hover:text-[#7c3aed] border-b border-[#8b5cf6] pb-[2px]"
+          >
+            View More
+          </Link>
         </div>
 
-        {/* Desktop Product Grid (Hidden on mobile) */}
+        {/* Desktop Product Grid */}
         <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {newArrivals.map((product) => (
             <ProductCard key={product.id} product={product} centered={true} />
           ))}
         </div>
 
-        {/* Mobile Product Scrollable Container (Visible on mobile only) */}
+        {/* Mobile Product Scrollable Container */}
         <div 
           ref={scrollRef}
-          className="flex sm:hidden overflow-x-auto gap-6 pb-6 px-1 scrollbar-none"
+          className="flex sm:hidden overflow-x-auto gap-4 pb-6 px-1 scrollbar-none"
         >
-          {[...newArrivals, ...newArrivals, ...newArrivals].map((product, idx) => (
+          {newArrivals.map((product, idx) => (
             <div
               key={`${product.id}-${idx}`}
-              className="min-w-[270px] max-w-[290px] w-[78vw] flex-shrink-0"
+              className="min-w-[240px] max-w-[260px] w-[75vw] flex-shrink-0"
             >
               <ProductCard product={product} centered={true} />
             </div>

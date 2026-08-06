@@ -87,6 +87,21 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get order(): Prisma.OrderDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
+    get shippingSettings(): Prisma.ShippingSettingsDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get shipment(): Prisma.ShipmentDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get shipmentLog(): Prisma.ShipmentLogDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get shipmentEvent(): Prisma.ShipmentEventDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get shippingWebhookLog(): Prisma.ShippingWebhookLogDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
     get orderItem(): Prisma.OrderItemDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;

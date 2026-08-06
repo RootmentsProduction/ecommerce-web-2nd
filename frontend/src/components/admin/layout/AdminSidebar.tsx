@@ -31,8 +31,21 @@ export default function AdminSidebar() {
       items: [
         { title: "Customers", href: "/admin/customers", iconName: "customers" },
         { title: "Vendors", href: "/admin/vendors", iconName: "vendors" },
-        { title: "Inventory", href: "/admin/inventory", iconName: "inventory" },
-        { title: "Stock Transactions", href: "/admin/inventory/transactions", iconName: "transactions" },
+        {
+          title: "Inventory",
+          href: "/admin/inventory",
+          iconName: "inventory",
+          subItems: [
+            { title: "Stock Overview", href: "/admin/inventory" },
+            { title: "Stock Transactions", href: "/admin/inventory/transactions" },
+          ],
+        },
+      ],
+    },
+    {
+      sectionTitle: "SETTINGS",
+      items: [
+        { title: "Shipping", href: "/admin/settings/shipping", iconName: "settings" },
       ],
     },
   ];
@@ -61,18 +74,6 @@ export default function AdminSidebar() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
           </svg>
         );
-      case "analytics":
-        return (
-          <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2" />
-          </svg>
-        );
-      case "reports":
-        return (
-          <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-        );
       case "orders":
         return (
           <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">
@@ -97,12 +98,6 @@ export default function AdminSidebar() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
         );
-      case "sales":
-        return (
-          <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-          </svg>
-        );
       case "customers":
         return (
           <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">
@@ -119,30 +114,6 @@ export default function AdminSidebar() {
         return (
           <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-        );
-      case "marketing":
-        return (
-          <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-          </svg>
-        );
-      case "finance":
-        return (
-          <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        );
-      case "content":
-        return (
-          <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2z" />
-          </svg>
-        );
-      case "users":
-        return (
-          <svg className="w-4 h-4" fill="none" stroke={color} strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 009 11.571V11a4 4 0 118 0v.571c0 1.625.432 3.149 1.189 4.47l.054.09A13.997 13.997 0 0021 20H3a13.997 13.997 0 013.44-9.429z" />
           </svg>
         );
       case "settings":
@@ -204,7 +175,7 @@ export default function AdminSidebar() {
         </div>
 
         {/* Navigation Items */}
-        <nav className="flex-1 overflow-y-auto py-6 px-4 no-scrollbar space-y-6">
+        <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-6">
           {navigationData.map((section, idx) => (
             <div key={idx} className="space-y-1">
               <h3 className="text-[10px] font-bold text-neutral-500 tracking-wider px-3 uppercase mb-2">
@@ -213,10 +184,10 @@ export default function AdminSidebar() {
               <ul className="space-y-0.5">
                 {section.items.map((item, itemIdx) => {
                   const isActive = pathname === item.href || (item.href !== "/admin" && pathname?.startsWith(item.href));
-                  const isMenuExpandable = item.subItems !== undefined;
+                  const isMenuExpandable = item.subItems !== undefined && item.subItems.length > 0;
 
                   return (
-                    <li key={itemIdx}>
+                    <li key={itemIdx} className="relative group">
                       <Link
                         href={item.href}
                         className={`flex items-center justify-between px-3 py-2.5 rounded text-xs font-medium transition-all ${
@@ -229,35 +200,32 @@ export default function AdminSidebar() {
                           {getIcon(item.iconName, isActive)}
                           <span>{item.title}</span>
                         </div>
-                        {isMenuExpandable && (
-                          <svg
-                            className={`w-3 h-3 text-neutral-500 transition-transform ${
-                              isActive ? "rotate-180 text-[#C99213]" : ""
-                            }`}
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            viewBox="0 0 24 24"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                          </svg>
-                        )}
                       </Link>
-                      
-                      {/* Sub-menu if active and has sub-items */}
-                      {isMenuExpandable && isActive && (
-                        <ul className="mt-1 pl-10 pr-3 space-y-1 py-1 border-l border-neutral-800/80 ml-5">
-                          {item.subItems?.map((sub, subIdx) => (
-                            <li key={subIdx}>
+
+                      {/* Floating Sub-selector Popover Box on Hover */}
+                      {isMenuExpandable && (
+                        <div className="absolute left-full top-0 ml-2 z-50 w-48 bg-[#252422] border border-neutral-700/80 rounded-xl p-2 shadow-2xl space-y-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-auto">
+                          <div className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider px-2.5 py-1 border-b border-neutral-800 mb-1">
+                            {item.title}
+                          </div>
+                          {item.subItems?.map((sub, subIdx) => {
+                            const isSubActive = pathname === sub.href;
+                            return (
                               <Link
+                                key={subIdx}
                                 href={sub.href}
-                                className="block py-1.5 text-[11px] text-neutral-500 hover:text-neutral-200 transition-colors"
+                                className={`flex items-center space-x-2 px-2.5 py-2 rounded-lg text-xs font-medium transition-all ${
+                                  isSubActive
+                                    ? "bg-[#1C1B19] text-[#C99213] font-bold border-l-2 border-[#C99213] pl-2"
+                                    : "text-neutral-300 hover:text-white hover:bg-neutral-800/60"
+                                }`}
                               >
-                                {sub.title}
+                                <span className={`w-1.5 h-1.5 rounded-full ${isSubActive ? "bg-[#C99213]" : "bg-neutral-500"}`} />
+                                <span>{sub.title}</span>
                               </Link>
-                            </li>
-                          ))}
-                        </ul>
+                            );
+                          })}
+                        </div>
                       )}
                     </li>
                   );

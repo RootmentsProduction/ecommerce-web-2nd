@@ -95,12 +95,12 @@ export declare class PurchaseOrdersController {
     getPurchaseOrders(): Promise<({
         vendor: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            status: string;
             email: string;
             firstName: string;
             lastName: string;
-            status: string;
-            createdAt: Date;
-            updatedAt: Date;
             mobile: string;
             salutation: string | null;
             companyName: string;
@@ -123,9 +123,9 @@ export declare class PurchaseOrdersController {
         };
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         paymentTerms: string;
         attachments: string | null;
@@ -161,12 +161,12 @@ export declare class PurchaseOrdersController {
     getPurchaseOrderDetails(id: string): Promise<{
         vendor: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            status: string;
             email: string;
             firstName: string;
             lastName: string;
-            status: string;
-            createdAt: Date;
-            updatedAt: Date;
             mobile: string;
             salutation: string | null;
             companyName: string;
@@ -216,9 +216,9 @@ export declare class PurchaseOrdersController {
         })[];
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         paymentTerms: string;
         attachments: string | null;
@@ -267,9 +267,9 @@ export declare class PurchaseOrdersController {
         }[];
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         paymentTerms: string;
         attachments: string | null;
@@ -318,9 +318,9 @@ export declare class PurchaseOrdersController {
         }[];
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         paymentTerms: string;
         attachments: string | null;
@@ -355,9 +355,9 @@ export declare class PurchaseOrdersController {
     }>;
     updateStatus(id: string, dto: UpdatePOStatusBodyDto): Promise<{
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         total: import("@prisma/client-runtime-utils").Decimal;
         paymentTerms: string;
         attachments: string | null;
