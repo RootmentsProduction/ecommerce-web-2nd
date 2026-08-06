@@ -62,7 +62,8 @@ export default function BestSellerSection({ products: bestSellers }: BestSellerS
     container.addEventListener('scroll', handleScroll, { passive: true });
 
     const step = () => {
-      if (!isInteracting && isMobile() && container.children.length >= originalCount * 2) {
+      if (!isMobile()) return;
+      if (!isInteracting && container.children.length >= originalCount * 2) {
         scrollPos += scrollSpeed;
 
         const firstSetEndElement = container.children[originalCount] as HTMLElement;
@@ -78,7 +79,9 @@ export default function BestSellerSection({ products: bestSellers }: BestSellerS
       animationFrameId = requestAnimationFrame(step);
     };
 
-    animationFrameId = requestAnimationFrame(step);
+    if (isMobile()) {
+      animationFrameId = requestAnimationFrame(step);
+    }
 
     return () => {
       cancelAnimationFrame(animationFrameId);
@@ -107,49 +110,30 @@ export default function BestSellerSection({ products: bestSellers }: BestSellerS
     <section className="py-12 bg-white relative sm:py-16">
       <div className="w-full px-[6.5%] mx-auto max-w-none relative z-10">
         
-        {/* Desktop Section Header (Left aligned title, Right aligned View More link) */}
+        {/* Desktop Section Header */}
         <div className="hidden sm:flex items-baseline justify-between mb-6 sm:mb-8 pb-2">
-          <h2 className="font-raleway font-medium text-[36px] leading-[100%] tracking-normal text-[#453920]">
+          <h2 className="font-raleway font-medium text-[32px] sm:text-[36px] leading-[100%] tracking-normal text-[#3c2f1d]">
             Best Sellers
           </h2>
           <Link
             href="/shop?filter=bestseller"
-            className="font-questrial font-light text-[22px] leading-[26px] tracking-normal text-[#B78924] hover:text-gold-600 no-underline border-b border-[#B78924] pb-[2px] text-right inline-block"
+            className="font-questrial text-[18px] sm:text-[20px] tracking-normal text-[#8b5cf6] hover:text-[#7c3aed] no-underline border-b border-[#8b5cf6] pb-[2px] text-right inline-block transition-colors"
           >
             View More
           </Link>
         </div>
 
-        {/* Mobile Section Header (centered style matching latest collection layout) */}
-        <div className="flex flex-col items-center text-center mb-6 sm:hidden">
-          <div 
-            className="flex items-center gap-2 mb-2"
-            style={{
-              color: '#B78924',
-              fontFamily: "'Questrial', sans-serif",
-              fontWeight: 200,
-              fontSize: '18px',
-              lineHeight: '26px',
-              letterSpacing: '0%',
-              textTransform: 'uppercase'
-            }}
-          >
-            <span className="text-[16px]">✳</span>
-            <span>Bestsellers</span>
-          </div>
-          
-          <h2 className="font-raleway font-medium text-[26px] leading-[32px] tracking-wide text-neutral-900 uppercase max-w-xs mx-auto mb-3">
+        {/* Mobile Section Header */}
+        <div className="flex items-center justify-between mb-4 sm:hidden px-1">
+          <h2 className="font-raleway font-medium text-[24px] text-[#3c2f1d]">
             Best Sellers
           </h2>
-          
-          <div className="w-full text-right px-2 mt-2">
-            <Link
-              href="/shop?filter=bestseller"
-              className="font-questrial font-light text-[15px] text-[#B78924] hover:text-gold-600 no-underline border-b border-[#B78924] pb-[2px] inline-block"
-            >
-              View More
-            </Link>
-          </div>
+          <Link
+            href="/shop?filter=bestseller"
+            className="font-questrial text-[14px] text-[#8b5cf6] hover:text-[#7c3aed] border-b border-[#8b5cf6] pb-[2px]"
+          >
+            View More
+          </Link>
         </div>
 
         {/* Desktop Product Grid (Hidden on mobile) */}

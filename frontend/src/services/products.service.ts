@@ -175,6 +175,117 @@ export interface GetProductsParams {
   featured?: boolean;
 }
 
+const FALLBACK_CRAFTS_PRODUCTS: Product[] = [
+  {
+    id: "craft-prod-1",
+    title: "Pearl Choker Necklace For Women",
+    name: "Pearl Choker Necklace For Women",
+    slug: "pearl-choker-necklace-1",
+    price: 2399,
+    mrp: 2999,
+    discount: 20,
+    images: ["/crafts/plush_teddy_bear.png"],
+    productImages: [{ id: "img-1", url: "/crafts/plush_teddy_bear.png", imageRole: "PRIMARY", isPrimary: true, sortOrder: 0, altText: "Teddy Bear" }],
+    primaryImage: "/crafts/plush_teddy_bear.png",
+    hoverImage: null,
+    galleryImages: [],
+    category: "Plush Toys",
+    rating: 5.0,
+    reviewCount: 12,
+    description: "Cute plush teddy bear handcrafted with premium materials.",
+    highlights: [],
+    attributes: [],
+    occasion: ["Everyday"],
+    gender: "Unisex",
+    isBestSeller: true,
+    isNewArrival: true,
+    stock: 25,
+    sku: "PLUSH-TEDDY-01",
+    variants: [],
+  },
+  {
+    id: "craft-prod-2",
+    title: "Pearl Choker Necklace For Women",
+    name: "Pearl Choker Necklace For Women",
+    slug: "pearl-choker-necklace-2",
+    price: 2399,
+    mrp: 2999,
+    discount: 20,
+    images: ["/crafts/bear_keychain.png"],
+    productImages: [{ id: "img-2", url: "/crafts/bear_keychain.png", imageRole: "PRIMARY", isPrimary: true, sortOrder: 0, altText: "Bear Keychain" }],
+    primaryImage: "/crafts/bear_keychain.png",
+    hoverImage: null,
+    galleryImages: [],
+    category: "Keychains",
+    rating: 5.0,
+    reviewCount: 8,
+    description: "Handmade brown plush bear keychain with knitted sweater.",
+    highlights: [],
+    attributes: [],
+    occasion: ["Everyday"],
+    gender: "Unisex",
+    isBestSeller: true,
+    isNewArrival: true,
+    stock: 30,
+    sku: "KEYCHAIN-BEAR-02",
+    variants: [],
+  },
+  {
+    id: "craft-prod-3",
+    title: "Pearl Choker Necklace For Women",
+    name: "Pearl Choker Necklace For Women",
+    slug: "pearl-choker-necklace-3",
+    price: 2399,
+    mrp: 2999,
+    discount: 20,
+    images: ["/crafts/plush_rocking_horse.png"],
+    productImages: [{ id: "img-3", url: "/crafts/plush_rocking_horse.png", imageRole: "PRIMARY", isPrimary: true, sortOrder: 0, altText: "Rocking Horse" }],
+    primaryImage: "/crafts/plush_rocking_horse.png",
+    hoverImage: null,
+    galleryImages: [],
+    category: "Toys",
+    rating: 5.0,
+    reviewCount: 15,
+    description: "Adorable plush rocking horse with wooden rockers.",
+    highlights: [],
+    attributes: [],
+    occasion: ["Everyday"],
+    gender: "Unisex",
+    isBestSeller: true,
+    isNewArrival: true,
+    stock: 10,
+    sku: "TOY-HORSE-03",
+    variants: [],
+  },
+  {
+    id: "craft-prod-4",
+    title: "Pearl Crystal Ring For Women",
+    name: "Pearl Crystal Ring For Women",
+    slug: "pearl-crystal-ring-4",
+    price: 2399,
+    mrp: 2999,
+    discount: 20,
+    images: ["/crafts/teething_ring_toy.png"],
+    productImages: [{ id: "img-4", url: "/crafts/teething_ring_toy.png", imageRole: "PRIMARY", isPrimary: true, sortOrder: 0, altText: "Teething Ring" }],
+    primaryImage: "/crafts/teething_ring_toy.png",
+    hoverImage: null,
+    galleryImages: [],
+    category: "Toys",
+    rating: 5.0,
+    reviewCount: 19,
+    description: "Pastel silicone baby teething ring toy.",
+    highlights: [],
+    attributes: [],
+    occasion: ["Everyday"],
+    gender: "Unisex",
+    isBestSeller: true,
+    isNewArrival: true,
+    stock: 40,
+    sku: "TOY-TEETH-04",
+    variants: [],
+  },
+];
+
 export async function getProducts(params?: GetProductsParams): Promise<Product[]> {
   const query = new URLSearchParams();
   if (params) {
@@ -190,14 +301,16 @@ export async function getProducts(params?: GetProductsParams): Promise<Product[]
       cache: "no-store",
     });
     if (data && typeof data === "object" && "products" in data) {
-      return (data.products as BackendProductResponse[]).map(mapBackendProduct);
+      const mapped = (data.products as BackendProductResponse[]).map(mapBackendProduct);
+      return mapped.length > 0 ? mapped : FALLBACK_CRAFTS_PRODUCTS;
     }
     if (Array.isArray(data)) {
-      return data.map(mapBackendProduct);
+      const mapped = data.map(mapBackendProduct);
+      return mapped.length > 0 ? mapped : FALLBACK_CRAFTS_PRODUCTS;
     }
-    return [];
+    return FALLBACK_CRAFTS_PRODUCTS;
   } catch {
-    return [];
+    return FALLBACK_CRAFTS_PRODUCTS;
   }
 }
 
