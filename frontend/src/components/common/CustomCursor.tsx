@@ -28,11 +28,6 @@ export default function CustomCursor() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    // Hide on coarse touch devices
-    if (window.matchMedia('(pointer: coarse)').matches) {
-      return;
-    }
-
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -43,6 +38,7 @@ export default function CustomCursor() {
     let lastX = -100;
     let lastY = -100;
     let isHoveringClickable = false;
+    let isTouchDevice = false;
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -88,21 +84,24 @@ export default function CustomCursor() {
       context.closePath();
       context.fillStyle = color;
       context.shadowColor = color;
-      context.shadowBlur = 8;
+      context.shadowBlur = 6;
       context.fill();
       context.restore();
     };
 
-    const createParticle = (x: number, y: number, isBurst = false) => {
+    const createParticle = (x: number, y: number, isBurst = false, isTouch = false) => {
       const angle = Math.random() * Math.PI * 2;
-      const speed = isBurst ? Math.random() * 4 + 1.5 : Math.random() * 1.8 + 0.3;
+      const speed = isBurst 
+        ? (isTouch ? Math.random() * 2.5 + 1.0 : Math.random() * 4 + 1.5) 
+        : (isTouch ? Math.random() * 1.2 + 0.2 : Math.random() * 1.8 + 0.3);
+
       particles.push({
         x,
         y,
         vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed + 0.15,
-        size: Math.random() * (isBurst ? 6.5 : 5) + 1.8,
-        alpha: 1,
+        vy: Math.sin(angle) * speed + 0.1,
+        size: Math.random() * (isBurst ? 5 : (isTouch ? 3.5 : 4.5)) + 1.2,
+        alpha: isTouch ? 0.65 : 1, // Shallow soft opacity on mobile touch
         color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
         rotation: Math.random() * Math.PI,
         rotationSpeed: (Math.random() - 0.5) * 0.12,
@@ -110,6 +109,7 @@ export default function CustomCursor() {
     };
 
     const onMouseMove = (e: MouseEvent) => {
+      if (isTouchDevice) return;
       const target = e.target as HTMLElement | null;
       if (
         target &&
@@ -130,7 +130,6 @@ export default function CustomCursor() {
       const dy = e.clientY - lastY;
       const dist = Math.hypot(dx, dy);
 
-      // Spawn a rich stream of stardust stars along movement path
       if (dist > 2) {
         const count = isHoveringClickable ? 6 : 3;
         for (let i = 0; i < count; i++) {
@@ -146,25 +145,72 @@ export default function CustomCursor() {
     };
 
     const onClick = (e: MouseEvent) => {
-      // Spawn burst of 18 stars on click
+      if (isTouchDevice) return;
       for (let i = 0; i < 18; i++) {
         createParticle(e.clientX, e.clientY, true);
       }
     };
 
+    // Shallow mobile touch event handlers
+    const onTouchStart = (e: TouchEvent) => {
+      isTouchDevice = true;
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        lastX = touch.clientX;
+        lastY = touch.clientY;
+        for (let i = 0; i < 4; i++) {
+          createParticle(lastX + (Math.random() - 0.5) * 12, lastY + (Math.random() - 0.5) * 12, false, true);
+        }
+      }
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      isTouchDevice = true;
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        const dx = touch.clientX - lastX;
+        const dy = touch.clientY - lastY;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist > 3) {
+          for (let i = 0; i < 3; i++) {
+            createParticle(
+              lastX + (dx / 3) * i + (Math.random() - 0.5) * 10,
+              lastY + (dy / 3) * i + (Math.random() - 0.5) * 10,
+              false,
+              true
+            );
+          }
+        }
+        lastX = touch.clientX;
+        lastY = touch.clientY;
+      }
+    };
+
+    const onTouchEnd = () => {
+      if (lastX > 0 && lastY > 0) {
+        for (let i = 0; i < 8; i++) {
+          createParticle(lastX, lastY, true, true);
+        }
+      }
+    };
+
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('click', onClick);
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
 
     // Animation Loop
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw and update stardust trail (slower decay for longer trail)
+      // Draw and update stardust trail
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.x += p.vx;
         p.y += p.vy;
-        p.alpha -= 0.016; // Slower fade-out for longer star trail
+        p.alpha -= 0.022; // Soft fade-out
         p.rotation += p.rotationSpeed;
 
         if (p.alpha <= 0) {
@@ -175,11 +221,11 @@ export default function CustomCursor() {
         drawStar(ctx, p.x, p.y, 4, p.size, p.size / 2, p.color, p.alpha, p.rotation);
       }
 
-      // Draw Shooting Star Cursor Head (Enlarges into bright gold star when hovering clickable items)
-      if (lastX > 0 && lastY > 0) {
-        const starSize = isHoveringClickable ? 15 : 8;
-        const innerSize = isHoveringClickable ? 6.5 : 3.5;
-        const starColor = isHoveringClickable ? '#fbbf24' : '#8b5cf6';
+      // Draw Shooting Star Cursor Head on mouse screens
+      if (!isTouchDevice && lastX > 0 && lastY > 0) {
+        const starSize = isHoveringClickable ? 14 : 7.5;
+        const innerSize = isHoveringClickable ? 6 : 3.2;
+        const starColor = isHoveringClickable ? '#fbbf24' : '#7c3aed';
 
         drawStar(ctx, lastX, lastY, 4, starSize, innerSize, starColor, 1, Date.now() * 0.004);
       }
@@ -193,6 +239,9 @@ export default function CustomCursor() {
       window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('click', onClick);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -200,7 +249,7 @@ export default function CustomCursor() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-50 hidden md:block"
+      className="fixed inset-0 pointer-events-none z-50 block"
     />
   );
 }
