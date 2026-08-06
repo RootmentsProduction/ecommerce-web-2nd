@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "../../context/AuthContext";
 import Header from "./Header";
 import Footer from "./Footer";
 import ServiceBenefitsBar from "./ServiceBenefitsBar";
+import CustomCursor from "../common/CustomCursor";
 
 interface ClientLayoutWrapperProps {
   children: React.ReactNode;
@@ -57,6 +58,7 @@ function LayoutContent({ children }: ClientLayoutWrapperProps) {
 
   return (
     <CartProvider>
+      <CustomCursor />
       <Header />
       <main className="flex-grow">
         {children}

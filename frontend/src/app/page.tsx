@@ -3,6 +3,7 @@ import HeroSection from "../components/home/HeroSection";
 import CategorySection, { CategorySectionSkeleton } from "../components/home/CategorySection";
 import NewArrivalsSection from "../components/home/NewArrivalsSection";
 import BestSellerSection from "../components/home/BestSellerSection";
+import TestimonialsSection from "../components/home/TestimonialsSection";
 import InstagramSection from "../components/home/InstagramSection";
 import PromoPopup from "../components/home/PromoPopup";
 
@@ -41,6 +42,9 @@ export default async function Home() {
 
         {/* Best Sellers Showcase */}
         <BestSellerSection products={bestSellers} />
+
+        {/* Customer Reviews & Ratings */}
+        <TestimonialsSection />
 
         {/* Instagram User Gallery */}
         <InstagramSection />

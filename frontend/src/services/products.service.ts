@@ -600,10 +600,15 @@ export async function getProductBySlug(slug: string): Promise<Product | undefine
     const data = await apiFetch<BackendProductResponse>(`/api/products/${slug}`, {
       cache: "no-store",
     });
-    return data ? mapBackendProduct(data) : undefined;
+    if (data) return mapBackendProduct(data);
   } catch {
-    return undefined;
+    // API unreachable or not found on backend, fall back below
   }
+  
+  // Search fallback products by slug, ID, or slugified title
+  return FALLBACK_CRAFTS_PRODUCTS.find(
+    (p) => p.slug === slug || p.id === slug || p.slug === slug.toLowerCase()
+  );
 }
 
 // ----- Admin CRUD -----
